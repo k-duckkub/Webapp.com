@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ลงทะเบียน 🐹</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --indigo:     #6366F1;
+      --indigo-d:   #4F46E5;
+      --purple:     #8B5CF6;
+      --pink:       #F472B6;
+      --bg1:        #C7D2FE;
+      --bg2:        #BAE6FD;
+      --white:      #FFFFFF;
+      --text:       #1F2937;
+      --muted:      #6B7280;
+      --border:     #E5E7EB;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
+      font-size: 16px;
+    }
+
+    body {
+      background: linear-gradient(145deg, var(--bg1) 0%, var(--bg2) 100%);
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Paw-print background ── */
+    #pawBg {
+      position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
+    }
+    #pawBg span {
+      position: absolute;
+      opacity: .07;
+      font-size: var(--sz);
+      transform: rotate(var(--rot));
+      animation: pawBob var(--dur) ease-in-out var(--delay) infinite alternate;
+    }
+    @keyframes pawBob {
+      from { transform: rotate(var(--rot)) translateY(0); }
+      to   { transform: rotate(var(--rot)) translateY(-14px); }
+    }
+
+    /* ── App card ── */
+    .card {
+      position: relative; z-index: 1;
+      width: min(390px, 96vw);
+      max-height: 96dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 36px;
+      padding: 22px 20px 26px;
+      box-shadow:
+        0 30px 60px rgba(99,102,241,.22),
+        0 0 0 1.5px rgba(255,255,255,.75) inset;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .card::-webkit-scrollbar { display: none; }
+
+    /* ── Score board ── */
+    .scoreboard {
+      display: flex; justify-content: center;
+    }
+    .score-pill {
+      background: var(--white);
+      border-radius: 999px;
+      padding: 7px 22px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: .95rem; font-weight: 700; color: var(--text);
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    }
+    .score-val {
+      color: var(--indigo);
+      font-size: 1.05rem;
+      min-width: 26px;
+      text-align: center;
+      display: inline-block;
+    }
+    .score-val.bump { animation: bump .3s cubic-bezier(.36,.07,.19,.97); }
+    @keyframes bump {
+      0%,100% { transform: scale(1); }
+      40%      { transform: scale(1.5); }
+    }
+
+    /* ── Mascot zone ── */
+    .mascot-zone {
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
+
+    /* Hamster wrapper */
+    .hamster-wrap {
+      position: relative;
+      width: 130px; height: 130px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; user-select: none;
+    }
+    .hamster-face {
+      font-size: 88px;
+      line-height: 1;
+      display: block;
+      filter: drop-shadow(0 10px 18px rgba(99,102,241,.28));
+      animation: floatie 3.2s ease-in-out infinite;
+      transition: filter .15s;
+      will-change: transform;
+    }
+    @keyframes floatie {
+      0%,100% { transform: translateY(0)   rotate(-3deg); }
+      50%      { transform: translateY(-9px) rotate(3deg); }
+    }
+    .hamster-face.tap {
+      animation: none;
+      transform: scale(.8) rotate(-8deg) !important;
+      filter: drop-shadow(0 4px 10px rgba(244,114,182,.6)) brightness(1.12);
+    }
+    .hamster-face.shy {
+      filter: drop-shadow(0 10px 18px rgba(244,114,182,.55))
+              sepia(.4) saturate(2) hue-rotate(-12deg);
+    }
+
+    /* Hearts container */
+    #hearts {
+      position: absolute; inset: 0; pointer-events: none; overflow: visible;
+    }
+    .heart {
+      position: absolute;
+      pointer-events: none;
+      font-size: var(--sz);
+      left: var(--x);
+      bottom: 65px;
+      animation: heartRise 1.1s ease-out forwards;
+    }
+    @keyframes heartRise {
+      0%   { transform: translateX(-50%) translateY(0)     scale(.4); opacity: 1; }
+      55%  { transform: translateX(calc(-50% + var(--dx))) translateY(-52px) scale(1.2); opacity: .9; }
+      100% { transform: translateX(calc(-50% + var(--dx))) translateY(-115px) scale(.7); opacity: 0; }
+    }
+
+    /* Ripple */
+    .ripple {
+      position: absolute; border-radius: 50%;
+      width: 110px; height: 110px;
+      top: 50%; left: 50%; margin: -55px;
+      background: rgba(244,114,182,.25);
+      transform: scale(0);
+      animation: ripple .7s ease-out forwards;
+      pointer-events: none;
+    }
+    @keyframes ripple { to { transform: scale(2.6); opacity: 0; } }
+
+    /* ── Speech bubble ── */
+    .bubble {
+      background: var(--white);
+      border-radius: 22px;
+      padding: 14px 20px;
+      max-width: 300px;
+      text-align: center;
+      box-shadow: 0 4px 18px rgba(0,0,0,.08);
+      position: relative;
+    }
+    .bubble::before {
+      content: '';
+      position: absolute;
+      top: -11px; left: 50%;
+      transform: translateX(-50%);
+      border: 12px solid transparent;
+      border-bottom-color: var(--white);
+      border-top: 0;
+    }
+    .bubble-text {
+      font-size: 1rem; font-weight: 600; line-height: 1.55; color: var(--text);
+    }
+    .bubble-text.out { animation: tOut .18s forwards; }
+    .bubble-text.in  { animation: tIn  .25s forwards; }
+    @keyframes tOut { to   { opacity: 0; transform: translateY(-5px); } }
+    @keyframes tIn  { from { opacity: 0; transform: translateY(6px); } to { opacity:1; transform:none; } }
+
+    /* ── Progress dots ── */
+    .dots {
+      display: flex; justify-content: center; gap: 7px;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border);
+      transition: background .3s, transform .3s;
+    }
+    .dot.done   { background: #A5B4FC; }
+    .dot.active { background: var(--indigo); transform: scale(1.35); }
+
+    /* ── Form area ── */
+    .form-area { display: flex; flex-direction: column; gap: 10px; }
+
+    .input-row {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 13px 16px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .input-row:focus-within {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 3.5px rgba(99,102,241,.14);
+    }
+    .input-row.shake {
+      border-color: #F87171;
+      box-shadow: 0 0 0 3px rgba(248,113,113,.18);
+      animation: shake .4s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-7px); }
+      40%     { transform: translateX(7px); }
+      60%     { transform: translateX(-5px); }
+      80%     { transform: translateX(5px); }
+    }
+    .inp-icon { font-size: 1.25rem; flex-shrink: 0; }
+    #userInput {
+      flex: 1; border: none; outline: none;
+      font-size: 1rem; font-family: inherit;
+      color: var(--text); background: transparent;
+    }
+    #userInput::placeholder { color: #C4C9D8; }
+
+    .inp-hint {
+      font-size: .82rem; color: var(--muted); text-align: center; padding: 0 4px;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      align-self: center;
+      width: 62px; height: 62px;
+      border: none; border-radius: 50%;
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      font-size: 1.8rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(99,102,241,.42);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .submit-btn:hover  { transform: scale(1.07); }
+    .submit-btn:active { transform: scale(.94); box-shadow: 0 4px 10px rgba(99,102,241,.3); }
+
+    /* ── Success overlay ── */
+    #successOverlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(99,102,241,.18);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: center; justify-content: center;
+    }
+    #successOverlay.show { display: flex; animation: fadeIn .35s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .success-card {
+      background: var(--white);
+      border-radius: 30px;
+      padding: 34px 28px;
+      text-align: center;
+      max-width: min(330px, 92vw);
+      box-shadow: 0 28px 55px rgba(0,0,0,.16);
+      animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes popIn {
+      from { transform: scale(.65); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .suc-ham   { font-size: 80px; display: block; animation: wiggle 1.2s ease-in-out infinite; }
+    @keyframes wiggle {
+      0%,100% { transform: rotate(-6deg); }
+      50%     { transform: rotate(6deg);  }
+    }
+    .suc-title { font-size: 1.45rem; font-weight: 800; color: var(--text); margin: 10px 0 6px; }
+    .suc-sub   { font-size: .93rem; color: var(--muted); line-height: 1.55; }
+    .suc-score-box {
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      border-radius: 18px; padding: 14px 20px; margin: 16px 0;
+    }
+    .suc-score-label { font-size: .8rem; color: var(--muted); }
+    .suc-score-num   { font-size: 2.8rem; font-weight: 800; color: var(--indigo); }
+    .suc-detail {
+      font-size: .88rem; color: var(--muted); line-height: 1.6; margin-top: 4px;
+    }
+    .suc-detail strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<!-- Paw-print BG -->
+<div id="pawBg"></div>
+
+<!-- Main card -->
+<div class="card">
+
+  <!-- Score -->
+  <div class="scoreboard">
+    <div class="score-pill">
+      ⭐ Tap Score: <span class="score-val" id="scoreVal">0</span>
+    </div>
+  </div>
+
+  <!-- Mascot -->
+  <div class="mascot-zone">
+    <!-- Hamster (clickable) -->
+    <div class="hamster-wrap" id="hamWrap" role="button" aria-label="กดแฮมสเตอร์">
+      <span class="hamster-face" id="hamFace">🐹</span>
+      <div id="hearts"></div>
+    </div>
+
+    <!-- Speech bubble -->
+    <div class="bubble">
+      <p class="bubble-text" id="bubbleText">ยินดีที่ได้รู้จักครับ!<br>ต่อไปขอข้อมูลอื่นนะ</p>
+    </div>
+  </div>
+
+  <!-- Progress dots -->
+  <div class="dots" id="dots"></div>
+
+  <!-- Form -->
+  <div class="form-area">
+    <div class="input-row" id="inputRow">
+      <span class="inp-icon" id="inpIcon">👤</span>
+      <input
+        id="userInput"
+        type="text"
+        inputmode="text"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        placeholder="ตัวอย่าง: สมชาย"
+      />
+    </div>
+    <p class="inp-hint" id="inpHint">พิมพ์ชื่อจริงของคุณได้เลยนะครับ</p>
+    <button class="submit-btn" id="submitBtn" aria-label="ถัดไป">🐾</button>
+  </div>
+
+</div>
+
+<!-- Success overlay -->
+<div id="successOverlay">
+  <div class="success-card">
+    <span class="suc-ham" id="sucHam">🥳</span>
+    <h2 class="suc-title">ลงทะเบียนสำเร็จ! 🎉</h2>
+    <p class="suc-sub">ขอบคุณมากเลยครับ แฮมสเตอร์ดีใจมากเลย~ 💕</p>
+    <div class="suc-score-box">
+      <div class="suc-score-label">Tap Bonus Points ของคุณ</div>
+      <div class="suc-score-num" id="sucScoreNum">0</div>
+      <div class="suc-score-label">แต้มโบนัสเริ่มต้น</div>
+    </div>
+    <div class="suc-detail" id="sucDetail">ยินดีต้อนรับ!</div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// STEPS CONFIG
+// ─────────────────────────────────────────────
+const STEPS = [
+  {
+    speech:    'ยินดีที่ได้รู้จักครับ!\nขอทราบชื่อจริงของคุณหน่อยนะครับ 🐾',
+    placeholder: 'ตัวอย่าง: สมชาย',
+    inputMode: 'text', inputType: 'text',
+    icon: '👤', hint: 'พิมพ์ชื่อจริงของคุณได้เลยนะครับ',
+    field: 'firstName', optional: false
+  },
+  {
+    speech:    'เยี่ยมมากเลยครับ!\nแล้วขอชื่อเล่นของคุณด้วยนะครับ 😊',
+    placeholder: 'ตัวอย่าง: ชาย',
+    inputMode: 'text', inputType: 'text',
+    icon: '😊', hint: 'ใส่ชื่อเล่นของคุณได้เลยครับ',
+    field: 'nickname', optional: false
+  },
+  {
+    speech:    'น่ารักมากเลย!\nคุณอายุเท่าไหร่ครับ? 🎂',
+    placeholder: 'ตัวอย่าง: 25',
+    inputMode: 'numeric', inputType: 'text',
+    icon: '🎂', hint: 'กรอกอายุเป็นตัวเลขได้เลยนะครับ',
+    field: 'age', optional: false
+  },
+  {
+    speech:    'เก่งมากครับ!\nขอเบอร์โทรศัพท์ด้วยนะครับ 📱',
+    placeholder: 'ตัวอย่าง: 081-234-5678',
+    inputMode: 'tel', inputType: 'tel',
+    icon: '📱', hint: 'ใส่เบอร์มือถือของคุณได้เลยครับ',
+    field: 'phone', optional: false
+  },
+  {
+    speech:    'เกือบเสร็จแล้วครับ!\nมีโค้ดพิเศษไหมครับ? 🎟️',
+    placeholder: 'ตัวอย่าง: HAMSTER2024',
+    inputMode: 'text', inputType: 'text',
+    icon: '🎟️', hint: 'ใส่โค้ดที่ได้รับมาได้เลยครับ (ถ้าไม่มีกด 🐾 ได้เลย)',
+    field: 'code', optional: true
+  }
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let tapScore   = 0;
+let step       = 0;
+let isShyMode  = false;
+let shyTimer   = null;
+let tapTimer   = null;
+const formData = {};
+
+const SHY_THRESHOLD = 50;
+
+// ─────────────────────────────────────────────
+// ELEMENTS
+// ─────────────────────────────────────────────
+const $score   = document.getElementById('scoreVal');
+const $hamWrap = document.getElementById('hamWrap');
+const $hamFace = document.getElementById('hamFace');
+const $hearts  = document.getElementById('hearts');
+const $bubble  = document.getElementById('bubbleText');
+const $dots    = document.getElementById('dots');
+const $inputRow= document.getElementById('inputRow');
+const $inpIcon = document.getElementById('inpIcon');
+const $input   = document.getElementById('userInput');
+const $hint    = document.getElementById('inpHint');
+const $btn     = document.getElementById('submitBtn');
+const $overlay = document.getElementById('successOverlay');
+const $sucScore= document.getElementById('sucScoreNum');
+const $sucDetail=document.getElementById('sucDetail');
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+function init() {
+  buildPawBg();
+  buildDots();
+  loadStep(0);
+
+  $hamWrap.addEventListener('pointerdown', onHamsterTap);
+  $btn.addEventListener('click', onSubmit);
+  $input.addEventListener('keydown', e => { if (e.key === 'Enter') onSubmit(); });
+}
+
+// ─────────────────────────────────────────────
+// PAW BG
+// ─────────────────────────────────────────────
+function buildPawBg() {
+  const bg = document.getElementById('pawBg');
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('span');
+    s.textContent = '🐾';
+    const rot = (Math.random() * 70 - 35).toFixed(1);
+    s.style.cssText = `
+      top:${(Math.random()*100).toFixed(1)}%;
+      left:${(Math.random()*100).toFixed(1)}%;
+      --sz:${(1.2 + Math.random()*2).toFixed(1)}rem;
+      --rot:${rot}deg;
+      --dur:${(2.5 + Math.random()*3).toFixed(1)}s;
+      --delay:${(Math.random()*2).toFixed(2)}s;
+    `;
+    bg.appendChild(s);
+  }
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS DOTS
+// ─────────────────────────────────────────────
+function buildDots() {
+  $dots.innerHTML = '';
+  STEPS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.id = `dot${i}`;
+    $dots.appendChild(d);
+  });
+}
+function refreshDots() {
+  STEPS.forEach((_, i) => {
+    const d = document.getElementById(`dot${i}`);
+    d.className = 'dot' + (i < step ? ' done' : i === step ? ' active' : '');
+  });
+}
+
+// ─────────────────────────────────────────────
+// HAMSTER TAP
+// ─────────────────────────────────────────────
+function onHamsterTap(e) {
+  e.preventDefault();
+  tapScore++;
+  bumpScore();
+  spawnHearts();
+  playTapAnim();
+  if (tapScore === SHY_THRESHOLD) triggerShyMode();
+}
+
+function bumpScore() {
+  $score.textContent = tapScore;
+  $score.classList.remove('bump');
+  void $score.offsetWidth;
+  $score.classList.add('bump');
+}
+
+function playTapAnim() {
+  // Ripple
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  $hamWrap.appendChild(r);
+  setTimeout(() => r.remove(), 700);
+
+  // Squish
+  $hamFace.classList.add('tap');
+  if (tapTimer) clearTimeout(tapTimer);
+  tapTimer = setTimeout(() => $hamFace.classList.remove('tap'), 280);
+}
+
+function triggerShyMode() {
+  isShyMode = true;
+  $hamFace.textContent = '🥰';
+  $hamFace.classList.add('shy');
+  setSpeech('อ๊ะ... เขินแล้วครับ...\nกดเยอะมากจนหน้าแดงเลย~ 💕');
+  for (let i = 0; i < 6; i++) setTimeout(spawnHearts, i * 90);
+  if (shyTimer) clearTimeout(shyTimer);
+  shyTimer = setTimeout(() => setSpeech(STEPS[step].speech), 3200);
+}
+
+// ─────────────────────────────────────────────
+// HEARTS
+// ─────────────────────────────────────────────
+const HEART_EMOJIS = ['❤️','💕','💖','💗','💝','💓','🩷'];
+function spawnHearts() {
+  const count = Math.random() < .5 ? 1 : 2;
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)];
+      const xPct = 25 + Math.random() * 50;
+      const dx   = (Math.random() - .5) * 55;
+      const sz   = (.9 + Math.random() * .9).toFixed(1);
+      h.style.cssText = `--x:${xPct}%; --dx:${dx}px; --sz:${sz}rem;`;
+      $hearts.appendChild(h);
+      setTimeout(() => h.remove(), 1200);
+    }, i * 75);
+  }
+}
+
+// ─────────────────────────────────────────────
+// SPEECH BUBBLE
+// ─────────────────────────────────────────────
+function setSpeech(text) {
+  $bubble.classList.add('out');
+  setTimeout(() => {
+    $bubble.innerHTML = text.replace(/\n/g, '<br>');
+    $bubble.classList.remove('out');
+    $bubble.classList.add('in');
+    setTimeout(() => $bubble.classList.remove('in'), 300);
+  }, 190);
+}
+
+// ─────────────────────────────────────────────
+// FORM STEPS
+// ─────────────────────────────────────────────
+function loadStep(idx) {
+  step = idx;
+  const s = STEPS[idx];
+
+  setSpeech(s.speech);
+  $inpIcon.textContent   = s.icon;
+  $input.placeholder     = s.placeholder;
+  $input.inputMode       = s.inputMode;
+  $input.type            = s.inputType;
+  $input.value           = '';
+  $hint.textContent      = s.hint;
+
+  refreshDots();
+  setTimeout(() => $input.focus(), 350);
+}
+
+function onSubmit() {
+  const val = $input.value.trim();
+  const s   = STEPS[step];
+
+  if (!val && !s.optional) {
+    shakeInput();
+    return;
+  }
+
+  formData[s.field] = val;
+
+  if (step < STEPS.length - 1) {
+    loadStep(step + 1);
+  } else {
+    showSuccess();
+  }
+}
+
+function shakeInput() {
+  $inputRow.classList.remove('shake');
+  void $inputRow.offsetWidth;
+  $inputRow.classList.add('shake');
+  setTimeout(() => $inputRow.classList.remove('shake'), 450);
+}
+
+// ─────────────────────────────────────────────
+// SUCCESS
+// ─────────────────────────────────────────────
+function showSuccess() {
+  $sucScore.textContent = tapScore;
+  const name = formData.firstName || 'เพื่อน';
+  const nick = formData.nickname   ? ` (${formData.nickname})` : '';
+  $sucDetail.innerHTML =
+    `ยินดีต้อนรับ <strong>${name}${nick}</strong>!<br>` +
+    `แต้มโบนัสเริ่มต้นของคุณคือ <strong>${tapScore}</strong> แต้ม 🎊`;
+
+  $overlay.classList.add('show');
+  for (let i = 0; i < 10; i++) setTimeout(spawnHearts, i * 120);
+}
+
+// ─────────────────────────────────────────────
+// GO!
+// ─────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
