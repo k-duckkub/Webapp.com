@@ -1,4 +1,5 @@
 export { RegistrationPage } from './RegistrationPage'
+export { GameRegistrationPage } from './GameRegistrationPage'
 export { LeftPanel } from './LeftPanel'
 export { RightPanel } from './RightPanel'
 export { Badge } from './Badge'
