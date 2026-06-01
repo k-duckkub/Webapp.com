@@ -19,7 +19,7 @@ export function LeftPanel() {
       </div>
 
       {/* Hero visual: mascot + showcase card */}
-      <div className="relative flex-1 min-h-[300px] overflow-hidden">
+      <div className="relative flex-1 min-h-[360px] overflow-hidden">
         <Mascot />
         <HeroShowcase />
       </div>
