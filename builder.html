@@ -12,39 +12,41 @@
 
 body {
   min-height: 100vh;
-  background: #E8DDD0;
+  background: #DDD4C4;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Sarabun', 'Helvetica Neue', Arial, sans-serif;
-  padding: 32px 20px;
+  padding: 40px 24px;
 }
 
-/* ─── CARD SHELL ─── */
+/* ─── CARD ─── */
 .card {
   display: grid;
   grid-template-columns: 62fr 38fr;
   width: 100%;
-  max-width: 1160px;
-  border-radius: 28px;
+  max-width: 1180px;
+  border-radius: 30px;
   overflow: hidden;
-  box-shadow: 0 32px 80px rgba(60,35,5,.18), 0 4px 16px rgba(0,0,0,.07);
-  min-height: 680px;
+  box-shadow:
+    0 40px 100px rgba(50,28,5,.2),
+    0 8px 24px rgba(0,0,0,.08),
+    0 0 0 1px rgba(0,0,0,.04);
 }
 
-/* ═══════════════════════════════════════════
-   LEFT COLUMN
-═══════════════════════════════════════════ */
+/* ═══════════════════════════════
+   LEFT
+═══════════════════════════════ */
 .left {
-  background: #F5EDD9;
+  background: #F6EDD8;
   display: flex;
   flex-direction: column;
-  position: relative;
+  min-height: 700px;
 }
 
-/* ── Top content area ── */
+/* top text area */
 .lt {
-  padding: 48px 52px 28px;
+  padding: 52px 56px 24px;
   flex-shrink: 0;
 }
 
@@ -53,122 +55,135 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: #FDE5B0;
-  border: 1.5px solid #E8C870;
-  color: #9A6808;
+  background: #FEE8B8;
+  border: 1.5px solid #EDD080;
+  color: #956005;
   font-size: 13px;
   font-weight: 700;
   padding: 7px 16px;
   border-radius: 999px;
-  margin-bottom: 22px;
-  letter-spacing: .01em;
+  margin-bottom: 20px;
+  letter-spacing: .02em;
 }
 
-/* Hero heading */
+/* Headings */
 .h1 {
-  font-size: 54px;
+  font-size: 58px;
   font-weight: 900;
-  color: #130D04;
-  line-height: 1.08;
-  letter-spacing: -1.5px;
-  margin-bottom: 2px;
+  color: #100B02;
+  line-height: 1.06;
+  letter-spacing: -2px;
 }
 
-.h1-gold {
-  font-size: 54px;
+.h1g {
+  font-size: 58px;
   font-weight: 900;
-  color: #C8800A;
-  line-height: 1.08;
-  letter-spacing: -1.5px;
-  margin-bottom: 16px;
+  color: #C47A08;
+  line-height: 1.06;
+  letter-spacing: -2px;
+  margin-bottom: 18px;
 }
 
-.hero-desc {
-  font-size: 15px;
-  color: #5A4010;
-  line-height: 1.8;
-  opacity: .85;
+.desc {
+  font-size: 15.5px;
+  color: #604820;
+  line-height: 1.75;
+  opacity: .82;
   margin-bottom: 28px;
 }
 
-/* Feature mini-cards */
-.features {
+/* Feature cards */
+.feats {
   display: flex;
   gap: 10px;
 }
 
 .feat {
-  background: #FFFFFF;
-  border-radius: 16px;
-  padding: 14px 16px;
-  box-shadow: 0 2px 12px rgba(160,100,10,.1);
   flex: 1;
+  background: #fff;
+  border-radius: 18px;
+  padding: 14px 15px 16px;
+  box-shadow: 0 2px 16px rgba(150,90,5,.1), 0 0 0 1px rgba(0,0,0,.03);
 }
 
-.feat-icon {
-  width: 34px;
-  height: 34px;
-  background: #FDE5B0;
-  border-radius: 9px;
+.fi {
+  width: 36px;
+  height: 36px;
+  background: #FEE8B8;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 9px;
-  color: #C8800A;
+  margin-bottom: 10px;
+  color: #C47A08;
 }
 
-.feat-icon svg { width: 17px; height: 17px; }
+.fi svg { width: 18px; height: 18px; }
 
-.feat-name {
-  font-size: 13px;
+.fn {
+  font-size: 13.5px;
   font-weight: 800;
-  color: #130D04;
+  color: #100B02;
   white-space: nowrap;
 }
 
-.feat-sub {
+.fs {
   font-size: 11px;
-  color: #9A7840;
+  color: #9A7830;
   margin-top: 3px;
 }
 
-/* ── Hero visual (bear + showcase) ── */
+/* ── Hero visual ── */
 .lv {
   flex: 1;
   position: relative;
   overflow: hidden;
-  min-height: 280px;
+  min-height: 290px;
 }
 
-/* Bear mascot */
+/* Atmospheric gradient over hero bg */
+.lv::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(170deg, #EAD8A8 0%, #F2E5C0 40%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Bear wrapper */
 .bear {
   position: absolute;
-  left: 28px;
+  left: 24px;
   bottom: 0;
-  width: 42%;
+  width: 44%;
   z-index: 3;
 }
 
-/* Floating showcase card */
+/* Showcase floating card */
 .showcase {
   position: absolute;
-  right: 28px;
-  top: 20px;
+  right: 24px;
+  top: 18px;
   bottom: 0;
-  width: 56%;
-  background: #FFFFFF;
+  width: 57%;
+  background: #fff;
   border-radius: 22px 22px 0 0;
-  box-shadow: 0 -6px 32px rgba(0,0,0,.11), 4px 0 18px rgba(0,0,0,.06);
-  padding: 16px;
-  overflow: hidden;
+  box-shadow:
+    0 -8px 40px rgba(0,0,0,.12),
+    6px 0 20px rgba(0,0,0,.06),
+    0 0 0 1px rgba(0,0,0,.04);
+  padding: 14px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 10px;
   z-index: 2;
+  transform: perspective(900px) rotateX(3deg) rotateY(-2deg);
+  transform-origin: bottom center;
 }
 
-.sc-cell {
+.sc {
   border-radius: 14px;
   overflow: hidden;
   display: flex;
@@ -176,44 +191,21 @@ body {
   justify-content: center;
 }
 
-.sc-phone {
-  background: #F2EDE4;
-  padding: 12px;
-}
-
-.sc-typo {
-  background: #F8F6F0;
-  border: 2px dashed #E0D8CC;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.sc-play {
-  background: #C8800A;
-}
-
-.sc-controls {
-  background: #F4F2EE;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px;
-}
-
 /* ── Trust bar ── */
 .trust {
-  background: #FFFFFF;
-  padding: 14px 52px;
+  background: #fff;
+  padding: 16px 56px;
   display: flex;
   align-items: center;
   gap: 14px;
   flex-shrink: 0;
-  border-top: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 -1px 0 rgba(0,0,0,.06);
 }
 
-.trust-lock {
-  width: 38px;
-  height: 38px;
-  background: #F4F0E8;
+.tlock {
+  width: 40px;
+  height: 40px;
+  background: #F5F0E8;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -222,77 +214,70 @@ body {
   color: #666;
 }
 
-.trust-text { flex: 1; }
+.ttxt { flex: 1; }
 
-.trust-title {
+.tt1 {
   font-size: 13px;
   font-weight: 800;
-  color: #130D04;
+  color: #100B02;
 }
 
-.trust-sub {
+.tt2 {
   font-size: 11px;
-  color: #9A9080;
+  color: #A09070;
   margin-top: 1px;
 }
 
 .pays {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
 }
 
 .pay {
-  height: 28px;
+  height: 30px;
   padding: 0 10px;
-  border: 1.5px solid #DDD;
-  border-radius: 6px;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 7px;
   background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
+  gap: 4px;
 }
 
-.pay-visa { color: #1A1F71; font-style: italic; font-size: 14px; letter-spacing: -.5px; }
-.pay-apple { color: #1A1A1A; gap: 3px; }
-
-.mc-wrap { display: flex; align-items: center; }
-.mc-r { width: 22px; height: 22px; background: #EB001B; border-radius: 50%; }
-.mc-y { width: 22px; height: 22px; background: #F79E1B; border-radius: 50%; margin-left: -10px; }
-
-/* ═══════════════════════════════════════════
-   RIGHT COLUMN – FORM
-═══════════════════════════════════════════ */
+/* ═══════════════════════════════
+   RIGHT
+═══════════════════════════════ */
 .right {
-  background: #FFFFFF;
-  padding: 48px 44px;
+  background: #fff;
+  padding: 52px 48px;
   display: flex;
   flex-direction: column;
 }
 
-.form-title {
-  font-size: 32px;
+.ftitle {
+  font-size: 34px;
   font-weight: 900;
-  color: #130D04;
-  letter-spacing: -.5px;
+  color: #100B02;
+  letter-spacing: -.6px;
   margin-bottom: 6px;
 }
 
-.form-sub {
+.fsub {
   font-size: 14px;
-  color: #AAAAAA;
-  margin-bottom: 28px;
+  color: #B8B8B8;
+  margin-bottom: 30px;
 }
 
-.field { margin-bottom: 14px; }
+.field { margin-bottom: 15px; }
 
-.flabel {
+.flbl {
   font-size: 13px;
   font-weight: 700;
-  color: #333;
+  color: #2A2A2A;
   margin-bottom: 7px;
 }
 
@@ -302,55 +287,60 @@ body {
   align-items: center;
 }
 
-.iw-ico {
+.ii {
   position: absolute;
   left: 14px;
-  color: #CCCCCC;
+  color: #D0D0D0;
   display: flex;
   align-items: center;
   pointer-events: none;
 }
 
-.iw-ico svg { width: 17px; height: 17px; }
+.ii svg { width: 17px; height: 17px; }
 
 .iw input {
   width: 100%;
-  padding: 13px 16px 13px 43px;
-  border: 1.5px solid #EBEBEB;
-  border-radius: 12px;
+  padding: 14px 16px 14px 44px;
+  border: 1.5px solid #ECECEC;
+  border-radius: 13px;
   font-size: 14px;
   font-family: 'Sarabun', sans-serif;
-  color: #333;
+  color: #2A2A2A;
   background: #FAFAFA;
   outline: none;
   transition: border-color .15s, box-shadow .15s, background .15s;
+  -webkit-appearance: none;
 }
 
 .iw input:focus {
-  border-color: #C8800A;
-  background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(200,128,10,.1);
+  border-color: #C47A08;
+  background: #fff;
+  box-shadow: 0 0 0 3.5px rgba(196,122,8,.12);
 }
 
-.iw input::placeholder { color: #C8C8C8; }
+.iw input::placeholder { color: #D0D0D0; }
 
-.iw-suf {
+.suf {
   position: absolute;
-  right: 14px;
+  right: 15px;
   font-size: 13px;
-  color: #BBBBBB;
+  color: #C0C0C0;
   pointer-events: none;
 }
 
-/* CTA Button */
-.btn-cta {
-  margin-top: 10px;
+/* Number input: hide arrows */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { -moz-appearance: textfield; }
+
+.btn {
+  margin-top: 8px;
   width: 100%;
   padding: 17px 20px;
-  background: #130D04;
+  background: #100B02;
   color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: 15px;
   font-size: 16px;
   font-weight: 800;
   font-family: 'Sarabun', sans-serif;
@@ -359,349 +349,456 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  letter-spacing: .02em;
-  transition: background .2s, transform .12s;
+  letter-spacing: .03em;
+  transition: background .18s, transform .1s;
 }
 
-.btn-cta:hover { background: #2A1E10; }
-.btn-cta:active { transform: scale(.99); }
+.btn:hover { background: #2C1E08; }
+.btn:active { transform: scale(.99); }
 
 .priv {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  color: #BBBBBB;
+  color: #C8C8C8;
   font-size: 12px;
   margin-top: 14px;
 }
 
-.priv svg { width: 13px; height: 13px; flex-shrink: 0; }
+.priv svg { width: 12px; height: 12px; flex-shrink: 0; }
 </style>
 </head>
 <body>
-
 <div class="card">
 
-  <!-- ══════════════ LEFT ══════════════ -->
-  <div class="left">
+<!-- ════════════ LEFT ════════════ -->
+<div class="left">
 
-    <!-- Top content -->
-    <div class="lt">
+  <div class="lt">
 
-      <!-- Badge -->
-      <div class="badge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
-        </svg>
-        คอร์สออนไลน์
-      </div>
-
-      <!-- Heading -->
-      <div class="h1">UI/UX Design</div>
-      <div class="h1-gold">Zero to Pro</div>
-
-      <!-- Description -->
-      <p class="hero-desc">
-        เรียนรู้การออกแบบ UI/UX ตั้งแต่พื้นฐาน<br>
-        จนถึงระดับมืออาชีพ
-      </p>
-
-      <!-- Feature mini-cards -->
-      <div class="features">
-
-        <div class="feat">
-          <div class="feat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
-            </svg>
-          </div>
-          <div class="feat-name">วิดีโอสอน</div>
-          <div class="feat-sub">50+ บทเรียน</div>
-        </div>
-
-        <div class="feat">
-          <div class="feat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
-            </svg>
-          </div>
-          <div class="feat-name">โปรเจกต์จริง</div>
-          <div class="feat-sub">สร้างพอร์ต</div>
-        </div>
-
-        <div class="feat">
-          <div class="feat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <div class="feat-name">ใบรับรอง</div>
-          <div class="feat-sub">เมื่อเรียนจบ</div>
-        </div>
-
-      </div>
+    <!-- Badge -->
+    <div class="badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+      </svg>
+      คอร์สออนไลน์
     </div>
 
-    <!-- Hero visual -->
-    <div class="lv">
+    <div class="h1">UI/UX Design</div>
+    <div class="h1g">Zero to Pro</div>
 
-      <!-- Bear mascot SVG -->
-      <div class="bear">
-        <svg viewBox="0 0 220 310" xmlns="http://www.w3.org/2000/svg">
+    <p class="desc">
+      เรียนรู้การออกแบบ UI/UX ตั้งแต่พื้นฐาน<br>
+      จนถึงระดับมืออาชีพ
+    </p>
+
+    <div class="feats">
+
+      <div class="feat">
+        <div class="fi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10 8 16 12 10 16 10 8"/>
+          </svg>
+        </div>
+        <div class="fn">วิดีโอสอน</div>
+        <div class="fs">50+ บทเรียน</div>
+      </div>
+
+      <div class="feat">
+        <div class="fi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+          </svg>
+        </div>
+        <div class="fn">โปรเจกต์จริง</div>
+        <div class="fs">สร้างพอร์ต</div>
+      </div>
+
+      <div class="feat">
+        <div class="fi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="fn">ใบรับรอง</div>
+        <div class="fs">เมื่อเรียนจบ</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Hero visual -->
+  <div class="lv">
+
+    <!-- Bear mascot -->
+    <div class="bear">
+      <svg viewBox="0 0 240 330" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bg2" cx="50%" cy="60%" r="70%">
+            <stop offset="0%" stop-color="#E2CFA0"/>
+            <stop offset="100%" stop-color="#D4BF90"/>
+          </radialGradient>
+          <linearGradient id="fur2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ECA020"/>
+            <stop offset="50%" stop-color="#D08810"/>
+            <stop offset="100%" stop-color="#B86C08"/>
+          </linearGradient>
+          <linearGradient id="furside" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#C87810"/>
+            <stop offset="100%" stop-color="#ECA020"/>
+          </linearGradient>
+          <radialGradient id="headshad" cx="50%" cy="70%" r="50%">
+            <stop offset="0%" stop-color="rgba(0,0,0,.18)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+          </radialGradient>
+          <linearGradient id="rock2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#9A8450"/>
+            <stop offset="100%" stop-color="#6A5428"/>
+          </linearGradient>
+          <linearGradient id="hoodie" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#303030"/>
+            <stop offset="100%" stop-color="#181818"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Sky / scene bg -->
+        <rect width="240" height="330" fill="url(#bg2)"/>
+
+        <!-- Distant mountains (soft layered) -->
+        <ellipse cx="20"  cy="288" rx="100" ry="72" fill="#C8B478" opacity=".4"/>
+        <ellipse cx="200" cy="295" rx="90"  ry="65" fill="#BEAA68" opacity=".36"/>
+        <ellipse cx="120" cy="268" rx="110" ry="70" fill="#D0BC84" opacity=".32"/>
+        <ellipse cx="60"  cy="275" rx="80"  ry="58" fill="#C8B270" opacity=".28"/>
+
+        <!-- Ground platform -->
+        <ellipse cx="120" cy="315" rx="88" ry="22" fill="url(#rock2)"/>
+        <path d="M42 315 Q80 290 120 285 Q160 290 198 315 Q175 324 120 327 Q65 324 42 315Z" fill="#7C6230"/>
+        <!-- Rock highlight -->
+        <path d="M80 291 Q120 283 160 291 Q140 287 120 286 Q100 287 80 291Z" fill="rgba(255,255,255,.12)"/>
+
+        <!-- ──── BEAR ──── -->
+
+        <!-- Ears (behind head) -->
+        <circle cx="82"  cy="148" r="26" fill="url(#fur2)"/>
+        <circle cx="82"  cy="149" r="14" fill="#8C4808" opacity=".7"/>
+        <circle cx="82"  cy="148" r="6"  fill="#B86020" opacity=".45"/>
+        <circle cx="158" cy="148" r="26" fill="url(#fur2)"/>
+        <circle cx="158" cy="149" r="14" fill="#8C4808" opacity=".7"/>
+        <circle cx="158" cy="148" r="6"  fill="#B86020" opacity=".45"/>
+
+        <!-- Body / hoodie -->
+        <ellipse cx="120" cy="258" rx="54" ry="60" fill="url(#hoodie)"/>
+        <!-- Hoodie side shading -->
+        <ellipse cx="162" cy="260" rx="18" ry="52" fill="rgba(0,0,0,.15)"/>
+        <!-- Collar -->
+        <path d="M88 205 Q120 220 152 205 L162 228 Q120 242 78 228Z" fill="#1E1E1E"/>
+        <!-- Hood opening -->
+        <path d="M100 205 Q120 214 140 205 L148 218 Q120 228 92 218Z" fill="#262626"/>
+        <!-- Pocket / logo badge -->
+        <rect x="99" y="256" width="42" height="26" rx="8" fill="#1C1C1C"/>
+        <rect x="101" y="258" width="38" height="22" rx="6" fill="#151515"/>
+        <text x="120" y="274" text-anchor="middle" font-size="12" font-weight="900" fill="#D49020" font-family="monospace" letter-spacing="-0.5">[/]</text>
+        <!-- Hoodie bottom hem -->
+        <path d="M72 295 Q120 300 168 295 Q165 308 120 312 Q75 308 72 295Z" fill="#141414"/>
+
+        <!-- Head -->
+        <circle cx="120" cy="188" r="60" fill="url(#fur2)"/>
+        <!-- Head shadow (bottom) -->
+        <ellipse cx="120" cy="230" rx="45" ry="12" fill="url(#headshad)"/>
+        <!-- Head side shading -->
+        <ellipse cx="165" cy="195" rx="20" ry="48" fill="rgba(0,0,0,.1)"/>
+        <!-- Forehead highlight -->
+        <ellipse cx="108" cy="165" rx="22" ry="14" fill="rgba(255,255,255,.12)"/>
+
+        <!-- Snout / muzzle -->
+        <ellipse cx="120" cy="208" rx="28" ry="21" fill="#C07518" opacity=".55"/>
+        <ellipse cx="120" cy="210" rx="22" ry="16" fill="#B06010" opacity=".35"/>
+
+        <!-- Eyes -->
+        <circle cx="98"  cy="184" r="14" fill="white"/>
+        <circle cx="142" cy="184" r="14" fill="white"/>
+        <!-- Iris -->
+        <circle cx="100" cy="186" r="9"  fill="#160A00"/>
+        <circle cx="144" cy="186" r="9"  fill="#160A00"/>
+        <!-- Pupil light -->
+        <circle cx="103" cy="182" r="3.5" fill="white"/>
+        <circle cx="147" cy="182" r="3.5" fill="white"/>
+        <!-- Small secondary shine -->
+        <circle cx="97"  cy="189" r="1.5" fill="white" opacity=".5"/>
+        <circle cx="141" cy="189" r="1.5" fill="white" opacity=".5"/>
+        <!-- Eye lid top shadow -->
+        <path d="M88 179 Q98 174 108 179" stroke="rgba(0,0,0,.12)" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M132 179 Q142 174 152 179" stroke="rgba(0,0,0,.12)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+        <!-- Nose -->
+        <ellipse cx="120" cy="205" rx="10" ry="7" fill="#160A00"/>
+        <!-- Nose highlight -->
+        <ellipse cx="117" cy="202.5" rx="3" ry="2.2" fill="white" opacity=".4"/>
+        <!-- Nose bridge -->
+        <line x1="120" y1="212" x2="120" y2="216" stroke="#160A00" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Smile -->
+        <path d="M108 218 Q120 228 132 218" stroke="#160A00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Cheek blush -->
+        <ellipse cx="88"  cy="205" rx="10" ry="6" fill="#E86020" opacity=".18"/>
+        <ellipse cx="152" cy="205" rx="10" ry="6" fill="#E86020" opacity=".18"/>
+
+        <!-- Left arm -->
+        <path d="M70 240 Q52 256 56 278 Q62 285 72 278 Q69 262 84 250Z" fill="url(#fur2)"/>
+        <ellipse cx="58" cy="278" rx="9" ry="7" fill="#C07010"/>
+
+        <!-- Right arm -->
+        <path d="M170 240 Q186 254 184 276 Q178 283 169 276 Q173 261 158 250Z" fill="url(#fur2)"/>
+        <ellipse cx="182" cy="276" rx="9" ry="7" fill="#C07010"/>
+
+        <!-- ──── PENCIL (large, diagonal) ──── -->
+        <g transform="rotate(32 155 240)">
+          <!-- Eraser -->
+          <rect x="144" y="130" width="22" height="20" rx="5" fill="#F49898"/>
+          <!-- Eraser shine -->
+          <rect x="146" y="132" width="18" height="5" rx="2" fill="rgba(255,255,255,.3)"/>
+          <!-- Metal band (2 strips) -->
+          <rect x="144" y="148" width="22" height="6"  rx="0" fill="#D0D0D0"/>
+          <rect x="144" y="152" width="22" height="4"  rx="0" fill="#B8B8B8"/>
+          <!-- Pencil body -->
+          <rect x="144" y="154" width="22" height="148" rx="3" fill="#F8D040"/>
+          <!-- Body shading right -->
+          <rect x="160" y="154" width="6" height="148" rx="0" fill="rgba(0,0,0,.08)"/>
+          <!-- Body top stripe -->
+          <rect x="144" y="154" width="22" height="16" rx="2" fill="#EDBE28"/>
+          <!-- Mid line details -->
+          <line x1="144" y1="195" x2="166" y2="195" stroke="#EDBE28" stroke-width="0.8" opacity=".6"/>
+          <line x1="144" y1="225" x2="166" y2="225" stroke="#EDBE28" stroke-width="0.8" opacity=".6"/>
+          <line x1="144" y1="255" x2="166" y2="255" stroke="#EDBE28" stroke-width="0.8" opacity=".6"/>
+          <!-- Wood cone -->
+          <path d="M144 300 L166 300 L155 328Z" fill="#D8A870"/>
+          <!-- Wood shading -->
+          <path d="M155 300 L166 300 L155 328Z" fill="rgba(0,0,0,.1)"/>
+          <!-- Graphite -->
+          <path d="M149 318 L161 318 L155 328Z" fill="#3C3C3C"/>
+        </g>
+
+      </svg>
+    </div><!-- /bear -->
+
+    <!-- Floating showcase card -->
+    <div class="showcase">
+
+      <!-- Phone mockup -->
+      <div class="sc" style="background:#F0E8DC;padding:14px 10px;">
+        <svg width="56" height="98" viewBox="0 0 56 98">
           <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#DCCFA8"/>
-              <stop offset="100%" stop-color="#EAD9B5"/>
-            </linearGradient>
-            <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#E09820"/>
-              <stop offset="100%" stop-color="#C07010"/>
-            </linearGradient>
-            <linearGradient id="rock" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#8A7248"/>
-              <stop offset="100%" stop-color="#6A5028"/>
+            <linearGradient id="phbg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FAF7F2"/>
+              <stop offset="100%" stop-color="#EDE8E0"/>
             </linearGradient>
           </defs>
-
-          <!-- Sky -->
-          <rect width="220" height="310" fill="url(#sky)"/>
-
-          <!-- Background mountains -->
-          <ellipse cx="30"  cy="270" rx="90" ry="65" fill="#C8B880" opacity=".45"/>
-          <ellipse cx="185" cy="278" rx="80" ry="55" fill="#BEA870" opacity=".38"/>
-          <ellipse cx="110" cy="255" rx="75" ry="52" fill="#CCB880" opacity=".35"/>
-
-          <!-- Ground rock -->
-          <ellipse cx="110" cy="300" rx="82" ry="24" fill="url(#rock)"/>
-          <path d="M40 300 Q75 278 110 274 Q145 278 180 300 Q160 308 110 311 Q60 308 40 300Z" fill="#7A6038"/>
-
-          <!-- Bear ears (behind head) -->
-          <circle cx="80"  cy="148" r="23" fill="url(#fur)"/>
-          <circle cx="80"  cy="148" r="13" fill="#985008" opacity=".65"/>
-          <circle cx="140" cy="148" r="23" fill="url(#fur)"/>
-          <circle cx="140" cy="148" r="13" fill="#985008" opacity=".65"/>
-
-          <!-- Body / hoodie -->
-          <ellipse cx="110" cy="252" rx="50" ry="56" fill="#232323"/>
-          <!-- Hoodie collar -->
-          <path d="M85 200 Q110 213 135 200 L145 224 Q110 236 75 224Z" fill="#1A1A1A"/>
-          <!-- [/] logo on hoodie -->
-          <rect x="92" y="255" width="36" height="24" rx="7" fill="#1A1A1A"/>
-          <text x="110" y="271" text-anchor="middle" font-size="11" font-weight="900" fill="#D49020" font-family="monospace">[/]</text>
-
-          <!-- Bear head -->
-          <circle cx="110" cy="190" r="56" fill="url(#fur)"/>
-
-          <!-- Snout -->
-          <ellipse cx="110" cy="207" rx="26" ry="19" fill="#B86C10" opacity=".6"/>
-
-          <!-- Eyes white -->
-          <circle cx="91"  cy="183" r="12" fill="white"/>
-          <circle cx="129" cy="183" r="12" fill="white"/>
-          <!-- Iris -->
-          <circle cx="92.5"  cy="184.5" r="7.5" fill="#180C00"/>
-          <circle cx="130.5" cy="184.5" r="7.5" fill="#180C00"/>
-          <!-- Shine -->
-          <circle cx="95.5"  cy="181.5" r="2.8" fill="white"/>
-          <circle cx="133.5" cy="181.5" r="2.8" fill="white"/>
-
-          <!-- Nose -->
-          <ellipse cx="110" cy="204" rx="8.5" ry="6" fill="#180C00"/>
-          <ellipse cx="108" cy="202" rx="2.5" ry="2" fill="white" opacity=".45"/>
-
-          <!-- Smile -->
-          <path d="M100 213 Q110 222 120 213" stroke="#180C00" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-
-          <!-- Left arm -->
-          <path d="M63 228 Q46 242 52 264 Q57 270 66 264 Q63 248 78 237Z" fill="url(#fur)"/>
-
-          <!-- Right arm (holding pencil) -->
-          <path d="M157 228 Q172 238 175 258 Q168 264 162 258 Q157 244 144 235Z" fill="url(#fur)"/>
-
-          <!-- Pencil -->
-          <g transform="rotate(28 138 255)">
-            <rect x="126" y="168" width="20" height="16" rx="4" fill="#F09090"/>
-            <rect x="126" y="182" width="20" height="8" rx="1" fill="#C4C4C4"/>
-            <rect x="126" y="188" width="20" height="108" rx="4" fill="#F5CE40"/>
-            <rect x="126" y="188" width="20" height="14" rx="3" fill="#E8BA28"/>
-            <path d="M126 294 L146 294 L136 318Z" fill="#D4A870"/>
-            <path d="M130 306 L142 306 L136 318Z" fill="#3A3A3A"/>
-          </g>
-
+          <!-- Phone shell -->
+          <rect x="1" y="1" width="54" height="96" rx="14" fill="white" stroke="#E0D8D0" stroke-width="1.5"/>
+          <!-- Side buttons -->
+          <rect x="54" y="26" width="3" height="10" rx="1.5" fill="#D8D0C8"/>
+          <rect x="-1" y="22" width="3" height="8"  rx="1.5" fill="#D8D0C8"/>
+          <rect x="-1" y="34" width="3" height="8"  rx="1.5" fill="#D8D0C8"/>
+          <!-- Screen -->
+          <rect x="6" y="12" width="44" height="68" rx="4" fill="url(#phbg)"/>
+          <!-- Notch -->
+          <rect x="18" y="4" width="20" height="6" rx="3" fill="#E0D8D0"/>
+          <!-- Home bar -->
+          <rect x="20" y="87" width="16" height="4" rx="2" fill="#E0D8D0"/>
+          <!-- Screen content -->
+          <rect x="10" y="17" width="36" height="8" rx="4" fill="#DDD4C4"/>
+          <rect x="10" y="29" width="24" height="4" rx="2" fill="#E8E0D4"/>
+          <rect x="10" y="37" width="36" height="28" rx="8" fill="#D4C8B0"/>
+          <!-- Image placeholder gradient -->
+          <rect x="10" y="37" width="36" height="28" rx="8" fill="url(#phbg)" opacity=".5"/>
+          <rect x="10" y="70" width="36" height="6" rx="3" fill="#DDD4C4"/>
+          <rect x="10" y="80" width="20" height="3" rx="1.5" fill="#E8E0D4"/>
         </svg>
       </div>
 
-      <!-- Floating showcase card -->
-      <div class="showcase">
-
-        <!-- Phone mockup -->
-        <div class="sc-cell sc-phone">
-          <svg width="58" height="96" viewBox="0 0 58 96">
-            <rect x="1" y="1" width="56" height="94" rx="13" fill="white" stroke="#DDD" stroke-width="1.5"/>
-            <rect x="7" y="12" width="44" height="66" rx="4" fill="#F0EDE8"/>
-            <rect x="21" y="5" width="16" height="5" rx="2.5" fill="#DDD"/>
-            <rect x="24" y="83" width="10" height="5" rx="2.5" fill="#DDD"/>
-            <rect x="11" y="16" width="36" height="7" rx="3.5" fill="#E0D8CC"/>
-            <rect x="11" y="27" width="26" height="4" rx="2" fill="#EAE4DA"/>
-            <rect x="11" y="35" width="36" height="26" rx="7" fill="#D8CDB8"/>
-            <rect x="11" y="65" width="36" height="7" rx="3.5" fill="#E0D8CC"/>
-            <rect x="11" y="76" width="18" height="4" rx="2" fill="#EAE4DA"/>
-          </svg>
+      <!-- Typography T card -->
+      <div class="sc" style="background:#F9F7F2;border:2px dashed #DDD6C8;flex-direction:column;gap:0;padding:12px;">
+        <div style="font-size:56px;font-weight:900;color:#100B02;line-height:.9;font-family:Georgia,serif;letter-spacing:-3px;">T</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;align-items:center;gap:5px;width:100%;">
+          <div style="width:80%;height:3px;background:#C47A08;border-radius:2px;"></div>
+          <div style="font-size:7.5px;color:#B0A88C;font-weight:700;letter-spacing:2px;font-family:monospace;text-transform:uppercase;">Typography</div>
         </div>
+        <!-- Mini type scale hint -->
+        <div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;width:80%;opacity:.5;">
+          <div style="height:3px;background:#8A7840;border-radius:1px;width:100%;"></div>
+          <div style="height:2px;background:#8A7840;border-radius:1px;width:75%;"></div>
+          <div style="height:2px;background:#8A7840;border-radius:1px;width:55%;"></div>
+        </div>
+      </div>
 
-        <!-- Typography card -->
-        <div class="sc-cell sc-typo">
-          <div style="font-size:52px;font-weight:900;color:#18110A;line-height:1;font-family:Georgia,serif;">T</div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:6px;">
-            <div style="width:36px;height:3px;background:#C8800A;border-radius:2px;"></div>
-            <div style="font-size:8px;color:#AAA;font-weight:700;letter-spacing:1.5px;font-family:monospace;">TYPE</div>
+      <!-- Play button -->
+      <div class="sc" style="background:linear-gradient(135deg,#D48A10,#C47008);">
+        <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+              <polygon points="8,5 20,12 8,19"/>
+            </svg>
           </div>
         </div>
+      </div>
 
-        <!-- Play button -->
-        <div class="sc-cell sc-play">
-          <svg width="38" height="38" viewBox="0 0 38 38">
-            <circle cx="19" cy="19" r="18" fill="rgba(255,255,255,.22)"/>
-            <polygon points="15,11 29,19 15,27" fill="white"/>
-          </svg>
-        </div>
-
-        <!-- Toggle + slider -->
-        <div class="sc-cell sc-controls">
-          <div style="width:52px;height:28px;background:#C8800A;border-radius:14px;display:flex;align-items:center;padding:4px;justify-content:flex-end;">
-            <div style="width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.2);"></div>
+      <!-- UI controls -->
+      <div class="sc" style="background:#F4F2EC;flex-direction:column;gap:12px;padding:16px;">
+        <!-- Toggle ON -->
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:48px;height:26px;background:#C47A08;border-radius:13px;display:flex;align-items:center;padding:3px;justify-content:flex-end;flex-shrink:0;box-shadow:0 2px 8px rgba(196,122,8,.3);">
+            <div style="width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.25);"></div>
           </div>
-          <div style="width:64px;height:6px;background:#E0DDD8;border-radius:3px;position:relative;">
-            <div style="width:40px;height:6px;background:#C8800A;border-radius:3px;position:absolute;left:0;top:0;"></div>
-            <div style="width:16px;height:16px;background:white;border:2.5px solid #C8800A;border-radius:50%;position:absolute;left:32px;top:-5px;box-shadow:0 1px 4px rgba(0,0,0,.18);"></div>
+          <div style="font-size:10px;font-weight:700;color:#8A7838;">ON</div>
+        </div>
+        <!-- Slider -->
+        <div style="width:100%;display:flex;flex-direction:column;gap:6px;">
+          <div style="width:100%;height:6px;background:#DDD8D0;border-radius:3px;position:relative;">
+            <div style="width:62%;height:6px;background:#C47A08;border-radius:3px;position:absolute;"></div>
+            <div style="width:16px;height:16px;background:white;border:2.5px solid #C47A08;border-radius:50%;position:absolute;left:calc(62% - 8px);top:-5px;box-shadow:0 1px 4px rgba(0,0,0,.2);"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <div style="font-size:8px;color:#B8B0A0;font-weight:600;">0</div>
+            <div style="font-size:8px;color:#B8B0A0;font-weight:600;">100</div>
           </div>
         </div>
-
       </div>
-    </div>
 
-    <!-- Trust bar -->
-    <div class="trust">
-      <div class="trust-lock">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <rect x="3" y="11" width="18" height="11" rx="2"/>
-          <path d="M7 11V7a5 5 0 0110 0v4"/>
-        </svg>
-      </div>
-      <div class="trust-text">
-        <div class="trust-title">ปลอดภัย 100%</div>
-        <div class="trust-sub">ข้อมูลของคุณถูกเข้ารหัสและปกป้อง</div>
-      </div>
-      <div class="pays">
-        <div class="pay pay-visa">VISA</div>
-        <div style="display:flex;align-items:center;">
-          <div class="mc-r"></div><div class="mc-y"></div>
-        </div>
-        <div class="pay pay-apple">
-          <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor">
-            <path d="M13.4 12.8c-.3.6-.6 1.2-1.1 1.8-.6.8-1.1 1.3-1.6 1.5-.6.2-1.3.1-2-.3-.6-.3-1.2-.5-1.7-.5-.5 0-1.1.2-1.7.5-.7.4-1.3.5-1.9.3-.6-.2-1.2-.8-1.8-1.6C.8 13.5.2 12.4.1 11.2c-.1-1.3.2-2.5 1-3.5.6-.8 1.4-1.2 2.4-1.3.5 0 1.2.2 2.1.5.5.2.9.3 1 .3.1 0 .5-.1 1-.3 1-.4 1.8-.5 2.4-.4 1.6.1 2.8.8 3.5 2.1-.4.3-.8.6-1 1-.3.6-.5 1.3-.5 1.9 0 .8.3 1.5.8 2.1.3.3.6.6.9.7-.1.3-.2.5-.3.5zM9.8 1c0 .6-.2 1.2-.5 1.7-.4.6-.9 1.1-1.5 1.4-.5.2-.9.3-1 .3V4c0-.5.2-1.1.6-1.7.4-.6 1-.9 1.8-1 .1 0 .3 0 .5-.1l.1.8z"/>
-          </svg>
-          Pay
-        </div>
-      </div>
-    </div>
+    </div><!-- /showcase -->
 
-  </div><!-- /left -->
+  </div><!-- /lv -->
 
-  <!-- ══════════════ RIGHT ══════════════ -->
-  <div class="right">
-
-    <div class="form-title">ลงทะเบียนเรียน</div>
-    <div class="form-sub">เริ่มต้นพัฒนาทักษะของคุณวันนี้</div>
-
-    <!-- 1. ชื่อจริง -->
-    <div class="field">
-      <div class="flabel">1. ชื่อจริง</div>
-      <div class="iw">
-        <span class="iw-ico">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-        </span>
-        <input type="text" placeholder="กรอกชื่อจริง">
-      </div>
-    </div>
-
-    <!-- 2. ชื่อเล่น -->
-    <div class="field">
-      <div class="flabel">2. ชื่อเล่น</div>
-      <div class="iw">
-        <span class="iw-ico">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-        </span>
-        <input type="text" placeholder="กรอกชื่อเล่น">
-      </div>
-    </div>
-
-    <!-- 3. อายุ -->
-    <div class="field">
-      <div class="flabel">3. อายุ</div>
-      <div class="iw">
-        <span class="iw-ico">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-            <line x1="3" y1="10" x2="21" y2="10"/>
-          </svg>
-        </span>
-        <input type="number" placeholder="กรอกอายุ" min="1" max="120" style="padding-right:40px;">
-        <span class="iw-suf">ปี</span>
-      </div>
-    </div>
-
-    <!-- 4. เบอร์โทรศัพท์ -->
-    <div class="field">
-      <div class="flabel">4. เบอร์โทรศัพท์</div>
-      <div class="iw">
-        <span class="iw-ico">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-          </svg>
-        </span>
-        <input type="tel" placeholder="กรอกเบอร์โทรศัพท์">
-      </div>
-    </div>
-
-    <!-- 5. โค้ดพิเศษ -->
-    <div class="field">
-      <div class="flabel">5. โค้ดพิเศษ (ถ้ามี)</div>
-      <div class="iw">
-        <span class="iw-ico">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
-            <line x1="7" y1="7" x2="7.01" y2="7"/>
-          </svg>
-        </span>
-        <input type="text" placeholder="กรอกโค้ดพิเศษ (optional)">
-      </div>
-    </div>
-
-    <!-- CTA -->
-    <button class="btn-cta" type="button">
-      ลงทะเบียนและชำระเงิน
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </button>
-
-    <!-- Privacy note -->
-    <div class="priv">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+  <!-- Trust bar -->
+  <div class="trust">
+    <div class="tlock">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
         <rect x="3" y="11" width="18" height="11" rx="2"/>
         <path d="M7 11V7a5 5 0 0110 0v4"/>
       </svg>
-      ข้อมูลของคุณจะถูกเก็บเป็นความลับ
     </div>
+    <div class="ttxt">
+      <div class="tt1">ปลอดภัย 100%</div>
+      <div class="tt2">ข้อมูลของคุณถูกเข้ารหัสและปกป้อง</div>
+    </div>
+    <div class="pays">
+      <!-- VISA -->
+      <div class="pay" style="color:#1A1F71;font-style:italic;font-size:15px;letter-spacing:-1px;">VISA</div>
+      <!-- Mastercard -->
+      <div style="display:flex;align-items:center;border:1.5px solid #E0E0E0;border-radius:7px;padding:0 6px;height:30px;gap:0;">
+        <div style="width:20px;height:20px;background:#EB001B;border-radius:50%;"></div>
+        <div style="width:20px;height:20px;background:#F79E1B;border-radius:50%;margin-left:-9px;"></div>
+      </div>
+      <!-- Apple Pay -->
+      <div class="pay" style="color:#1A1A1A;gap:3px;">
+        <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor">
+          <path d="M13.4 12.8c-.3.6-.6 1.2-1.1 1.8-.6.8-1.1 1.3-1.6 1.5-.6.2-1.3.1-2-.3-.6-.3-1.2-.5-1.7-.5-.5 0-1.1.2-1.7.5-.7.4-1.3.5-1.9.3-.6-.2-1.2-.8-1.8-1.6C.8 13.5.2 12.4.1 11.2c-.1-1.3.2-2.5 1-3.5.6-.8 1.4-1.2 2.4-1.3.5 0 1.2.2 2.1.5.5.2.9.3 1 .3.1 0 .5-.1 1-.3 1-.4 1.8-.5 2.4-.4 1.6.1 2.8.8 3.5 2.1-.4.3-.8.6-1 1-.3.6-.5 1.3-.5 1.9 0 .8.3 1.5.8 2.1.3.3.6.6.9.7-.1.3-.2.5-.3.5zM9.8 1c0 .6-.2 1.2-.5 1.7-.4.6-.9 1.1-1.5 1.4-.5.2-.9.3-1 .3V4c0-.5.2-1.1.6-1.7.4-.6 1-.9 1.8-1 .1 0 .3 0 .5-.1l.1.8z"/>
+        </svg>
+        Pay
+      </div>
+    </div>
+  </div>
 
-  </div><!-- /right -->
+</div><!-- /left -->
+
+<!-- ════════════ RIGHT ════════════ -->
+<div class="right">
+
+  <div class="ftitle">ลงทะเบียนเรียน</div>
+  <div class="fsub">เริ่มต้นพัฒนาทักษะของคุณวันนี้</div>
+
+  <!-- 1 ชื่อจริง -->
+  <div class="field">
+    <div class="flbl">1. ชื่อจริง</div>
+    <div class="iw">
+      <span class="ii">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </span>
+      <input type="text" placeholder="กรอกชื่อจริง">
+    </div>
+  </div>
+
+  <!-- 2 ชื่อเล่น -->
+  <div class="field">
+    <div class="flbl">2. ชื่อเล่น</div>
+    <div class="iw">
+      <span class="ii">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </span>
+      <input type="text" placeholder="กรอกชื่อเล่น">
+    </div>
+  </div>
+
+  <!-- 3 อายุ -->
+  <div class="field">
+    <div class="flbl">3. อายุ</div>
+    <div class="iw">
+      <span class="ii">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8"  y1="2" x2="8"  y2="6"/>
+          <line x1="3"  y1="10" x2="21" y2="10"/>
+        </svg>
+      </span>
+      <input type="number" placeholder="กรอกอายุ" min="1" max="120" style="padding-right:42px;">
+      <span class="suf">ปี</span>
+    </div>
+  </div>
+
+  <!-- 4 เบอร์ -->
+  <div class="field">
+    <div class="flbl">4. เบอร์โทรศัพท์</div>
+    <div class="iw">
+      <span class="ii">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+      </span>
+      <input type="tel" placeholder="กรอกเบอร์โทรศัพท์">
+    </div>
+  </div>
+
+  <!-- 5 โค้ด -->
+  <div class="field">
+    <div class="flbl">5. โค้ดพิเศษ (ถ้ามี)</div>
+    <div class="iw">
+      <span class="ii">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+      </span>
+      <input type="text" placeholder="กรอกโค้ดพิเศษ (optional)">
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <button class="btn" type="button">
+    ลงทะเบียนและชำระเงิน
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+      <polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </button>
+
+  <div class="priv">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/>
+      <path d="M7 11V7a5 5 0 0110 0v4"/>
+    </svg>
+    ข้อมูลของคุณจะถูกเก็บเป็นความลับ
+  </div>
+
+</div><!-- /right -->
 
 </div><!-- /card -->
 </body>
