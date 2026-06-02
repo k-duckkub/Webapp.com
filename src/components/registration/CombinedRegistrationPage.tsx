@@ -37,240 +37,223 @@ const HEARTS = ['❤️', '💕', '💖', '💗', '💝', '💓', '🩷', '🌸'
 const TOTAL = STEPS.length
 const SHY_THRESHOLD = 50
 
-// ── Hamster SVG — AI coder with pencil (reference-matched) ───────────────────
+// ── Hamster SVG — 3D cute hamster coder (reference-matched) ──────────────────
 function HamsterSVG({ face }: { face: FaceState }) {
-  const bl = face === 'popped' ? 0.52 : face === 'happy' ? 0.4 : face === 'shy' ? 0.88 : 0
+  const bl = face === 'popped' ? 0.75 : face === 'happy' ? 0.38 : face === 'shy' ? 0.9 : 0
   return (
-    <svg viewBox="0 0 220 250" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style={{ pointerEvents: 'none' }}>
+    <svg viewBox="0 0 240 260" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style={{ pointerEvents: 'none' }}>
       <defs>
-        <radialGradient id="hg" cx="42%" cy="38%" r="55%">
-          <stop offset="0%" stopColor="#F9C870" />
-          <stop offset="100%" stopColor="#E8903A" />
+        {/* orange fur */}
+        <radialGradient id="hg" cx="38%" cy="28%" r="62%">
+          <stop offset="0%" stopColor="#FCD06E" />
+          <stop offset="55%" stopColor="#F59028" />
+          <stop offset="100%" stopColor="#D07010" />
         </radialGradient>
-        <radialGradient id="sg" cx="50%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#1E2A4A" />
-          <stop offset="100%" stopColor="#060C18" />
+        {/* cream face patch */}
+        <radialGradient id="fg" cx="50%" cy="36%" r="60%">
+          <stop offset="0%" stopColor="#FFFAF2" />
+          <stop offset="100%" stopColor="#F8E2C4" />
         </radialGradient>
+        {/* dark eye gradient */}
+        <radialGradient id="eg" cx="30%" cy="25%" r="70%">
+          <stop offset="0%" stopColor="#18182A" />
+          <stop offset="100%" stopColor="#060610" />
+        </radialGradient>
+        {/* blue base glow */}
         <radialGradient id="bg" cx="50%" cy="0%" r="100%">
-          <stop offset="0%" stopColor="#38BDF8" stopOpacity=".55" />
+          <stop offset="0%" stopColor="#38BDF8" stopOpacity=".58" />
           <stop offset="100%" stopColor="#38BDF8" stopOpacity="0" />
         </radialGradient>
+        {/* pencil yellow */}
+        <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#C8A000" />
+          <stop offset="20%" stopColor="#FFE135" />
+          <stop offset="80%" stopColor="#FFE135" />
+          <stop offset="100%" stopColor="#B09000" />
+        </linearGradient>
       </defs>
 
-      {/* ═══ HOODIE BODY ═══ */}
-      {/* main body shape — wide, boxy hoodie */}
-      <path d="M28 134 C6 158 4 210 4 235 L196 235 C196 210 194 158 172 134
-               C154 118 130 110 100 109 C70 110 46 118 28 134Z" fill="#16162A" />
-      {/* hood neckline curve */}
-      <path d="M38 130 Q100 110 162 130 Q145 116 100 113 Q55 116 38 130Z" fill="#22223A" />
-      {/* hoodie side seams */}
-      <line x1="60" y1="135" x2="50" y2="235" stroke="#1E1E32" strokeWidth="2" />
-      <line x1="140" y1="135" x2="150" y2="235" stroke="#1E1E32" strokeWidth="2" />
-      {/* kangaroo front pocket */}
-      <path d="M66 175 Q100 185 134 175 Q138 192 100 196 Q62 192 66 175Z" fill="#1E1E32" />
+      {/* ── BASE GLOW ── */}
+      <ellipse cx="116" cy="252" rx="84" ry="13" fill="url(#bg)" />
+      <ellipse cx="116" cy="249" rx="60" ry="8.5" fill="rgba(56,189,248,.32)" />
 
-      {/* ═══ EARS (round, outer-orange / inner-pink) ═══ */}
-      <circle cx="30" cy="48" r="28" fill="#E8923C" />
-      <circle cx="30" cy="48" r="18" fill="#F9AABB" />
-      <circle cx="30" cy="48" r="10" fill="#F07090" opacity=".6" />
-      <circle cx="170" cy="48" r="28" fill="#E8923C" />
-      <circle cx="170" cy="48" r="18" fill="#F9AABB" />
-      <circle cx="170" cy="48" r="10" fill="#F07090" opacity=".6" />
+      {/* ── JACKET / BODY ── */}
+      <path d="M56 148 C36 165 32 210 30 256 L202 256 C200 210 196 165 176 148
+               C161 136 141 128 116 127 C91 128 71 136 56 148Z" fill="#111827" />
+      <path d="M85 150 Q116 136 147 150 Q137 132 116 129 Q95 132 85 150Z" fill="#1F2937" />
+      <line x1="116" y1="150" x2="116" y2="256" stroke="#1F2937" strokeWidth="2.5" />
 
-      {/* ═══ HEAD (large round, gradient orange) ═══ */}
-      <circle cx="100" cy="84" r="66" fill="url(#hg)" />
-      {/* top head shine */}
-      <ellipse cx="82" cy="42" rx="22" ry="12" fill="white" opacity=".18" transform="rotate(-12 82 42)" />
+      {/* ── EARS ── */}
+      <circle cx="50" cy="30" r="27" fill="url(#hg)" />
+      <circle cx="50" cy="30" r="18" fill="#F5A8B8" />
+      <circle cx="50" cy="30" r="10" fill="#E07090" opacity=".6" />
+      <circle cx="182" cy="30" r="27" fill="url(#hg)" />
+      <circle cx="182" cy="30" r="18" fill="#F5A8B8" />
+      <circle cx="182" cy="30" r="10" fill="#E07090" opacity=".6" />
 
-      {/* ═══ CHUBBY CHEEKS ═══ */}
-      <ellipse cx="18" cy="97" rx="22" ry="17" fill="#E8923C" />
-      <ellipse cx="182" cy="97" rx="22" ry="17" fill="#E8923C" />
+      {/* ── HEAD ── */}
+      <circle cx="116" cy="87" r="74" fill="url(#hg)" />
+      <ellipse cx="90" cy="38" rx="30" ry="15" fill="white" opacity=".15" transform="rotate(-14 90 38)" />
 
-      {/* ═══ FACE CREAM PATCH ═══ */}
-      <ellipse cx="100" cy="96" rx="46" ry="35" fill="#FEF0D6" />
+      {/* ── CHUBBY HAMSTER CHEEKS (pouches) ── */}
+      <ellipse cx="20" cy="100" rx="30" ry="23" fill="#E88020" />
+      <ellipse cx="212" cy="100" rx="30" ry="23" fill="#E88020" />
+      <ellipse cx="14" cy="93" rx="14" ry="9" fill="#FBA850" opacity=".38" />
+      <ellipse cx="206" cy="93" rx="14" ry="9" fill="#FBA850" opacity=".38" />
 
-      {/* ═══ LAPTOP SCREEN LID ═══ */}
-      {/* outer bezel */}
-      <path d="M10 183 L20 132 L180 132 L190 183Z" fill="#141424" />
-      {/* inner screen */}
-      <path d="M15 181 L25 136 L175 136 L185 181Z" fill="url(#sg)" />
-      {/* ── screen content ── */}
-      {/* code editor lines (left column) */}
-      <rect x="30" y="142" width="28" height="3" rx="1.5" fill="#3B82F6" opacity=".7" />
-      <rect x="30" y="148" width="18" height="3" rx="1.5" fill="#F97316" opacity=".6" />
-      <rect x="30" y="154" width="24" height="3" rx="1.5" fill="#34D399" opacity=".6" />
-      <rect x="30" y="160" width="14" height="3" rx="1.5" fill="#A78BFA" opacity=".5" />
-      <rect x="30" y="166" width="22" height="3" rx="1.5" fill="#3B82F6" opacity=".4" />
-      {/* AI big text — center */}
-      <text x="115" y="158" textAnchor="middle" dominantBaseline="middle"
-        fill="#60A5FA" fontSize="30" fontWeight="900"
-        fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="4">AI</text>
-      {/* AI glow halo */}
-      <ellipse cx="115" cy="162" rx="34" ry="8" fill="rgba(96,165,250,.22)" />
-      {/* cursor blink dot */}
-      <rect x="30" y="172" width="3" height="6" rx="1" fill="#60A5FA" opacity=".9" />
-      {/* screen top-bar stripe */}
-      <rect x="15" y="136" width="170" height="6" rx="2" fill="#1A1A30" opacity=".6" />
-      <circle cx="22" cy="139" r="2" fill="#FF5F57" />
-      <circle cx="28" cy="139" r="2" fill="#FEBC2E" />
-      <circle cx="34" cy="139" r="2" fill="#28C840" />
+      {/* ── FACE CREAM PATCH ── */}
+      <ellipse cx="116" cy="104" rx="56" ry="47" fill="url(#fg)" />
 
-      {/* ═══ KEYBOARD BASE ═══ */}
-      <rect x="8" y="182" width="184" height="28" rx="9" fill="#141424" />
-      <rect x="14" y="186" width="172" height="20" rx="5" fill="#1E1E34" />
-      {/* key grid row 1 */}
-      {[20,33,46,59,72,85,98,111,124,137,150,163].map((x,i) => (
-        <rect key={i} x={x} y={188} width={11} height={7} rx="2" fill="#141428" />
+      {/* ── LAPTOP SCREEN LID ── */}
+      <path d="M28 184 L44 136 L194 136 L210 184Z" fill="#14141E" />
+      <path d="M34 182 L48 140 L188 140 L202 182Z" fill="#0D1117" />
+      {/* code lines left */}
+      <rect x="54" y="148" width="32" height="2.5" rx="1.2" fill="#3B82F6" opacity=".85" />
+      <rect x="54" y="154" width="22" height="2.5" rx="1.2" fill="#F97316" opacity=".75" />
+      <rect x="54" y="160" width="28" height="2.5" rx="1.2" fill="#34D399" opacity=".65" />
+      <rect x="54" y="166" width="18" height="2.5" rx="1.2" fill="#A78BFA" opacity=".55" />
+      <rect x="54" y="172" width="24" height="2.5" rx="1.2" fill="#3B82F6" opacity=".45" />
+      {/* AI text */}
+      <text x="148" y="163" textAnchor="middle" dominantBaseline="middle"
+        fill="#60A5FA" fontSize="28" fontWeight="900"
+        fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="3">AI</text>
+      <ellipse cx="148" cy="169" rx="32" ry="8" fill="rgba(96,165,250,.2)" />
+      {/* </> on screen */}
+      <text x="148" y="179" textAnchor="middle"
+        fill="#F97316" fontSize="9.5" fontWeight="900" fontFamily="monospace">{'</>'}</text>
+      {/* top bar */}
+      <rect x="34" y="140" width="168" height="6" rx="2" fill="#1A1A2E" opacity=".5" />
+      <circle cx="42" cy="143" r="2" fill="#FF5F57" />
+      <circle cx="49" cy="143" r="2" fill="#FEBC2E" />
+      <circle cx="56" cy="143" r="2" fill="#28C840" />
+
+      {/* ── KEYBOARD ── */}
+      <rect x="18" y="182" width="206" height="32" rx="10" fill="#14141E" />
+      <rect x="24" y="186" width="194" height="24" rx="6" fill="#1E1E32" />
+      {[30,45,60,75,90,105,120,135,150,165,180,195].map((x, i) => (
+        <rect key={`k1-${i}`} x={x} y={188} width={13} height={8} rx="2.5" fill="#0F0F1E" />
       ))}
-      {/* key grid row 2 */}
-      {[24,37,50,63,76,89,102,115,128,141,154].map((x,i) => (
-        <rect key={i} x={x} y={198} width={11} height={5} rx="2" fill="#141428" />
+      {[34,49,64,79,94,109,124,139,154,169,184].map((x, i) => (
+        <rect key={`k2-${i}`} x={x} y={199} width={13} height={5.5} rx="2" fill="#0F0F1E" />
       ))}
-      {/* </> label on keyboard */}
-      <text x="100" y="202" textAnchor="middle" fill="#F97316" fontSize="6.5" fontWeight="900"
-        fontFamily="monospace" opacity=".9">{'</>'}</text>
-      {/* hinge strip */}
-      <rect x="8" y="180" width="184" height="4" rx="2" fill="#2A2A42" />
+      <rect x="18" y="180" width="206" height="4" rx="2" fill="#2A2A3E" />
 
-      {/* ═══ PAWS ON KEYBOARD ═══ */}
-      {/* LEFT paw */}
-      <ellipse cx="52" cy="196" rx="20" ry="12" fill="#E8923C" />
-      <ellipse cx="52" cy="193" rx="13" ry="7" fill="#FEF0D6" />
-      <circle cx="44" cy="191" r="3.5" fill="#F0A860" />
-      <circle cx="52" cy="189" r="3.5" fill="#F0A860" />
-      <circle cx="60" cy="191" r="3.5" fill="#F0A860" />
+      {/* ── LEFT PAW ── */}
+      <ellipse cx="62" cy="202" rx="23" ry="14" fill="#E88020" />
+      <ellipse cx="62" cy="199" rx="15" ry="9" fill="#FEF2DA" />
+      <circle cx="53" cy="197" r="4" fill="#F0A060" />
+      <circle cx="62" cy="195" r="4" fill="#F0A060" />
+      <circle cx="71" cy="197" r="4" fill="#F0A060" />
 
-      {/* ═══ PENCIL (held upright in right paw, tilted ~20° toward upper-right) ═══ */}
-      {/* translate pivot = right-paw grip; rotate 20° CW → tip ends up ~(217, 14) */}
-      <g transform="translate(162, 168) rotate(20)">
-        {/* pink eraser cap */}
-        <rect x="-5" y="20" width="10" height="14" rx="2.5" fill="#FFB3C6"/>
-        {/* silver ferrule band */}
-        <rect x="-6" y="7" width="12" height="15" rx="2" fill="#A8A8B8"/>
-        <rect x="-5.5" y="9" width="11" height="5" rx="1" fill="#D0D0DC" opacity=".6"/>
-        {/* yellow body */}
-        <rect x="-5" y="-132" width="10" height="141" fill="#FFE135"/>
-        {/* left face shading */}
-        <rect x="-5" y="-132" width="3.5" height="141" fill="#C9A100" opacity=".42"/>
-        {/* right face highlight */}
-        <rect x="2" y="-132" width="3" height="141" fill="#FFF59D" opacity=".4"/>
-        {/* wood cone */}
-        <polygon points="-5,-132 5,-132 0,-158" fill="#D4935A"/>
-        <polygon points="-5,-132 0,-132 0,-158" fill="#A05A20" opacity=".35"/>
-        {/* graphite tip */}
-        <polygon points="-2.5,-154 2.5,-154 0,-164" fill="#2D2D2D"/>
-        <polygon points="-1,-154 0,-154 0,-164" fill="#555" opacity=".4"/>
+      {/* ── PENCIL (held in right paw, tip at upper-right) ── */}
+      <g transform="translate(168, 178) rotate(20)">
+        <rect x="-7" y="14" width="14" height="16" rx="3.5" fill="#FFB3C6" />
+        <rect x="-7.5" y="2" width="15" height="14" rx="2.5" fill="#B0B2C0" />
+        <rect x="-7" y="4.5" width="14" height="5" rx="1.5" fill="#D4D4DE" opacity=".6" />
+        <rect x="-7" y="-148" width="14" height="152" fill="url(#pg)" />
+        <rect x="-7" y="-148" width="5" height="152" fill="#A07A00" opacity=".35" />
+        <rect x="4" y="-148" width="3" height="152" fill="#FFFDE7" opacity=".42" />
+        <polygon points="-7,-148 7,-148 0,-174" fill="#D4935A" />
+        <polygon points="-7,-148 0,-148 0,-174" fill="#9C5020" opacity=".38" />
+        <polygon points="-3.5,-170 3.5,-170 0,-180" fill="#2D2D2D" />
+        <polygon points="-1.5,-170 0,-170 0,-180" fill="#555" opacity=".35" />
       </g>
 
-      {/* RIGHT paw — drawn after pencil so it looks like it's gripping it */}
-      <ellipse cx="148" cy="196" rx="20" ry="12" fill="#E8923C" />
-      <ellipse cx="148" cy="193" rx="13" ry="7" fill="#FEF0D6" />
-      <circle cx="140" cy="191" r="3.5" fill="#F0A860" />
-      <circle cx="148" cy="189" r="3.5" fill="#F0A860" />
-      <circle cx="156" cy="191" r="3.5" fill="#F0A860" />
+      {/* ── RIGHT PAW (grips pencil) ── */}
+      <ellipse cx="158" cy="202" rx="23" ry="14" fill="#E88020" />
+      <ellipse cx="158" cy="199" rx="15" ry="9" fill="#FEF2DA" />
+      <circle cx="149" cy="197" r="4" fill="#F0A060" />
+      <circle cx="158" cy="195" r="4" fill="#F0A060" />
+      <circle cx="167" cy="197" r="4" fill="#F0A060" />
 
-      {/* ═══ GLASSES (most distinctive feature!) ═══ */}
-      {/* shadow beneath glasses for depth */}
-      <circle cx="70" cy="83" r="26" fill="rgba(0,0,0,.08)" />
-      <circle cx="130" cy="83" r="26" fill="rgba(0,0,0,.08)" />
-      {/* left lens frame */}
-      <circle cx="70" cy="82" r="26" fill="rgba(210,228,255,.12)" stroke="#111" strokeWidth="4.5" />
-      {/* right lens frame */}
-      <circle cx="130" cy="82" r="26" fill="rgba(210,228,255,.12)" stroke="#111" strokeWidth="4.5" />
-      {/* bridge connecting both lenses */}
-      <path d="M96 82 C98 78 102 78 104 82" fill="none" stroke="#111" strokeWidth="4.5" strokeLinecap="round" />
-      {/* left temple arm */}
-      <path d="M44 82 C36 76 32 66 28 60" fill="none" stroke="#111" strokeWidth="4.5" strokeLinecap="round" />
-      {/* right temple arm */}
-      <path d="M156 82 C164 76 168 66 172 60" fill="none" stroke="#111" strokeWidth="4.5" strokeLinecap="round" />
-      {/* lens glare arc (top-left of each lens) */}
-      <path d="M55 68 Q63 62 72 66" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M115 68 Q123 62 132 66" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="2.5" strokeLinecap="round" />
+      {/* ── GLASSES ── */}
+      <circle cx="82" cy="87" r="28" fill="rgba(0,0,0,.07)" />
+      <circle cx="150" cy="87" r="28" fill="rgba(0,0,0,.07)" />
+      <circle cx="82" cy="85" r="28" fill="rgba(215,230,255,.09)" stroke="#111" strokeWidth="4.5" />
+      <circle cx="150" cy="85" r="28" fill="rgba(215,230,255,.09)" stroke="#111" strokeWidth="4.5" />
+      <path d="M110 85 C112 80 114 80 116 85" fill="none" stroke="#111" strokeWidth="4.5" strokeLinecap="round" />
+      <path d="M54 85 C46 78 42 68 38 58" fill="none" stroke="#111" strokeWidth="4.5" strokeLinecap="round" />
+      <path d="M178 85 C186 78 190 68 194 58" fill="none" stroke="#111" strokeWidth="4.5" strokeLinecap="round" />
+      <path d="M66 70 Q76 63 86 67" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M134 70 Q144 63 154 67" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="2.5" strokeLinecap="round" />
 
-      {/* ═══ EYES — state dependent ═══ */}
+      {/* ── EYES — state dependent ── */}
       {face === 'normal' && <>
-        {/* left eye */}
-        <circle cx="70" cy="82" r="20" fill="white" />
-        <circle cx="72" cy="84" r="13.5" fill="#10101E" />
-        <circle cx="76.5" cy="78.5" r="6.5" fill="white" />
-        <circle cx="70" cy="89" r="3" fill="rgba(255,255,255,.45)" />
-        {/* right eye */}
-        <circle cx="130" cy="82" r="20" fill="white" />
-        <circle cx="132" cy="84" r="13.5" fill="#10101E" />
-        <circle cx="136.5" cy="78.5" r="6.5" fill="white" />
-        <circle cx="130" cy="89" r="3" fill="rgba(255,255,255,.45)" />
+        <circle cx="82" cy="85" r="23" fill="white" />
+        <circle cx="84" cy="87" r="15.5" fill="url(#eg)" />
+        <circle cx="90" cy="78" r="9" fill="white" />
+        <circle cx="78" cy="93" r="3.5" fill="rgba(255,255,255,.52)" />
+        <circle cx="150" cy="85" r="23" fill="white" />
+        <circle cx="152" cy="87" r="15.5" fill="url(#eg)" />
+        <circle cx="158" cy="78" r="9" fill="white" />
+        <circle cx="146" cy="93" r="3.5" fill="rgba(255,255,255,.52)" />
       </>}
 
       {face === 'popped' && <>
-        {/* HUGE surprised eyes filling the lens */}
-        <circle cx="70" cy="82" r="22" fill="white" />
-        <circle cx="70" cy="82" r="16" fill="#10101E" />
-        <circle cx="75" cy="76" r="9" fill="white" />
-        <circle cx="68" cy="88" r="3.5" fill="rgba(255,255,255,.5)" />
-        <circle cx="130" cy="82" r="22" fill="white" />
-        <circle cx="130" cy="82" r="16" fill="#10101E" />
-        <circle cx="135" cy="76" r="9" fill="white" />
-        <circle cx="128" cy="88" r="3.5" fill="rgba(255,255,255,.5)" />
+        {/* BIG cute sparkle eyes — tap reaction */}
+        <circle cx="82" cy="85" r="25.5" fill="white" />
+        <circle cx="84" cy="87" r="18" fill="url(#eg)" />
+        <circle cx="91" cy="77" r="11" fill="white" />
+        <circle cx="78" cy="94" r="5" fill="rgba(255,255,255,.52)" />
+        {/* tiny star sparkles (left) */}
+        <polygon points="108,56 109.4,60.4 113.8,60.4 110.4,63 111.8,67.4 108,64.8 104.2,67.4 105.6,63 102.2,60.4 106.6,60.4"
+          fill="#FBBF24" />
+        <polygon points="52,56 52.9,58.7 55.6,58.7 53.5,60.3 54.3,63 52,61.4 49.7,63 50.5,60.3 48.4,58.7 51.1,58.7"
+          fill="#A5B4FC" transform="scale(0.75) translate(18, 18)" />
+        <circle cx="150" cy="85" r="25.5" fill="white" />
+        <circle cx="152" cy="87" r="18" fill="url(#eg)" />
+        <circle cx="159" cy="77" r="11" fill="white" />
+        <circle cx="146" cy="94" r="5" fill="rgba(255,255,255,.52)" />
+        {/* tiny star sparkle (right) */}
+        <polygon points="176,54 177.4,58.4 181.8,58.4 178.4,61 179.8,65.4 176,62.8 172.2,65.4 173.6,61 170.2,58.4 174.6,58.4"
+          fill="#FBBF24" />
       </>}
 
       {face === 'happy' && <>
-        {/* curved happy ^_^ arcs */}
-        <path d="M48 84 Q70 62 92 84" fill="#10101E" />
-        <path d="M108 84 Q130 62 152 84" fill="#10101E" />
-        {/* highlight crescent above arcs */}
-        <path d="M52 80 Q70 65 88 80" fill="none" stroke="rgba(255,255,255,.3)" strokeWidth="3" strokeLinecap="round" />
-        <path d="M112 80 Q130 65 148 80" fill="none" stroke="rgba(255,255,255,.3)" strokeWidth="3" strokeLinecap="round" />
+        {/* ^_^ squinted happy arcs */}
+        <path d="M57 87 Q82 62 107 87" fill="url(#eg)" />
+        <path d="M61 82 Q82 65 103 82" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M125 87 Q150 62 175 87" fill="url(#eg)" />
+        <path d="M129 82 Q150 65 171 82" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="3" strokeLinecap="round" />
       </>}
 
       {face === 'shy' && <>
-        {/* downcast sad arcs */}
-        <path d="M50 78 Q70 94 90 78" fill="none" stroke="#10101E" strokeWidth="5.5" strokeLinecap="round" />
-        <path d="M110 78 Q130 94 150 78" fill="none" stroke="#10101E" strokeWidth="5.5" strokeLinecap="round" />
+        {/* downcast droopy arcs */}
+        <path d="M58 81 Q82 98 106 81" fill="none" stroke="#060610" strokeWidth="6" strokeLinecap="round" />
+        <path d="M126 81 Q150 98 174 81" fill="none" stroke="#060610" strokeWidth="6" strokeLinecap="round" />
         {/* tear drops */}
-        <ellipse cx="90" cy="94" rx="4.5" ry="6.5" fill="#93C5FD" opacity=".9" />
-        <ellipse cx="130" cy="94" rx="4.5" ry="6.5" fill="#93C5FD" opacity=".9" />
+        <ellipse cx="106" cy="98" rx="5" ry="7" fill="#93C5FD" opacity=".9" />
+        <ellipse cx="150" cy="98" rx="5" ry="7" fill="#93C5FD" opacity=".9" />
       </>}
 
-      {/* ═══ NOSE ═══ */}
-      <ellipse cx="100" cy="108" rx="10" ry="6.5" fill="#C05060" />
-      <ellipse cx="96.5" cy="106" rx="4" ry="2.5" fill="rgba(255,255,255,.6)" />
+      {/* ── NOSE ── */}
+      <ellipse cx="116" cy="115" rx="11.5" ry="7.5" fill="#C05070" />
+      <ellipse cx="112" cy="112.5" rx="4.5" ry="2.5" fill="rgba(255,255,255,.62)" />
 
-      {/* ═══ BLUSH ═══ */}
-      <ellipse cx="20" cy="105" rx="16" ry="12" fill="#FF6B8A" opacity={bl} />
-      <ellipse cx="180" cy="105" rx="16" ry="12" fill="#FF6B8A" opacity={bl} />
+      {/* ── BLUSH ── */}
+      <ellipse cx="22" cy="113" rx="20" ry="14" fill="#FF6B8A" opacity={bl} />
+      <ellipse cx="210" cy="113" rx="20" ry="14" fill="#FF6B8A" opacity={bl} />
 
-      {/* ═══ MOUTH — state dependent ═══ */}
+      {/* ── MOUTH — state dependent ── */}
       {face === 'normal' && <>
-        {/* open happy mouth — matches reference (showing teeth) */}
-        <path d="M80 116 Q100 137 120 116" fill="none" stroke="#A03050" strokeWidth="3.5" strokeLinecap="round" />
-        <path d="M84 118 Q100 133 116 118 L116 126 Q100 141 84 126Z" fill="white" />
-        <line x1="100" y1="118" x2="100" y2="126" stroke="rgba(0,0,0,.06)" strokeWidth="2" />
+        {/* happy open smile with teeth */}
+        <path d="M95 124 Q116 142 137 124" fill="none" stroke="#A03050" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M99 127 Q116 140 133 127 L133 135 Q116 148 99 135Z" fill="white" />
+        <line x1="116" y1="127" x2="116" y2="135" stroke="rgba(0,0,0,.07)" strokeWidth="2" />
       </>}
-      {face === 'popped' && <>
-        {/* big open mouth */}
-        <path d="M74 114 Q86 108 100 108 Q114 108 126 114" fill="#A03050" />
-        <path d="M74 114 Q80 140 100 143 Q120 140 126 114Z" fill="#2C000E" />
-        <path d="M74 114 Q86 121 100 121 Q114 121 126 114" fill="#D07080" />
-        <ellipse cx="100" cy="133" rx="18" ry="10" fill="#FF6B8A" />
-        <ellipse cx="95" cy="130" rx="6" ry="4" fill="rgba(255,255,255,.4)" />
-        {/* top teeth */}
-        <rect x="83" y="112" width="13" height="10" rx="3" fill="white" />
-        <rect x="100" y="112" width="13" height="10" rx="3" fill="white" />
-        <line x1="100" y1="112" x2="100" y2="122" stroke="rgba(0,0,0,.06)" strokeWidth="2" />
-      </>}
+      {face === 'popped' && (
+        /* cute uwu smile — no wide open mouth */
+        <path d="M101 124 Q116 134 131 124" fill="none" stroke="#A03050" strokeWidth="3.5" strokeLinecap="round" />
+      )}
       {face === 'happy' && <>
-        <path d="M80 116 Q100 136 120 116" fill="none" stroke="#A03050" strokeWidth="3.5" strokeLinecap="round" />
-        <path d="M84 119 Q100 134 116 119 L116 126 Q100 140 84 126Z" fill="white" />
-        <line x1="100" y1="119" x2="100" y2="126" stroke="rgba(0,0,0,.06)" strokeWidth="2" />
+        <path d="M94 122 Q116 142 138 122" fill="none" stroke="#A03050" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M98 125 Q116 140 134 125 L134 133 Q116 147 98 133Z" fill="white" />
+        <line x1="116" y1="125" x2="116" y2="133" stroke="rgba(0,0,0,.07)" strokeWidth="2" />
       </>}
       {face === 'shy' && (
-        <path d="M86 118 Q93 124 100 120 Q107 116 114 122"
+        <path d="M100 126 Q109 133 116 129 Q123 125 132 131"
           fill="none" stroke="#A03050" strokeWidth="3" strokeLinecap="round" />
       )}
-
-      {/* ═══ BASE BLUE GLOW ═══ */}
-      <ellipse cx="100" cy="233" rx="74" ry="11" fill="url(#bg)" />
-      <ellipse cx="100" cy="231" rx="52" ry="7" fill="rgba(56,189,248,.45)" />
     </svg>
   )
 }
