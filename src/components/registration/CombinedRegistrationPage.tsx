@@ -37,11 +37,11 @@ const HEARTS = ['❤️', '💕', '💖', '💗', '💝', '💓', '🩷', '🌸'
 const TOTAL = STEPS.length
 const SHY_THRESHOLD = 50
 
-// ── Hamster SVG — AI coder: glasses + hoodie + laptop (fresh design) ─────────
+// ── Hamster SVG — AI coder with pencil (reference-matched) ───────────────────
 function HamsterSVG({ face }: { face: FaceState }) {
   const bl = face === 'popped' ? 0.52 : face === 'happy' ? 0.4 : face === 'shy' ? 0.88 : 0
   return (
-    <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style={{ pointerEvents: 'none' }}>
+    <svg viewBox="0 0 220 250" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style={{ pointerEvents: 'none' }}>
       <defs>
         <radialGradient id="hg" cx="42%" cy="38%" r="55%">
           <stop offset="0%" stopColor="#F9C870" />
@@ -126,16 +126,43 @@ function HamsterSVG({ face }: { face: FaceState }) {
       {[24,37,50,63,76,89,102,115,128,141,154].map((x,i) => (
         <rect key={i} x={x} y={198} width={11} height={5} rx="2" fill="#141428" />
       ))}
+      {/* </> label on keyboard */}
+      <text x="100" y="202" textAnchor="middle" fill="#F97316" fontSize="6.5" fontWeight="900"
+        fontFamily="monospace" opacity=".9">{'</>'}</text>
       {/* hinge strip */}
       <rect x="8" y="180" width="184" height="4" rx="2" fill="#2A2A42" />
 
       {/* ═══ PAWS ON KEYBOARD ═══ */}
+      {/* LEFT paw */}
       <ellipse cx="52" cy="196" rx="20" ry="12" fill="#E8923C" />
       <ellipse cx="52" cy="193" rx="13" ry="7" fill="#FEF0D6" />
-      {/* paw toe beans */}
       <circle cx="44" cy="191" r="3.5" fill="#F0A860" />
       <circle cx="52" cy="189" r="3.5" fill="#F0A860" />
       <circle cx="60" cy="191" r="3.5" fill="#F0A860" />
+
+      {/* ═══ PENCIL (held upright in right paw, tilted ~20° toward upper-right) ═══ */}
+      {/* translate pivot = right-paw grip; rotate 20° CW → tip ends up ~(217, 14) */}
+      <g transform="translate(162, 168) rotate(20)">
+        {/* pink eraser cap */}
+        <rect x="-5" y="20" width="10" height="14" rx="2.5" fill="#FFB3C6"/>
+        {/* silver ferrule band */}
+        <rect x="-6" y="7" width="12" height="15" rx="2" fill="#A8A8B8"/>
+        <rect x="-5.5" y="9" width="11" height="5" rx="1" fill="#D0D0DC" opacity=".6"/>
+        {/* yellow body */}
+        <rect x="-5" y="-132" width="10" height="141" fill="#FFE135"/>
+        {/* left face shading */}
+        <rect x="-5" y="-132" width="3.5" height="141" fill="#C9A100" opacity=".42"/>
+        {/* right face highlight */}
+        <rect x="2" y="-132" width="3" height="141" fill="#FFF59D" opacity=".4"/>
+        {/* wood cone */}
+        <polygon points="-5,-132 5,-132 0,-158" fill="#D4935A"/>
+        <polygon points="-5,-132 0,-132 0,-158" fill="#A05A20" opacity=".35"/>
+        {/* graphite tip */}
+        <polygon points="-2.5,-154 2.5,-154 0,-164" fill="#2D2D2D"/>
+        <polygon points="-1,-154 0,-154 0,-164" fill="#555" opacity=".4"/>
+      </g>
+
+      {/* RIGHT paw — drawn after pencil so it looks like it's gripping it */}
       <ellipse cx="148" cy="196" rx="20" ry="12" fill="#E8923C" />
       <ellipse cx="148" cy="193" rx="13" ry="7" fill="#FEF0D6" />
       <circle cx="140" cy="191" r="3.5" fill="#F0A860" />
@@ -213,9 +240,12 @@ function HamsterSVG({ face }: { face: FaceState }) {
       <ellipse cx="180" cy="105" rx="16" ry="12" fill="#FF6B8A" opacity={bl} />
 
       {/* ═══ MOUTH — state dependent ═══ */}
-      {face === 'normal' && (
-        <path d="M85 118 Q100 130 115 118" fill="none" stroke="#A03050" strokeWidth="3.5" strokeLinecap="round" />
-      )}
+      {face === 'normal' && <>
+        {/* open happy mouth — matches reference (showing teeth) */}
+        <path d="M80 116 Q100 137 120 116" fill="none" stroke="#A03050" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M84 118 Q100 133 116 118 L116 126 Q100 141 84 126Z" fill="white" />
+        <line x1="100" y1="118" x2="100" y2="126" stroke="rgba(0,0,0,.06)" strokeWidth="2" />
+      </>}
       {face === 'popped' && <>
         {/* big open mouth */}
         <path d="M74 114 Q86 108 100 108 Q114 108 126 114" fill="#A03050" />
