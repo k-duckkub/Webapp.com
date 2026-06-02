@@ -1,11 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Badge } from './Badge'
-import { Hero } from './Hero'
-import { FeatureList } from './FeatureList'
-import { HeroShowcase } from './HeroShowcase'
+import { Settings, User, ChevronRight } from 'lucide-react'
 import { TrustCard } from './TrustCard'
 
-// ── Types ──────────────────────────────────────────────────────────────────
+// ── Types ───────────────────────────────────────────────────────────────────
 type FaceState = 'normal' | 'popped' | 'happy' | 'shy'
 
 interface Step {
@@ -13,7 +10,7 @@ interface Step {
   placeholder: string
   inputMode: React.HTMLAttributes<HTMLInputElement>['inputMode']
   inputType: string
-  icon: string
+  icon: React.ReactNode
   field: string
   optional: boolean
 }
@@ -21,29 +18,28 @@ interface Step {
 const STEPS: Step[] = [
   { speech: 'ยินดีที่ได้รู้จักครับ!\nขอทราบ ชื่อจริง ของคุณหน่อยนะครับ 🐾',
     placeholder: 'ตัวอย่าง: สมชาย', inputMode: 'text', inputType: 'text',
-    icon: '👤', field: 'firstName', optional: false },
+    icon: <User size={16} color="#6366F1" />, field: 'firstName', optional: false },
   { speech: 'เยี่ยมมากเลยครับ!\nแล้วขอ ชื่อเล่น ด้วยนะครับ 😊',
     placeholder: 'ตัวอย่าง: ชาย', inputMode: 'text', inputType: 'text',
-    icon: '😊', field: 'nickname', optional: false },
+    icon: <User size={16} color="#6366F1" />, field: 'nickname', optional: false },
   { speech: 'น่ารักมากเลย!\nคุณ อายุ เท่าไหร่ครับ? 🎂',
     placeholder: 'ตัวอย่าง: 25', inputMode: 'numeric', inputType: 'text',
-    icon: '🎂', field: 'age', optional: false },
+    icon: <User size={16} color="#6366F1" />, field: 'age', optional: false },
   { speech: 'เก่งมากครับ!\nขอ เบอร์โทรศัพท์ ด้วยนะครับ 📱',
     placeholder: 'ตัวอย่าง: 081-234-5678', inputMode: 'tel', inputType: 'tel',
-    icon: '📱', field: 'phone', optional: false },
+    icon: <User size={16} color="#6366F1" />, field: 'phone', optional: false },
   { speech: 'เกือบเสร็จแล้วครับ!\nมี โค้ดพิเศษ ไหมครับ? 🎟️',
     placeholder: 'ตัวอย่าง: HAMSTER2024', inputMode: 'text', inputType: 'text',
-    icon: '🎟️', field: 'code', optional: true },
+    icon: <User size={16} color="#6366F1" />, field: 'code', optional: true },
 ]
 
 const HEARTS = ['❤️', '💕', '💖', '💗', '💝', '💓', '🩷', '🌸']
 const TOTAL = STEPS.length
 const SHY_THRESHOLD = 50
 
-// ── Hamster SVG ─────────────────────────────────────────────────────────────
+// ── Hamster SVG (Pop Cat states) ─────────────────────────────────────────────
 function HamsterSVG({ face }: { face: FaceState }) {
   const blushOpacity = face === 'popped' ? 0.4 : face === 'happy' ? 0.3 : face === 'shy' ? 0.8 : 0
-
   return (
     <svg viewBox="0 0 100 115" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style={{ pointerEvents: 'none' }}>
       <ellipse cx="50" cy="113" rx="24" ry="4.5" fill="rgba(0,0,0,.1)" />
@@ -124,268 +120,7 @@ function HamsterSVG({ face }: { face: FaceState }) {
   )
 }
 
-// ── Left Panel (unchanged visual, bear is static) ───────────────────────────
-function LeftPanel() {
-  return (
-    <div
-      className="flex flex-col overflow-hidden rounded-l-card max-lg:rounded-b-none max-lg:rounded-tl-card max-lg:rounded-tr-card"
-      style={{ background: 'linear-gradient(160deg, #F3EBDD 0%, #EAE0D0 100%)' }}
-    >
-      <div className="flex-shrink-0 px-12 pt-12 pb-5">
-        <Badge />
-        <Hero />
-        <FeatureList />
-      </div>
-      <div className="relative flex-1 min-h-[360px] overflow-hidden">
-        {/* Static bear mascot */}
-        <BearMascot />
-        <HeroShowcase />
-      </div>
-      <TrustCard />
-    </div>
-  )
-}
-
-function BearMascot() {
-  const [imgUrl, setImgUrl] = useState<string | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const prev = imgUrl
-    setImgUrl(URL.createObjectURL(file))
-    if (prev) URL.revokeObjectURL(prev)
-    e.target.value = ''
-  }
-
-  return (
-    <div
-      className="absolute bottom-0 left-6 w-[42%] z-[3] cursor-pointer group select-none"
-      onClick={() => inputRef.current?.click()}
-      title="คลิกเพื่อเปลี่ยนรูป"
-    >
-      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
-      {imgUrl
-        ? <img src={imgUrl} alt="mascot" className="w-full h-full object-contain object-bottom" draggable={false} />
-        : <BearSVG />
-      }
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100
-                      transition-opacity duration-200 rounded-2xl"
-           style={{ background: 'rgba(0,0,0,.28)' }}>
-        <div className="flex flex-col items-center gap-1.5">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-               fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-            <circle cx="12" cy="13" r="4"/>
-          </svg>
-          <span className="text-white text-[11px] font-semibold drop-shadow">เปลี่ยนรูป</span>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ── Right Game Panel ─────────────────────────────────────────────────────────
-interface GamePanelProps {
-  tapScore: number
-  curStep: number
-  face: FaceState
-  isHamPop: boolean
-  ripples: number[]
-  bubbleText: string
-  bubbleAnim: 'in' | 'out' | null
-  inputVal: string
-  shaking: boolean
-  onInputChange: (v: string) => void
-  onInputKeyDown: (e: React.KeyboardEvent) => void
-  onNext: () => void
-  onSkip: () => void
-  onPointerDown: (e: React.PointerEvent) => void
-  hamWrapRef: React.RefObject<HTMLDivElement>
-  inputRef: React.RefObject<HTMLInputElement>
-}
-
-function GameRightPanel({
-  tapScore, curStep, face, isHamPop, ripples,
-  bubbleText, bubbleAnim, inputVal, shaking,
-  onInputChange, onInputKeyDown, onNext, onSkip, onPointerDown,
-  hamWrapRef, inputRef,
-}: GamePanelProps) {
-  const step = STEPS[curStep]
-  const speechLines = bubbleText.split('\n')
-
-  return (
-    <div className="bg-white flex flex-col rounded-r-card max-lg:rounded-t-none max-lg:rounded-b-card overflow-hidden">
-
-      {/* HUD */}
-      <div className="flex justify-between items-center px-8 pt-8 pb-3 flex-shrink-0">
-        <HudBox label="TAP SCORE" value={tapScore} />
-        <HudBox label="STEP" value={`${curStep + 1}`} suffix={`/5`} />
-      </div>
-
-      {/* Tappable hamster */}
-      <div className="flex items-center justify-center flex-shrink-0 py-2">
-        <div
-          ref={hamWrapRef}
-          onPointerDown={onPointerDown}
-          style={{
-            position: 'relative',
-            width: 140,
-            height: 140,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            userSelect: 'none',
-            touchAction: 'none',
-          }}
-        >
-          <div style={{
-            width: 130,
-            height: 130,
-            filter: isHamPop
-              ? 'drop-shadow(0 4px 14px rgba(244,114,182,.7)) brightness(1.08)'
-              : 'drop-shadow(0 8px 18px rgba(99,102,241,.22))',
-            transform: isHamPop ? 'scale(1.12) translateY(-3px)' : undefined,
-            animation: isHamPop ? 'none' : 'floatie 3s ease-in-out infinite',
-            transition: 'transform .06s ease-out, filter .06s ease-out',
-          }}>
-            <HamsterSVG face={face} />
-          </div>
-          {ripples.map(id => (
-            <div key={id} style={{
-              position: 'absolute',
-              borderRadius: '50%',
-              width: 130, height: 130,
-              top: '50%', left: '50%', margin: '-65px',
-              background: 'rgba(99,102,241,.15)',
-              transform: 'scale(0)',
-              pointerEvents: 'none',
-              animation: 'ripAnim .6s ease-out forwards',
-            }} />
-          ))}
-        </div>
-      </div>
-
-      {/* Form area */}
-      <div className="flex flex-col items-center gap-4 px-8 pb-8 flex-1 justify-end">
-
-        {/* Progress dots */}
-        <div className="flex gap-2">
-          {Array.from({ length: TOTAL }).map((_, i) => (
-            <div key={i} style={{
-              width: i === curStep ? 22 : 8,
-              height: 8,
-              borderRadius: 999,
-              background: i < curStep ? '#A5B4FC' : i === curStep ? '#6366F1' : '#E5E7EB',
-              transition: 'all .3s',
-            }} />
-          ))}
-        </div>
-
-        {/* Speech bubble */}
-        <div className="w-full" style={{
-          background: '#F9F8FF',
-          borderRadius: 20,
-          padding: '14px 18px',
-          position: 'relative',
-          boxShadow: '0 3px 14px rgba(99,102,241,.09)',
-          animation: bubbleAnim === 'out' ? 'swapOut .18s ease forwards'
-            : bubbleAnim === 'in' ? 'swapIn .25s ease forwards'
-            : undefined,
-        }}>
-          <div style={{ position: 'absolute', top: -9, left: '50%', transform: 'translateX(-50%)',
-            width: 0, height: 0,
-            borderLeft: '9px solid transparent',
-            borderRight: '9px solid transparent',
-            borderBottom: '10px solid #F9F8FF',
-          }} />
-          <div style={{ fontSize: '.68rem', fontWeight: 700, color: '#6366F1', marginBottom: 3, letterSpacing: '.03em' }}>
-            แฮมสเตอร์พูดว่า...
-          </div>
-          <p style={{ fontSize: '.9rem', fontWeight: 600, lineHeight: 1.6, color: '#1F2937', margin: 0 }}>
-            {speechLines.map((line, i) => <span key={i}>{i > 0 && <br />}{line}</span>)}
-          </p>
-        </div>
-
-        {/* Input */}
-        <div className="w-full" style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          background: 'white',
-          border: `2px solid ${shaking ? '#F87171' : '#E5E7EB'}`,
-          borderRadius: 16, padding: '13px 16px',
-          boxShadow: shaking ? '0 0 0 3px rgba(248,113,113,.15)' : '0 1px 6px rgba(0,0,0,.05)',
-          transition: 'border-color .2s, box-shadow .2s',
-          animation: shaking ? 'shake .35s ease' : undefined,
-        }}>
-          <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{step.icon}</span>
-          <input
-            ref={inputRef}
-            value={inputVal}
-            onChange={e => onInputChange(e.target.value)}
-            onKeyDown={onInputKeyDown}
-            inputMode={step.inputMode}
-            type={step.inputType}
-            placeholder={step.placeholder}
-            autoComplete="off"
-            style={{
-              flex: 1, border: 'none', outline: 'none',
-              fontSize: '.95rem', fontFamily: 'inherit',
-              color: '#1F2937', background: 'transparent',
-            }}
-          />
-        </div>
-
-        {/* Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-          <button
-            onClick={onNext}
-            style={{
-              width: 60, height: 60, border: 'none', borderRadius: '50%',
-              background: 'linear-gradient(135deg,#6366F1,#8B5CF6)',
-              fontSize: '1.7rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', boxShadow: '0 8px 20px rgba(99,102,241,.38)',
-              transition: 'transform .12s, box-shadow .12s',
-            }}
-            onPointerDown={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(.92)' }}
-            onPointerUp={e => { (e.currentTarget as HTMLButtonElement).style.transform = '' }}
-          >
-            🐾
-          </button>
-          {step.optional && (
-            <button onClick={onSkip} style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: '.82rem', color: '#9CA3AF', fontFamily: 'inherit', textDecoration: 'underline', padding: '3px 8px',
-            }}>
-              ข้ามได้เลย →
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ── HUD box ──────────────────────────────────────────────────────────────────
-function HudBox({ label, value, suffix }: { label: string; value: number | string; suffix?: string }) {
-  return (
-    <div style={{
-      background: '#F5F3FF', borderRadius: 16, padding: '8px 18px',
-      textAlign: 'center', minWidth: 90,
-      boxShadow: '0 2px 10px rgba(99,102,241,.08)',
-    }}>
-      <div style={{ fontSize: '.65rem', fontWeight: 700, color: '#8B5CF6', letterSpacing: '.06em', textTransform: 'uppercase' }}>
-        {label}
-      </div>
-      <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#6366F1', lineHeight: 1.1 }}>
-        {value}{suffix && <span style={{ fontSize: '.9rem', fontWeight: 600, color: '#9CA3AF' }}>{suffix}</span>}
-      </div>
-    </div>
-  )
-}
-
-// ── Success overlay ──────────────────────────────────────────────────────────
+// ── Success Overlay ──────────────────────────────────────────────────────────
 function SuccessOverlay({ score, firstName, nickname }: { score: number; firstName: string; nickname: string }) {
   return (
     <div style={{
@@ -405,8 +140,7 @@ function SuccessOverlay({ score, firstName, nickname }: { score: number; firstNa
             <ellipse cx="50" cy="113" rx="23" ry="4" fill="rgba(0,0,0,.08)" />
             <ellipse cx="50" cy="90" rx="28" ry="23" fill="#F7C17A" />
             <ellipse cx="50" cy="93" rx="18" ry="14" fill="#FDEBD0" />
-            <ellipse cx="24" cy="99" rx="11" ry="8" fill="#F0B060" />
-            <ellipse cx="76" cy="99" rx="11" ry="8" fill="#F0B060" />
+            <ellipse cx="24" cy="99" rx="11" ry="8" fill="#F0B060" /><ellipse cx="76" cy="99" rx="11" ry="8" fill="#F0B060" />
             <ellipse cx="15" cy="35" rx="13" ry="15" fill="#E8A050" /><ellipse cx="15" cy="35" rx="8" ry="10" fill="#F5B8C0" />
             <ellipse cx="85" cy="35" rx="13" ry="15" fill="#E8A050" /><ellipse cx="85" cy="35" rx="8" ry="10" fill="#F5B8C0" />
             <ellipse cx="50" cy="55" rx="36" ry="33" fill="#F7C17A" />
@@ -432,11 +166,11 @@ function SuccessOverlay({ score, firstName, nickname }: { score: number; firstNa
         <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#1F2937', margin: '10px 0 5px' }}>ลงทะเบียนสำเร็จ! 🎉</h2>
         <p style={{ fontSize: '.9rem', color: '#6B7280', lineHeight: 1.6 }}>ขอบคุณมากเลยครับ แฮมสเตอร์ดีใจมาก~ 💕</p>
         <div style={{
-          background: 'linear-gradient(135deg,#EEF2FF,#E0F2FE)',
+          background: 'linear-gradient(135deg,#EEF2FF,#DBEAFE)',
           borderRadius: 18, padding: '14px 20px', margin: '14px 0',
         }}>
           <div style={{ fontSize: '.75rem', color: '#6B7280' }}>Tap Bonus Points</div>
-          <div style={{ fontSize: '2.8rem', fontWeight: 800, color: '#6366F1' }}>{score}</div>
+          <div style={{ fontSize: '2.8rem', fontWeight: 800, color: '#3B82F6' }}>{score}</div>
           <div style={{ fontSize: '.75rem', color: '#6B7280' }}>แต้มโบนัสเริ่มต้น</div>
         </div>
         <div style={{ fontSize: '.86rem', color: '#6B7280', lineHeight: 1.65 }}>
@@ -448,82 +182,363 @@ function SuccessOverlay({ score, firstName, nickname }: { score: number; firstNa
   )
 }
 
-// ── Bear SVG (same as Mascot.tsx) ───────────────────────────────────────────
-function BearSVG() {
+// ── Left Panel ───────────────────────────────────────────────────────────────
+function NewLeftPanel() {
+  const [imgUrl, setImgUrl] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const prev = imgUrl
+    setImgUrl(URL.createObjectURL(file))
+    if (prev) URL.revokeObjectURL(prev)
+    e.target.value = ''
+  }
+
   return (
-    <svg viewBox="0 0 240 330" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <defs>
-        <radialGradient id="cb-bg" cx="50%" cy="60%" r="70%">
-          <stop offset="0%" stopColor="#E2CFA0" /><stop offset="100%" stopColor="#D4BF90" />
-        </radialGradient>
-        <linearGradient id="cb-fur" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#ECA020" /><stop offset="50%" stopColor="#D08810" /><stop offset="100%" stopColor="#B86C08" />
-        </linearGradient>
-        <linearGradient id="cb-rock" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#9A8450" /><stop offset="100%" stopColor="#6A5428" />
-        </linearGradient>
-        <linearGradient id="cb-hood" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#303030" /><stop offset="100%" stopColor="#181818" />
-        </linearGradient>
-        <radialGradient id="cb-hs" cx="50%" cy="70%" r="50%">
-          <stop offset="0%" stopColor="rgba(0,0,0,.16)" /><stop offset="100%" stopColor="rgba(0,0,0,0)" />
-        </radialGradient>
-      </defs>
-      <rect width="240" height="330" fill="url(#cb-bg)" />
-      <ellipse cx="20" cy="288" rx="100" ry="72" fill="#C8B478" opacity=".4" />
-      <ellipse cx="200" cy="295" rx="90" ry="65" fill="#BEAA68" opacity=".36" />
-      <ellipse cx="120" cy="268" rx="110" ry="70" fill="#D0BC84" opacity=".32" />
-      <ellipse cx="120" cy="315" rx="88" ry="22" fill="url(#cb-rock)" />
-      <path d="M42 315 Q80 290 120 285 Q160 290 198 315 Q175 324 120 327 Q65 324 42 315Z" fill="#7C6230" />
-      <circle cx="82" cy="148" r="26" fill="url(#cb-fur)" />
-      <circle cx="82" cy="149" r="14" fill="#8C4808" opacity=".7" />
-      <circle cx="158" cy="148" r="26" fill="url(#cb-fur)" />
-      <circle cx="158" cy="149" r="14" fill="#8C4808" opacity=".7" />
-      <ellipse cx="120" cy="258" rx="54" ry="60" fill="url(#cb-hood)" />
-      <path d="M88 205 Q120 220 152 205 L162 228 Q120 242 78 228Z" fill="#1E1E1E" />
-      <path d="M100 205 Q120 214 140 205 L148 218 Q120 228 92 218Z" fill="#262626" />
-      <rect x="99" y="256" width="42" height="26" rx="8" fill="#151515" />
-      <text x="120" y="274" textAnchor="middle" fontSize="12" fontWeight="900" fill="#D49020" fontFamily="monospace" letterSpacing="-0.5">[/]</text>
-      <path d="M72 295 Q120 300 168 295 Q165 308 120 312 Q75 308 72 295Z" fill="#141414" />
-      <circle cx="120" cy="188" r="60" fill="url(#cb-fur)" />
-      <ellipse cx="120" cy="230" rx="45" ry="12" fill="url(#cb-hs)" />
-      <ellipse cx="165" cy="195" rx="20" ry="48" fill="rgba(0,0,0,.08)" />
-      <ellipse cx="108" cy="165" rx="22" ry="14" fill="rgba(255,255,255,.12)" />
-      <ellipse cx="120" cy="208" rx="28" ry="21" fill="#C07518" opacity=".55" />
-      <circle cx="98" cy="184" r="14" fill="white" /><circle cx="142" cy="184" r="14" fill="white" />
-      <circle cx="100" cy="186" r="9" fill="#160A00" /><circle cx="144" cy="186" r="9" fill="#160A00" />
-      <circle cx="103" cy="182" r="3.5" fill="white" /><circle cx="147" cy="182" r="3.5" fill="white" />
-      <circle cx="97" cy="189" r="1.5" fill="white" opacity=".5" /><circle cx="141" cy="189" r="1.5" fill="white" opacity=".5" />
-      <ellipse cx="120" cy="205" rx="10" ry="7" fill="#160A00" />
-      <ellipse cx="117" cy="202" rx="3" ry="2.2" fill="white" opacity=".4" />
-      <line x1="120" y1="212" x2="120" y2="216" stroke="#160A00" strokeWidth="2" strokeLinecap="round" />
-      <path d="M108 218 Q120 228 132 218" stroke="#160A00" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      <ellipse cx="88" cy="205" rx="10" ry="6" fill="#E86020" opacity=".18" />
-      <ellipse cx="152" cy="205" rx="10" ry="6" fill="#E86020" opacity=".18" />
-      <path d="M70 240 Q52 256 56 278 Q62 285 72 278 Q69 262 84 250Z" fill="url(#cb-fur)" />
-      <path d="M170 240 Q186 254 184 276 Q178 283 169 276 Q173 261 158 250Z" fill="url(#cb-fur)" />
-      <g transform="rotate(32 155 240)">
-        <rect x="144" y="130" width="22" height="20" rx="5" fill="#F49898" />
-        <rect x="146" y="132" width="18" height="5" rx="2" fill="rgba(255,255,255,.3)" />
-        <rect x="144" y="148" width="22" height="6" fill="#D0D0D0" />
-        <rect x="144" y="152" width="22" height="4" fill="#B8B8B8" />
-        <rect x="144" y="154" width="22" height="148" rx="3" fill="#F8D040" />
-        <rect x="160" y="154" width="6" height="148" fill="rgba(0,0,0,.07)" />
-        <rect x="144" y="154" width="22" height="16" rx="2" fill="#EDBE28" />
-        <path d="M144 300 L166 300 L155 328Z" fill="#D8A870" />
-        <path d="M149 318 L161 318 L155 328Z" fill="#3C3C3C" />
-      </g>
-    </svg>
+    <div style={{
+      background: '#E8EEFF',
+      display: 'flex', flexDirection: 'column',
+      position: 'relative', overflow: 'hidden',
+      borderRadius: '32px 0 0 32px',
+      minHeight: 720,
+    }}>
+      {/* Background blobs */}
+      <div style={{ position: 'absolute', width: 192, height: 192, top: -32, left: -48, background: 'white', borderRadius: '50%', opacity: .25, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', width: 144, height: 144, bottom: 80, right: -24, background: '#C7D2FE', borderRadius: '50%', opacity: .4, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', width: 96, height: 96, top: '40%', left: '8%', background: 'white', borderRadius: '50%', opacity: .2, pointerEvents: 'none' }} />
+
+      {/* Gear icon */}
+      <div style={{
+        position: 'absolute', top: 20, left: 20, zIndex: 2,
+        width: 36, height: 36, background: 'white', borderRadius: 12,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 2px 8px rgba(99,102,241,.12)',
+      }}>
+        <Settings size={16} color="#6B7280" />
+      </div>
+
+      {/* Sparkles */}
+      <span style={{ position: 'absolute', top: '12%', left: '72%', fontSize: '1.1rem', color: '#FBBF24', pointerEvents: 'none', zIndex: 2 }}>✦</span>
+      <span style={{ position: 'absolute', top: '28%', right: '8%', fontSize: '.85rem', color: '#FBBF24', opacity: .7, pointerEvents: 'none', zIndex: 2 }}>✦</span>
+      <span style={{ position: 'absolute', top: '65%', left: '78%', fontSize: '.7rem', color: '#A5B4FC', opacity: .8, pointerEvents: 'none', zIndex: 2 }}>✦</span>
+      <span style={{ position: 'absolute', top: '75%', left: '12%', fontSize: '1rem', color: '#FBBF24', opacity: .6, pointerEvents: 'none', zIndex: 2 }}>✦</span>
+
+      {/* Main content: image card + play button, flex-1 */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '64px 28px 28px' }}>
+
+        {/* Upload card */}
+        <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+        <div
+          onClick={() => inputRef.current?.click()}
+          style={{
+            width: '82%', aspectRatio: '1 / 1',
+            background: 'white', borderRadius: 24,
+            boxShadow: '0 8px 32px rgba(99,102,241,.12)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', overflow: 'hidden',
+            position: 'relative',
+          }}
+        >
+          {imgUrl ? (
+            <img src={imgUrl} alt="uploaded" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 22 }} draggable={false} />
+          ) : (
+            <span style={{ fontSize: 40, fontWeight: 700, color: '#1F2937', userSelect: 'none', fontFamily: 'Sarabun, sans-serif' }}>
+              ใส่รูปได้
+            </span>
+          )}
+        </div>
+
+        {/* Play button — right side, vertically centered on card */}
+        <button
+          onClick={() => inputRef.current?.click()}
+          style={{
+            position: 'absolute', right: 8,
+            width: 52, height: 52, borderRadius: '50%',
+            background: 'white', border: 'none', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 4px 16px rgba(0,0,0,.12)',
+            zIndex: 3,
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#1F2937">
+            <polygon points="6,4 20,12 6,20" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Trust bar */}
+      <TrustCard />
+    </div>
   )
 }
 
-// ── Main Combined Page ───────────────────────────────────────────────────────
+// ── Right Panel ──────────────────────────────────────────────────────────────
+interface RightPanelProps {
+  tapScore: number
+  curStep: number
+  face: FaceState
+  isHamPop: boolean
+  ripples: number[]
+  bubbleText: string
+  bubbleAnim: 'in' | 'out' | null
+  inputVal: string
+  shaking: boolean
+  isFocused: boolean
+  onFocus: () => void
+  onBlur: () => void
+  onInputChange: (v: string) => void
+  onInputKeyDown: (e: React.KeyboardEvent) => void
+  onNext: () => void
+  onSkip: () => void
+  onPointerDown: (e: React.PointerEvent) => void
+  hamWrapRef: React.RefObject<HTMLDivElement>
+  inputRef: React.RefObject<HTMLInputElement>
+  hamImgUrl: string | null
+  hamInputRef: React.RefObject<HTMLInputElement>
+  onHamsterFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+function NewRightPanel({
+  tapScore, curStep, face, isHamPop, ripples,
+  bubbleText, bubbleAnim, inputVal, shaking, isFocused,
+  onFocus, onBlur, onInputChange, onInputKeyDown, onNext, onSkip,
+  onPointerDown, hamWrapRef, inputRef,
+  hamImgUrl, hamInputRef, onHamsterFileChange,
+}: RightPanelProps) {
+  const step = STEPS[curStep]
+  const speechLines = bubbleText.split('\n')
+
+  return (
+    <div style={{
+      background: '#D6E4FF',
+      display: 'flex', flexDirection: 'column',
+      position: 'relative', overflow: 'hidden',
+      borderRadius: '0 32px 32px 0',
+      minHeight: 720,
+    }}>
+      {/* Background blobs */}
+      <div style={{ position: 'absolute', width: 208, height: 208, top: -32, right: -40, background: '#BFDBFE', borderRadius: '50%', opacity: .5, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', width: 128, height: 128, bottom: 160, left: -20, background: '#C7D2FE', borderRadius: '50%', opacity: .4, pointerEvents: 'none' }} />
+
+      {/* Floating "b" */}
+      <span style={{
+        position: 'absolute', top: 20, left: 24, zIndex: 2,
+        fontSize: 72, fontWeight: 900, color: '#1F2937', lineHeight: 1,
+        fontFamily: 'system-ui, sans-serif', pointerEvents: 'none',
+      }}>b</span>
+
+      {/* Floating "p" */}
+      <span style={{
+        position: 'absolute', top: '22%', left: 16, zIndex: 2,
+        fontSize: 72, fontWeight: 900, color: '#F97316', lineHeight: 1,
+        fontFamily: 'system-ui, sans-serif', pointerEvents: 'none',
+      }}>p</span>
+
+      {/* AI badge */}
+      <div style={{
+        position: 'absolute', top: 20, right: 20, zIndex: 2,
+        background: '#3B5BF5', borderRadius: 10, padding: '4px 12px',
+        display: 'flex', alignItems: 'center',
+      }}>
+        <span style={{ fontSize: '.85rem', fontWeight: 900, color: 'white', letterSpacing: '.02em', fontFamily: 'system-ui, sans-serif' }}>AI</span>
+      </div>
+
+      {/* Sparkles */}
+      <span style={{ position: 'absolute', top: '5%', right: '20%', fontSize: '1rem', color: '#FBBF24', zIndex: 2, pointerEvents: 'none' }}>✦</span>
+      <span style={{ position: 'absolute', top: '15%', right: '35%', fontSize: '.7rem', color: '#A5B4FC', zIndex: 2, pointerEvents: 'none' }}>✦</span>
+      <span style={{ position: 'absolute', top: '38%', left: '8%', fontSize: '.85rem', color: '#FBBF24', zIndex: 2, pointerEvents: 'none' }}>✦</span>
+      <span style={{ position: 'absolute', top: '45%', right: '12%', fontSize: '.7rem', color: '#FBBF24', zIndex: 2, pointerEvents: 'none' }}>✦</span>
+
+      {/* Circuit decoration */}
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none"
+           style={{ position: 'absolute', top: 12, right: '26%', zIndex: 2, opacity: .4, pointerEvents: 'none' }}>
+        <circle cx="4" cy="4" r="2.5" fill="#93C5FD" />
+        <circle cx="32" cy="4" r="2.5" fill="#93C5FD" />
+        <circle cx="18" cy="18" r="2.5" fill="#60A5FA" />
+        <circle cx="4" cy="32" r="1.5" fill="#93C5FD" />
+        <line x1="4" y1="4" x2="18" y2="18" stroke="#93C5FD" strokeWidth="1" />
+        <line x1="32" y1="4" x2="18" y2="18" stroke="#93C5FD" strokeWidth="1" />
+        <line x1="4" y1="32" x2="18" y2="18" stroke="#93C5FD" strokeWidth=".8" strokeDasharray="2,2" />
+      </svg>
+
+      {/* Hamster tap area */}
+      <input ref={hamInputRef} type="file" accept="image/*" className="hidden" onChange={onHamsterFileChange} />
+      <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 56, paddingBottom: 4, position: 'relative' }}>
+        <div
+          ref={hamWrapRef}
+          onPointerDown={onPointerDown}
+          style={{
+            position: 'relative', width: 240, height: 260,
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+            cursor: 'pointer', userSelect: 'none', touchAction: 'none',
+          }}
+        >
+          {/* Glow halo */}
+          <div style={{
+            position: 'absolute', bottom: '4%', left: '50%', transform: 'translateX(-50%)',
+            width: 180, height: 50,
+            background: 'radial-gradient(ellipse, rgba(56,189,248,.52) 0%, transparent 70%)',
+            borderRadius: '50%', pointerEvents: 'none',
+          }} />
+
+          {/* Hamster */}
+          <div style={{
+            width: 220, height: 220, zIndex: 1,
+            filter: isHamPop
+              ? 'drop-shadow(0 4px 18px rgba(244,114,182,.65)) brightness(1.08)'
+              : 'drop-shadow(0 10px 24px rgba(99,102,241,.22))',
+            transform: isHamPop ? 'scale(1.12) translateY(-4px)' : undefined,
+            animation: isHamPop ? 'none' : 'floatie 3s ease-in-out infinite',
+            transition: 'transform .06s ease-out, filter .06s ease-out',
+          }}>
+            {hamImgUrl
+              ? <img src={hamImgUrl} alt="hamster" style={{ width: '100%', height: '100%', objectFit: 'contain' }} draggable={false} />
+              : <HamsterSVG face={face} />
+            }
+          </div>
+
+          {/* Ripples */}
+          {ripples.map(id => (
+            <div key={id} style={{
+              position: 'absolute', borderRadius: '50%',
+              width: 200, height: 200, top: '50%', left: '50%', margin: '-100px',
+              background: 'rgba(99,102,241,.14)', transform: 'scale(0)',
+              pointerEvents: 'none', animation: 'ripAnim .6s ease-out forwards',
+            }} />
+          ))}
+        </div>
+      </div>
+
+      {/* HUD row */}
+      <div style={{ display: 'flex', gap: 14, justifyContent: 'center', padding: '10px 24px' }}>
+        <HudBox label="TAP SCORE" value={tapScore} />
+        <HudBox label="STEP" value={curStep + 1} suffix="/5" />
+      </div>
+
+      {/* Form card */}
+      <div style={{
+        background: 'white', margin: '8px 16px 16px',
+        borderRadius: 24, padding: '18px 20px 20px',
+        display: 'flex', flexDirection: 'column', gap: 13,
+        flex: 1,
+      }}>
+
+        {/* Progress dots */}
+        <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+          {Array.from({ length: TOTAL }).map((_, i) => (
+            <div key={i} style={{
+              width: i === curStep ? 28 : 8, height: 8, borderRadius: 999,
+              background: i < curStep ? '#93C5FD' : i === curStep ? '#3B82F6' : '#E5E7EB',
+              transition: 'all .3s',
+            }} />
+          ))}
+        </div>
+
+        {/* Speech bubble */}
+        <div style={{
+          background: '#F8FAFF', borderRadius: 16, padding: '12px 16px',
+          animation: bubbleAnim === 'out' ? 'swapOut .18s ease forwards'
+            : bubbleAnim === 'in' ? 'swapIn .25s ease forwards' : undefined,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <span style={{ fontSize: '1rem' }}>🐹</span>
+            <span style={{ fontSize: '.68rem', fontWeight: 700, color: '#E0A152', letterSpacing: '.03em' }}>
+              แฮมสเตอร์พูดว่า...
+            </span>
+          </div>
+          <p style={{ fontSize: '.9rem', fontWeight: 700, color: '#1F2937', lineHeight: 1.55, margin: 0 }}>
+            {speechLines.map((line, i) => <span key={i}>{i > 0 && <br />}{line}</span>)}
+          </p>
+        </div>
+
+        {/* Input */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          background: '#EEF2FF', borderRadius: 14, padding: '0 16px', height: 48,
+          boxShadow: isFocused ? '0 0 0 2px #818CF8' : 'none',
+          transition: 'box-shadow .15s',
+          animation: shaking ? 'shake .35s ease' : undefined,
+        }}>
+          {step.icon}
+          <input
+            ref={inputRef}
+            value={inputVal}
+            onChange={e => onInputChange(e.target.value)}
+            onKeyDown={onInputKeyDown}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            inputMode={step.inputMode}
+            type={step.inputType}
+            placeholder={step.placeholder}
+            autoComplete="off"
+            style={{
+              flex: 1, border: 'none', outline: 'none',
+              background: 'transparent', fontSize: '.93rem',
+              color: '#1F2937', fontFamily: 'inherit',
+            }}
+          />
+        </div>
+
+        {/* Buttons */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <button
+            onClick={onNext}
+            style={{
+              width: '100%', height: 52, border: 'none', borderRadius: 999,
+              background: 'linear-gradient(90deg, #60A5FA, #93C5FD)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              cursor: 'pointer', transition: 'filter .12s, transform .12s',
+              boxShadow: '0 6px 20px rgba(96,165,250,.35)',
+            }}
+            onPointerDown={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(.97)' }}
+            onPointerUp={e => { (e.currentTarget as HTMLButtonElement).style.transform = '' }}
+          >
+            <span style={{ fontSize: '.95rem', fontWeight: 700, color: 'white' }}>ถัดไป</span>
+            <ChevronRight size={18} color="white" strokeWidth={2.5} />
+          </button>
+          {step.optional && (
+            <button onClick={onSkip} style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              fontSize: '.82rem', color: '#9CA3AF', fontFamily: 'inherit', textDecoration: 'underline', padding: '3px 8px',
+              alignSelf: 'center',
+            }}>
+              ข้ามได้เลย →
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── HUD box ──────────────────────────────────────────────────────────────────
+function HudBox({ label, value, suffix }: { label: string; value: number; suffix?: string }) {
+  return (
+    <div style={{
+      background: 'white', borderRadius: 18, padding: '10px 24px',
+      textAlign: 'center', minWidth: 130,
+      boxShadow: '0 4px 16px rgba(99,102,241,.10)',
+    }}>
+      <div style={{ fontSize: '.62rem', fontWeight: 700, color: '#9CA3AF', letterSpacing: '.08em', textTransform: 'uppercase' }}>
+        {label}
+      </div>
+      <div style={{ fontSize: '2.4rem', fontWeight: 800, color: '#3B82F6', lineHeight: 1.1 }}>
+        {value}{suffix && <span style={{ fontSize: '1rem', fontWeight: 600, color: '#9CA3AF' }}>{suffix}</span>}
+      </div>
+    </div>
+  )
+}
+
+// ── Main Page ────────────────────────────────────────────────────────────────
 export function CombinedRegistrationPage() {
   const [tapScore, setTapScore] = useState(0)
   const [curStep, setCurStep] = useState(0)
   const [face, setFace] = useState<FaceState>('normal')
   const [isHamPop, setIsHamPop] = useState(false)
   const [inputVal, setInputVal] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [bubbleText, setBubbleText] = useState(STEPS[0].speech)
   const [bubbleAnim, setBubbleAnim] = useState<'in' | 'out' | null>(null)
@@ -532,6 +547,7 @@ export function CombinedRegistrationPage() {
   const [ripples, setRipples] = useState<number[]>([])
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [finalScore, setFinalScore] = useState(0)
+  const [hamImgUrl, setHamImgUrl] = useState<string | null>(null)
 
   const tapScoreRef = useRef(0)
   const isPoppedRef = useRef(false)
@@ -540,18 +556,29 @@ export function CombinedRegistrationPage() {
   const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const hamWrapRef = useRef<HTMLDivElement>(null)
+  const hamInputRef = useRef<HTMLInputElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const heartsLayerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => { tapScoreRef.current = tapScore }, [tapScore])
   useEffect(() => { isShyRef.current = isShyMode }, [isShyMode])
 
+  // Hamster image upload
+  function handleHamsterFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const prev = hamImgUrl
+    setHamImgUrl(URL.createObjectURL(file))
+    if (prev) URL.revokeObjectURL(prev)
+    e.target.value = ''
+  }
+
   const playPopSound = useCallback(() => {
     try {
       if (!audioCtxRef.current)
         audioCtxRef.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
       const ctx = audioCtxRef.current
-      const osc = ctx.createOscillator(); const gain = ctx.createGain()
+      const osc = ctx.createOscillator(), gain = ctx.createGain()
       osc.connect(gain); gain.connect(ctx.destination)
       osc.type = 'sine'
       osc.frequency.setValueAtTime(680, ctx.currentTime)
@@ -563,7 +590,7 @@ export function CombinedRegistrationPage() {
   }, [])
 
   const spawnHearts = useCallback(() => {
-    const wrap = hamWrapRef.current; const layer = heartsLayerRef.current
+    const wrap = hamWrapRef.current, layer = heartsLayerRef.current
     if (!wrap || !layer) return
     const rect = wrap.getBoundingClientRect()
     const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2
@@ -572,7 +599,7 @@ export function CombinedRegistrationPage() {
       setTimeout(() => {
         const h = document.createElement('span')
         h.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)]
-        const dx = (Math.random() - 0.5) * 80, dy = -(55 + Math.random() * 55)
+        const dx = (Math.random() - 0.5) * 80, dy = -(55 + Math.random() * 60)
         h.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;font-size:${(0.8 + Math.random()).toFixed(2)}rem;line-height:1;pointer-events:none;z-index:600;transform:translate(-50%,-50%);`
         layer.appendChild(h)
         h.animate([
@@ -637,7 +664,10 @@ export function CombinedRegistrationPage() {
     setCurStep(step); setInputVal('')
     if (animate) {
       setBubbleAnim('out')
-      setTimeout(() => { setBubbleText(STEPS[step].speech); setBubbleAnim('in'); setTimeout(() => setBubbleAnim(null), 280) }, 190)
+      setTimeout(() => {
+        setBubbleText(STEPS[step].speech); setBubbleAnim('in')
+        setTimeout(() => setBubbleAnim(null), 280)
+      }, 190)
     } else {
       setBubbleText(STEPS[step].speech)
     }
@@ -669,15 +699,25 @@ export function CombinedRegistrationPage() {
   const onSkip = useCallback(() => advance(null), [advance])
 
   return (
-    <div className="min-h-screen bg-bg-page flex items-center justify-center p-10 max-sm:p-4"
-         style={{ fontFamily: "'Sarabun','Noto Sans Thai',sans-serif" }}>
-
-      {/* hearts overlay */}
+    <div style={{
+      minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '32px 16px',
+      background: 'linear-gradient(150deg, #EEF2FF 0%, #DBEAFE 100%)',
+      fontFamily: "'Sarabun', 'Noto Sans Thai', sans-serif",
+    }}>
+      {/* Hearts layer */}
       <div ref={heartsLayerRef} style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 600 }} />
 
-      <div className="w-full max-w-[1160px] shadow-card rounded-card overflow-hidden grid grid-cols-[62fr_38fr] max-lg:grid-cols-1">
-        <LeftPanel />
-        <GameRightPanel
+      {/* Card */}
+      <div style={{
+        width: '100%', maxWidth: 1200, minHeight: 720,
+        display: 'grid', gridTemplateColumns: '1fr 1fr',
+        borderRadius: 32,
+        boxShadow: '0 32px 80px rgba(99,102,241,.18), 0 0 0 1px rgba(255,255,255,.6) inset',
+        overflow: 'hidden',
+      }}>
+        <NewLeftPanel />
+        <NewRightPanel
           tapScore={tapScore}
           curStep={curStep}
           face={face}
@@ -687,6 +727,9 @@ export function CombinedRegistrationPage() {
           bubbleAnim={bubbleAnim}
           inputVal={inputVal}
           shaking={shaking}
+          isFocused={isFocused}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           onInputChange={setInputVal}
           onInputKeyDown={e => e.key === 'Enter' && onNext()}
           onNext={onNext}
@@ -694,6 +737,9 @@ export function CombinedRegistrationPage() {
           onPointerDown={handlePointerDown}
           hamWrapRef={hamWrapRef}
           inputRef={inputRef}
+          hamImgUrl={hamImgUrl}
+          hamInputRef={hamInputRef}
+          onHamsterFileChange={handleHamsterFile}
         />
       </div>
 
@@ -706,8 +752,8 @@ export function CombinedRegistrationPage() {
       )}
 
       <style>{`
-        @keyframes floatie { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-6px) rotate(2deg)} }
-        @keyframes ripAnim  { to{transform:scale(2.2);opacity:0} }
+        @keyframes floatie { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-8px) rotate(2deg)} }
+        @keyframes ripAnim  { to{transform:scale(2.4);opacity:0} }
         @keyframes swapOut  { to{opacity:0;transform:translateY(-8px)} }
         @keyframes swapIn   { from{opacity:0;transform:translateY(8px)} }
         @keyframes shake    { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
