@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Hamster Pop Camp 🐹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800;900&family=Nunito:wght@800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F3F4F7;
+  --ink:#16294E;
+  --blue:#2F6BFF;
+  --blue-deep:#1E4FD0;
+  --blue-soft:#EAF0FF;
+  --purple:#7C5CFC;
+  --green:#22C55E;
+  --card:#FFFFFF;
+  --text-muted:#7C8597;
+  --line:#E6E9F0;
+  --cream:#FFF2E2;
+  --orange:#EE9A45;
+  --yellow:#F5C542;
+  --shadow:0 18px 40px rgba(22,41,78,0.10);
+  --shadow-soft:0 10px 24px rgba(22,41,78,0.08);
+}
+body{
+  font-family:'Kanit',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── SPARKLE CANVAS ── */
+#sparkle-canvas{
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── LAYOUT ── */
+.page-wrap{
+  position:relative;
+  z-index:1;
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:58fr 42fr;
+  max-width:1280px;
+  margin:0 auto;
+  padding:32px 24px;
+  gap:28px;
+  align-items:start;
+}
+
+/* ── LEFT COLUMN ── */
+.left-col{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  padding:8px 0;
+}
+
+/* LOGO */
+.logo-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  opacity:0;
+  animation:slideDown .5s .05s ease forwards;
+}
+.logo-icon{
+  width:40px;height:40px;
+  background:var(--blue);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(47,107,255,.35);
+  font-size:20px;
+}
+.logo-name{
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--ink);
+  letter-spacing:.01em;
+}
+.logo-name span{color:var(--blue)}
+
+/* LIVE BADGE */
+.live-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#FEE2E2;
+  color:#DC2626;
+  font-size:.72rem;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  width:fit-content;
+  opacity:0;
+  animation:slideDown .5s .12s ease forwards;
+}
+.live-dot{
+  width:7px;height:7px;
+  border-radius:50%;
+  background:#EF4444;
+  animation:livePulse 1.4s ease-in-out infinite;
+}
+
+/* HERO TITLE */
+.hero-title{
+  opacity:0;
+  animation:slideDown .6s .2s ease forwards;
+}
+.hero-title .hamster-word{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(3.2rem,6vw,5.2rem);
+  font-weight:900;
+  color:var(--ink);
+  line-height:1;
+  display:block;
+  letter-spacing:-.02em;
+}
+.hero-title .popcamp-word{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(3.2rem,6vw,5.2rem);
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-.02em;
+}
+.popcamp-word .p1{color:var(--ink)}
+.popcamp-word .paw-o{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:clamp(48px,5.5vw,72px);
+  height:clamp(48px,5.5vw,72px);
+  position:relative;
+  top:4px;
+}
+.popcamp-word .p2{color:var(--orange)}
+
+/* SUBTITLE */
+.subtitle{
+  font-size:clamp(.9rem,1.4vw,1.08rem);
+  color:var(--text-muted);
+  font-weight:500;
+  line-height:1.6;
+  max-width:480px;
+  opacity:0;
+  animation:slideDown .6s .3s ease forwards;
+}
+
+/* TIME BUBBLE */
+.time-bubble{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:white;
+  border:1.5px solid var(--line);
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--ink);
+  box-shadow:var(--shadow-soft);
+  width:fit-content;
+  opacity:0;
+  animation:slideDown .6s .38s ease forwards;
+}
+.time-bubble .calendar-icon{
+  font-size:1rem;
+}
+.time-bubble .time-text b{color:var(--blue)}
+
+/* HAMSTER HERO AREA */
+.hamster-hero{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:280px;
+  cursor:pointer;
+  user-select:none;
+  touch-action:none;
+  opacity:0;
+  animation:fadeInScale .7s .45s ease forwards;
+}
+.hamster-hero svg{
+  width:220px;
+  height:220px;
+  filter:drop-shadow(0 16px 32px rgba(22,41,78,.15));
+  animation:hamFloat 3s ease-in-out infinite;
+  transition:transform .12s ease;
+  pointer-events:none;
+}
+.hamster-hero.popped svg{
+  transform:scale(1.1);
+  filter:drop-shadow(0 20px 40px rgba(47,107,255,.3));
+}
+
+/* GLOW UNDER HAMSTER */
+.hamster-glow{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:160px;height:40px;
+  background:radial-gradient(ellipse, rgba(47,107,255,.25) 0%, transparent 70%);
+  border-radius:50%;
+  pointer-events:none;
+}
+
+/* RIPPLE */
+.ripple{
+  position:absolute;
+  border-radius:50%;
+  background:rgba(47,107,255,.18);
+  pointer-events:none;
+  animation:ripAnim .7s ease-out forwards;
+}
+
+/* FEATURES BAR */
+.features-bar{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  opacity:0;
+  animation:slideDown .6s .55s ease forwards;
+}
+.feature-card{
+  background:white;
+  border-radius:16px;
+  padding:14px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  box-shadow:var(--shadow-soft);
+  border:1px solid var(--line);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.feature-card:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow);
+}
+.feature-icon{font-size:1.4rem;margin-bottom:2px}
+.feature-title{font-size:.78rem;font-weight:700;color:var(--ink)}
+.feature-desc{font-size:.7rem;color:var(--text-muted);font-weight:500;line-height:1.4}
+
+/* POPS COUNTER */
+.pops-bar{
+  background:white;
+  border-radius:18px;
+  padding:16px 20px;
+  box-shadow:var(--shadow-soft);
+  border:1px solid var(--line);
+  opacity:0;
+  animation:slideDown .6s .65s ease forwards;
+}
+.pops-label-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.pops-label{
+  font-size:.78rem;
+  font-weight:700;
+  color:var(--text-muted);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.pops-count{
+  font-family:'Nunito',sans-serif;
+  font-size:1.6rem;
+  font-weight:900;
+  color:var(--blue);
+  animation:popsPulse 2.8s ease-in-out infinite;
+}
+.pops-count span{font-size:.85rem;font-weight:700;color:var(--text-muted)}
+.pops-track{
+  height:8px;
+  background:var(--blue-soft);
+  border-radius:999px;
+  overflow:hidden;
+}
+.pops-fill{
+  height:100%;
+  background:linear-gradient(90deg, var(--blue), var(--purple));
+  border-radius:999px;
+  width:79%;
+  transition:width .8s ease;
+  animation:popsGrow 1s .8s ease backwards;
+}
+
+/* ── RIGHT COLUMN ── */
+.right-col{
+  position:sticky;
+  top:24px;
+  opacity:0;
+  animation:slideLeft .7s .2s ease forwards;
+}
+
+/* REGISTRATION CARD */
+.reg-card{
+  background:white;
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  border:1px solid rgba(22,41,78,.06);
+}
+
+/* CARD TOP GRADIENT STRIP */
+.card-top{
+  background:linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+  padding:24px 28px 20px;
+  position:relative;
+  overflow:hidden;
+}
+.card-top::before{
+  content:'';
+  position:absolute;
+  top:-40px;right:-40px;
+  width:160px;height:160px;
+  background:rgba(255,255,255,.08);
+  border-radius:50%;
+}
+.card-top::after{
+  content:'';
+  position:absolute;
+  bottom:-20px;left:-20px;
+  width:80px;height:80px;
+  background:rgba(255,255,255,.06);
+  border-radius:50%;
+}
+.card-top-title{
+  font-size:1.3rem;
+  font-weight:800;
+  color:white;
+  margin-bottom:4px;
+  position:relative;
+}
+.card-top-sub{
+  font-size:.8rem;
+  color:rgba(255,255,255,.75);
+  font-weight:500;
+  position:relative;
+}
+
+/* PROGRESS BAR */
+.progress-wrap{
+  padding:20px 28px 0;
+}
+.progress-dots{
+  display:flex;
+  gap:6px;
+  justify-content:center;
+  margin-bottom:4px;
+}
+.progress-dot{
+  height:8px;
+  border-radius:999px;
+  background:var(--line);
+  transition:all .35s ease;
+}
+.progress-dot.done{background:#93C5FD}
+.progress-dot.active{
+  background:var(--blue);
+  width:28px !important;
+}
+
+/* CARD BODY */
+.card-body{
+  padding:20px 28px 28px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+/* SPEECH BUBBLE */
+.speech-bubble{
+  background:#F8FAFF;
+  border-radius:16px;
+  padding:14px 16px;
+  animation:swapIn .3s ease;
+}
+.speech-header{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:5px;
+}
+.speech-emoji{font-size:1rem}
+.speech-label{
+  font-size:.67rem;
+  font-weight:700;
+  color:#E0A152;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.speech-text{
+  font-size:.9rem;
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.55;
+  white-space:pre-line;
+}
+
+/* INPUT ROW */
+.input-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#EEF2FF;
+  border-radius:14px;
+  padding:13px 16px;
+  transition:box-shadow .2s ease;
+}
+.input-row:focus-within{
+  box-shadow:0 0 0 2px #818CF8;
+}
+.input-row input{
+  flex:1;
+  border:none;
+  outline:none;
+  background:transparent;
+  font-size:.93rem;
+  font-weight:500;
+  color:var(--ink);
+  font-family:'Kanit',sans-serif;
+}
+.input-row input::placeholder{color:#C4C9D8}
+.input-icon{
+  color:#6366F1;
+  flex-shrink:0;
+  font-size:.95rem;
+}
+
+/* NEXT BUTTON */
+.next-btn{
+  width:100%;
+  height:52px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(90deg, #60A5FA, #93C5FD);
+  color:white;
+  font-size:.95rem;
+  font-weight:700;
+  font-family:'Kanit',sans-serif;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  transition:filter .15s, transform .1s;
+  box-shadow:0 6px 20px rgba(96,165,250,.35);
+}
+.next-btn:hover{filter:brightness(1.07)}
+.next-btn:active{transform:scale(.97)}
+.next-btn.shake{animation:shake .38s ease}
+
+/* SKIP BUTTON */
+.skip-btn{
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:.82rem;
+  font-family:'Kanit',sans-serif;
+  color:var(--text-muted);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  padding:4px;
+  display:block;
+  width:100%;
+  text-align:center;
+}
+
+/* HUD ROW */
+.hud-row{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  padding:0 20px;
+}
+.hud-box{
+  background:white;
+  border-radius:16px;
+  padding:10px 20px;
+  min-width:120px;
+  text-align:center;
+  box-shadow:0 4px 16px rgba(99,102,241,.1);
+  flex:1;
+  max-width:160px;
+}
+.hud-label{
+  font-size:.6rem;
+  font-weight:700;
+  color:#9CA3AF;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:2px;
+}
+.hud-value{
+  font-family:'Nunito',sans-serif;
+  font-size:2.2rem;
+  font-weight:900;
+  color:var(--blue);
+  line-height:1.1;
+}
+.hud-value .of5{
+  font-size:1rem;
+  font-weight:600;
+  color:#9CA3AF;
+}
+
+/* SUCCESS OVERLAY */
+.success-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,20,40,.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+  opacity:0;
+  animation:fadeIn .35s ease forwards;
+}
+.success-card{
+  background:white;
+  border-radius:32px;
+  padding:40px 48px;
+  text-align:center;
+  max-width:420px;
+  width:90%;
+  box-shadow:0 40px 80px rgba(22,41,78,.2);
+  animation:popIn .4s .1s ease backwards;
+}
+.success-ham{
+  font-size:5rem;
+  animation:wiggle 1.2s .4s ease infinite;
+  display:block;
+  margin-bottom:16px;
+}
+.success-title{
+  font-size:1.6rem;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.success-sub{
+  font-size:.9rem;
+  color:var(--text-muted);
+  line-height:1.6;
+  margin-bottom:24px;
+}
+.success-close{
+  background:var(--blue);
+  color:white;
+  border:none;
+  border-radius:999px;
+  padding:12px 32px;
+  font-size:.95rem;
+  font-weight:700;
+  font-family:'Kanit',sans-serif;
+  cursor:pointer;
+  transition:filter .15s;
+}
+.success-close:hover{filter:brightness(1.1)}
+
+/* HEARTS LAYER */
+#hearts-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:500;
+}
+.floating-heart{
+  position:absolute;
+  font-size:1.2rem;
+  pointer-events:none;
+  animation:heartFloat 1s ease-out forwards;
+  user-select:none;
+}
+
+/* ── KEYFRAMES ── */
+@keyframes slideDown{
+  from{opacity:0;transform:translateY(-18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes slideLeft{
+  from{opacity:0;transform:translateX(24px)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes fadeInScale{
+  from{opacity:0;transform:scale(.9)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes hamFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+@keyframes livePulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(.85)}
+}
+@keyframes ripAnim{
+  from{opacity:.6;transform:scale(0)}
+  to{opacity:0;transform:scale(2.6)}
+}
+@keyframes heartFloat{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-80px) scale(.6)}
+}
+@keyframes popsPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+@keyframes popsGrow{
+  from{width:0}
+}
+@keyframes swapIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-5px)}
+  80%{transform:translateX(4px)}
+}
+@keyframes fadeIn{
+  to{opacity:1}
+}
+@keyframes popIn{
+  from{opacity:0;transform:scale(.85)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes wiggle{
+  0%,100%{transform:rotate(-8deg)}
+  50%{transform:rotate(8deg)}
+}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .page-wrap{
+    grid-template-columns:1fr;
+    padding:20px 16px;
+    gap:24px;
+  }
+  .right-col{
+    position:static;
+  }
+  .hamster-hero{height:220px}
+  .hamster-hero svg{width:170px;height:170px}
+  .features-bar{grid-template-columns:repeat(3,1fr);gap:8px}
+}
+@media(max-width:480px){
+  .features-bar{grid-template-columns:1fr}
+}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sparkle-canvas"></canvas>
+<div id="hearts-layer"></div>
+
+<div class="page-wrap">
+  <!-- ── LEFT COLUMN ── -->
+  <div class="left-col">
+
+    <!-- LOGO -->
+    <div class="logo-row">
+      <div class="logo-icon">🐹</div>
+      <div class="logo-name">Hamster<span>Pop</span>Camp</div>
+    </div>
+
+    <!-- LIVE BADGE -->
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span>LIVE กำลังรับสมัคร</span>
+    </div>
+
+    <!-- HERO TITLE -->
+    <div class="hero-title">
+      <span class="hamster-word">Hamster</span>
+      <div class="popcamp-word">
+        <span class="p1">P</span>
+        <span class="paw-o">
+          <svg viewBox="0 0 72 72" width="100%" height="100%">
+            <!-- Paw print replacing "O" -->
+            <circle cx="36" cy="38" r="22" fill="#EE9A45"/>
+            <circle cx="36" cy="38" r="17" fill="#F5C542"/>
+            <!-- paw beans -->
+            <ellipse cx="36" cy="22" rx="7.5" ry="9" fill="#EE9A45"/>
+            <ellipse cx="19" cy="28" rx="6" ry="7.5" fill="#EE9A45"/>
+            <ellipse cx="53" cy="28" rx="6" ry="7.5" fill="#EE9A45"/>
+            <ellipse cx="13" cy="43" rx="5.5" ry="7" fill="#EE9A45"/>
+            <ellipse cx="59" cy="43" rx="5.5" ry="7" fill="#EE9A45"/>
+          </svg>
+        </span>
+        <span class="p1">p&nbsp;</span>
+        <span class="p2">Camp</span>
+      </div>
+    </div>
+
+    <!-- SUBTITLE -->
+    <p class="subtitle">
+      เรียนรู้และสร้าง <b>AI ด้วยตัวเอง</b> ผ่านเกมส์สนุกๆ<br/>
+      เข้าใจง่าย ไม่ต้องมีพื้นฐานโปรแกรมมิ่ง 🚀
+    </p>
+
+    <!-- TIME BUBBLE -->
+    <div class="time-bubble">
+      <span class="calendar-icon">📅</span>
+      <div class="time-text">
+        Camp เริ่ม <b>7–9 มิถุนายน 2025</b> &nbsp;|&nbsp; เวลา <b>09:00–17:00</b>
+      </div>
+    </div>
+
+    <!-- HAMSTER HERO -->
+    <div class="hamster-hero" id="hamster-hero">
+      <div class="hamster-glow"></div>
+      <svg id="hamster-svg" viewBox="0 0 240 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="hg" cx="38%" cy="28%" r="62%">
+            <stop offset="0%" stop-color="#FCD070"/><stop offset="55%" stop-color="#F59028"/><stop offset="100%" stop-color="#D07010"/>
+          </radialGradient>
+          <radialGradient id="fg" cx="50%" cy="36%" r="60%">
+            <stop offset="0%" stop-color="#FFFAF2"/><stop offset="100%" stop-color="#F8E2C4"/>
+          </radialGradient>
+          <radialGradient id="eg" cx="30%" cy="25%" r="70%">
+            <stop offset="0%" stop-color="#1A1A2E"/><stop offset="100%" stop-color="#060610"/>
+          </radialGradient>
+          <radialGradient id="bg2" cx="50%" cy="0%" r="100%">
+            <stop offset="0%" stop-color="#38BDF8" stop-opacity=".58"/><stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#C8A000"/><stop offset="22%" stop-color="#FFE135"/>
+            <stop offset="78%" stop-color="#FFE135"/><stop offset="100%" stop-color="#B09000"/>
+          </linearGradient>
+        </defs>
+        <!-- BASE GLOW -->
+        <ellipse cx="116" cy="252" rx="86" ry="13" fill="url(#bg2)"/>
+        <ellipse cx="116" cy="249" rx="62" ry="8.5" fill="rgba(56,189,248,.3)"/>
+        <!-- HOODIE BODY -->
+        <path d="M50 154 C30 170 26 214 24 257 L208 257 C206 214 202 170 182 154 C165 141 144 133 116 132 C88 133 67 141 50 154Z" fill="#111827"/>
+        <path d="M80 154 Q116 140 152 154 Q141 134 116 131 Q91 134 80 154Z" fill="#1F2937"/>
+        <line x1="116" y1="154" x2="116" y2="257" stroke="#1F2937" stroke-width="2.5"/>
+        <path d="M70 192 Q116 205 162 192 Q167 210 116 215 Q65 210 70 192Z" fill="#1F2937"/>
+        <path d="M100 150 Q116 158 132 150" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="100" cy="150" r="3" fill="#374151"/><circle cx="132" cy="150" r="3" fill="#374151"/>
+        <!-- LAPTOP SCREEN (before head) -->
+        <path d="M26 185 L42 137 L198 137 L214 185Z" fill="#13131D"/>
+        <path d="M32 183 L46 141 L190 141 L204 183Z" fill="#0D1117"/>
+        <rect x="32" y="141" width="172" height="6" rx="2" fill="#191928" opacity=".55"/>
+        <circle cx="40" cy="144" r="2.2" fill="#FF5F57"/>
+        <circle cx="47" cy="144" r="2.2" fill="#FEBC2E"/>
+        <circle cx="54" cy="144" r="2.2" fill="#28C840"/>
+        <rect x="52" y="150" width="32" height="2.5" rx="1.2" fill="#3B82F6" opacity=".9"/>
+        <rect x="52" y="156" width="22" height="2.5" rx="1.2" fill="#F97316" opacity=".8"/>
+        <rect x="52" y="162" width="28" height="2.5" rx="1.2" fill="#34D399" opacity=".7"/>
+        <rect x="52" y="168" width="18" height="2.5" rx="1.2" fill="#A78BFA" opacity=".6"/>
+        <rect x="52" y="174" width="24" height="2.5" rx="1.2" fill="#3B82F6" opacity=".5"/>
+        <text x="150" y="164" text-anchor="middle" dominant-baseline="middle" fill="#60A5FA" font-size="28" font-weight="900" font-family="system-ui,-apple-system,sans-serif" letter-spacing="3">AI</text>
+        <ellipse cx="150" cy="170" rx="33" ry="8" fill="rgba(96,165,250,.18)"/>
+        <text x="150" y="180" text-anchor="middle" fill="#F97316" font-size="10" font-weight="900" font-family="monospace">&lt;/&gt;</text>
+        <!-- KEYBOARD -->
+        <rect x="16" y="183" width="210" height="34" rx="11" fill="#13131D"/>
+        <rect x="22" y="187" width="198" height="26" rx="6.5" fill="#1E1E32"/>
+        <rect x="28" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="44" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="60" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="76" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="92" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="108" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="124" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="140" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="156" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="172" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="188" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="204" y="189" width="14" height="9" rx="3" fill="#0E0E1E"/>
+        <rect x="32" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="48" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="64" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="80" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="96" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="112" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="128" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="144" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="160" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="176" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="192" y="201" width="14" height="6" rx="2.5" fill="#0E0E1E"/>
+        <rect x="16" y="181" width="210" height="4" rx="2" fill="#28283C"/>
+        <!-- EARS -->
+        <circle cx="62" cy="16" r="30" fill="url(#hg)"/>
+        <circle cx="62" cy="16" r="20" fill="#F5A8B8"/>
+        <circle cx="62" cy="16" r="11" fill="#E07090" opacity=".65"/>
+        <circle cx="170" cy="16" r="30" fill="url(#hg)"/>
+        <circle cx="170" cy="16" r="20" fill="#F5A8B8"/>
+        <circle cx="170" cy="16" r="11" fill="#E07090" opacity=".65"/>
+        <!-- HEAD -->
+        <circle cx="116" cy="84" r="78" fill="url(#hg)"/>
+        <ellipse cx="88" cy="34" rx="32" ry="16" fill="white" opacity=".14" transform="rotate(-14 88 34)"/>
+        <!-- POUCHES -->
+        <ellipse cx="18" cy="102" rx="42" ry="32" fill="#E88020"/>
+        <ellipse cx="214" cy="102" rx="42" ry="32" fill="#E88020"/>
+        <ellipse cx="10" cy="95" rx="18" ry="12" fill="#FBA850" opacity=".34"/>
+        <ellipse cx="206" cy="95" rx="18" ry="12" fill="#FBA850" opacity=".34"/>
+        <!-- FACE CREAM -->
+        <ellipse cx="116" cy="99" rx="59" ry="51" fill="url(#fg)"/>
+        <!-- LEFT PAW -->
+        <ellipse cx="60" cy="204" rx="24" ry="15" fill="#E88020"/>
+        <ellipse cx="60" cy="201" rx="16" ry="10" fill="#FEF2DA"/>
+        <circle cx="51" cy="199" r="4.2" fill="#F0A060"/>
+        <circle cx="60" cy="197" r="4.2" fill="#F0A060"/>
+        <circle cx="69" cy="199" r="4.2" fill="#F0A060"/>
+        <!-- PENCIL -->
+        <g transform="translate(168,178) rotate(20)">
+          <rect x="-7.5" y="15" width="15" height="18" rx="4" fill="#FFB3C6"/>
+          <rect x="-8" y="2" width="16" height="15" rx="3" fill="#ADADBE"/>
+          <rect x="-7.5" y="4.5" width="15" height="5.5" rx="1.5" fill="#CFCFDC" opacity=".65"/>
+          <rect x="-7.5" y="-150" width="15" height="154" fill="url(#pg)"/>
+          <rect x="-7.5" y="-150" width="5.5" height="154" fill="#9A7800" opacity=".33"/>
+          <rect x="4" y="-150" width="3.5" height="154" fill="#FFFDE7" opacity=".44"/>
+          <polygon points="-7.5,-150 7.5,-150 0,-177" fill="#D4935A"/>
+          <polygon points="-7.5,-150 0,-150 0,-177" fill="#9C5020" opacity=".38"/>
+          <polygon points="-3.5,-173 3.5,-173 0,-183" fill="#2D2D2D"/>
+          <polygon points="-1.5,-173 0,-173 0,-183" fill="#555" opacity=".35"/>
+        </g>
+        <!-- RIGHT PAW -->
+        <ellipse cx="158" cy="204" rx="24" ry="15" fill="#E88020"/>
+        <ellipse cx="158" cy="201" rx="16" ry="10" fill="#FEF2DA"/>
+        <circle cx="149" cy="199" r="4.2" fill="#F0A060"/>
+        <circle cx="158" cy="197" r="4.2" fill="#F0A060"/>
+        <circle cx="167" cy="199" r="4.2" fill="#F0A060"/>
+        <!-- GLASSES -->
+        <circle cx="82" cy="86" r="29" fill="rgba(0,0,0,.07)"/>
+        <circle cx="150" cy="86" r="29" fill="rgba(0,0,0,.07)"/>
+        <circle cx="82" cy="84" r="29" fill="rgba(215,230,255,.08)" stroke="#0F0F18" stroke-width="5.5"/>
+        <circle cx="150" cy="84" r="29" fill="rgba(215,230,255,.08)" stroke="#0F0F18" stroke-width="5.5"/>
+        <path d="M111 84 C113 79 115 79 117 84" fill="none" stroke="#0F0F18" stroke-width="5.5" stroke-linecap="round"/>
+        <path d="M53 84 C44 77 40 67 36 57" fill="none" stroke="#0F0F18" stroke-width="5.5" stroke-linecap="round"/>
+        <path d="M179 84 C188 77 192 67 196 57" fill="none" stroke="#0F0F18" stroke-width="5.5" stroke-linecap="round"/>
+        <path d="M65 69 Q75 62 85 66" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M133 69 Q143 62 153 66" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- EYES (normal) -->
+        <g id="eyes-normal">
+          <circle cx="82" cy="84" r="24.5" fill="white"/>
+          <circle cx="84" cy="86" r="16.5" fill="url(#eg)"/>
+          <circle cx="91" cy="77" r="10" fill="white"/>
+          <circle cx="77" cy="93" r="4.5" fill="rgba(255,255,255,.48)"/>
+          <circle cx="150" cy="84" r="24.5" fill="white"/>
+          <circle cx="152" cy="86" r="16.5" fill="url(#eg)"/>
+          <circle cx="159" cy="77" r="10" fill="white"/>
+          <circle cx="145" cy="93" r="4.5" fill="rgba(255,255,255,.48)"/>
+        </g>
+        <!-- EYES (popped) — hidden by default -->
+        <g id="eyes-popped" display="none">
+          <circle cx="82" cy="84" r="27" fill="white"/>
+          <circle cx="84" cy="86" r="19" fill="url(#eg)"/>
+          <circle cx="92" cy="75" r="12" fill="white"/>
+          <circle cx="77" cy="94" r="5.5" fill="rgba(255,255,255,.5)"/>
+          <polygon points="110,50 112.5,54 116.5,54 113.5,56.5 114.5,60.5 110,58 105.5,60.5 106.5,56.5 103.5,54 107.5,54" fill="#FBBF24"/>
+          <circle cx="150" cy="84" r="27" fill="white"/>
+          <circle cx="152" cy="86" r="19" fill="url(#eg)"/>
+          <circle cx="160" cy="75" r="12" fill="white"/>
+          <circle cx="145" cy="94" r="5.5" fill="rgba(255,255,255,.5)"/>
+          <polygon points="178,47 180.5,51 184.5,51 181.5,53.5 182.5,57.5 178,55 173.5,57.5 174.5,53.5 171.5,51 175.5,51" fill="#FBBF24"/>
+          <polygon points="116,40 117.5,43 120.5,43 118,45.5 119,48.5 116,46.5 113,48.5 114,45.5 111.5,43 114.5,43" fill="#A5B4FC"/>
+        </g>
+        <!-- NOSE -->
+        <ellipse cx="116" cy="113" rx="12" ry="8.5" fill="#C05070"/>
+        <ellipse cx="112" cy="110.5" rx="5" ry="3" fill="rgba(255,255,255,.62)"/>
+        <!-- BLUSH (hidden by default) -->
+        <ellipse id="blush-l" cx="20" cy="116" rx="20" ry="14" fill="#FF6B8A" opacity="0"/>
+        <ellipse id="blush-r" cx="212" cy="116" rx="20" ry="14" fill="#FF6B8A" opacity="0"/>
+        <!-- MOUTH normal -->
+        <g id="mouth-normal">
+          <ellipse cx="116" cy="128" rx="14" ry="12" fill="#2C000E"/>
+          <ellipse cx="116" cy="128" rx="10" ry="8.5" fill="#4A001E"/>
+          <ellipse cx="113" cy="126" rx="4.5" ry="3" fill="#FF8FAB" opacity=".38"/>
+        </g>
+        <!-- MOUTH popped — hidden -->
+        <path id="mouth-popped" d="M101 124 Q116 132 131 124" fill="none" stroke="#A03050" stroke-width="3.5" stroke-linecap="round" display="none"/>
+      </svg>
+    </div>
+
+    <!-- FEATURES BAR -->
+    <div class="features-bar">
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">AI Workshop</div>
+        <div class="feature-desc">สร้าง AI จริงๆ ด้วยมือตัวเอง</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎮</div>
+        <div class="feature-title">Game-Based</div>
+        <div class="feature-desc">เรียนผ่านเกมส์สนุก ไม่น่าเบื่อ</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <div class="feature-title">Certificate</div>
+        <div class="feature-desc">ได้รับประกาศนียบัตรทุกคน</div>
+      </div>
+    </div>
+
+    <!-- POPS COUNTER -->
+    <div class="pops-bar">
+      <div class="pops-label-row">
+        <span class="pops-label">🐹 Total Camp Pops</span>
+        <span class="pops-count" id="pops-display">79<span>&nbsp;/ 100</span></span>
+      </div>
+      <div class="pops-track">
+        <div class="pops-fill" id="pops-fill" style="width:79%"></div>
+      </div>
+    </div>
+
+  </div><!-- /left-col -->
+
+  <!-- ── RIGHT COLUMN ── -->
+  <div class="right-col">
+
+    <!-- HUD -->
+    <div class="hud-row" style="margin-bottom:16px">
+      <div class="hud-box">
+        <div class="hud-label">Tap Score</div>
+        <div class="hud-value" id="tap-score">0</div>
+      </div>
+      <div class="hud-box">
+        <div class="hud-label">Step</div>
+        <div class="hud-value" id="step-display">1<span class="of5">/5</span></div>
+      </div>
+    </div>
+
+    <!-- REGISTRATION CARD -->
+    <div class="reg-card">
+      <div class="card-top">
+        <div class="card-top-title">🐹 สมัครเรียน Hamster Pop Camp</div>
+        <div class="card-top-sub">กรอกข้อมูลให้ครบเพื่อยืนยันสิทธิ์เข้าร่วม Camp</div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-dots" id="progress-dots">
+          <!-- generated by JS -->
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- SPEECH BUBBLE -->
+        <div class="speech-bubble" id="speech-bubble">
+          <div class="speech-header">
+            <span class="speech-emoji">🐹</span>
+            <span class="speech-label">แฮมสเตอร์พูดว่า...</span>
+          </div>
+          <div class="speech-text" id="speech-text">ยินดีที่ได้รู้จักครับ!&#10;ขอทราบ ชื่อจริง ของคุณหน่อยนะครับ 🐾</div>
+        </div>
+
+        <!-- INPUT ROW -->
+        <div class="input-row" id="input-row">
+          <span class="input-icon">👤</span>
+          <input
+            id="step-input"
+            type="text"
+            inputmode="text"
+            placeholder="ตัวอย่าง: สมชาย"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- NEXT BUTTON -->
+        <button class="next-btn" id="next-btn">
+          ถัดไป &nbsp;›
+        </button>
+
+        <!-- SKIP BUTTON (shown on step 5) -->
+        <button class="skip-btn" id="skip-btn" style="display:none">ข้ามได้เลย →</button>
+      </div>
+    </div>
+  </div><!-- /right-col -->
+</div><!-- /page-wrap -->
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────
+const STEPS = [
+  { speech: 'ยินดีที่ได้รู้จักครับ!\nขอทราบ ชื่อจริง ของคุณหน่อยนะครับ 🐾',
+    placeholder: 'ตัวอย่าง: สมชาย', inputmode: 'text', type: 'text', optional: false },
+  { speech: 'เยี่ยมมากเลยครับ!\nแล้วขอ ชื่อเล่น ด้วยนะครับ 😊',
+    placeholder: 'ตัวอย่าง: ชาย', inputmode: 'text', type: 'text', optional: false },
+  { speech: 'น่ารักมากเลย!\nคุณ อายุ เท่าไหร่ครับ? 🎂',
+    placeholder: 'ตัวอย่าง: 25', inputmode: 'numeric', type: 'text', optional: false },
+  { speech: 'เก่งมากครับ!\nขอ เบอร์โทรศัพท์ ด้วยนะครับ 📱',
+    placeholder: 'ตัวอย่าง: 081-234-5678', inputmode: 'tel', type: 'tel', optional: false },
+  { speech: 'เกือบเสร็จแล้วครับ!\nมี โค้ดพิเศษ ไหมครับ? 🎟️',
+    placeholder: 'ตัวอย่าง: HAMSTER2024', inputmode: 'text', type: 'text', optional: true },
+]
+const HEARTS = ['❤️','💕','💖','💗','💝','💓','🩷','🌸']
+const TOTAL = STEPS.length
+
+let curStep = 0
+let tapScore = 0
+let isPopped = false
+let popsCount = 79
+let popTimeout = null
+let answers = Array(TOTAL).fill('')
+
+// ── DOM REFS ────────────────────────────────────────────────
+const hamsterHero   = document.getElementById('hamster-hero')
+const tapScoreEl    = document.getElementById('tap-score')
+const stepDisplayEl = document.getElementById('step-display')
+const progressDots  = document.getElementById('progress-dots')
+const speechText    = document.getElementById('speech-text')
+const speechBubble  = document.getElementById('speech-bubble')
+const inputEl       = document.getElementById('step-input')
+const inputRow      = document.getElementById('input-row')
+const nextBtn       = document.getElementById('next-btn')
+const skipBtn       = document.getElementById('skip-btn')
+const popsDisplay   = document.getElementById('pops-display')
+const popsFill      = document.getElementById('pops-fill')
+const heartsLayer   = document.getElementById('hearts-layer')
+const eyesNormal    = document.getElementById('eyes-normal')
+const eyesPopped    = document.getElementById('eyes-popped')
+const mouthNormal   = document.getElementById('mouth-normal')
+const mouthPopped   = document.getElementById('mouth-popped')
+const blushL        = document.getElementById('blush-l')
+const blushR        = document.getElementById('blush-r')
+
+// ── INIT ────────────────────────────────────────────────────
+function renderStep(){
+  const s = STEPS[curStep]
+  speechText.textContent = s.speech
+  inputEl.setAttribute('placeholder', s.placeholder)
+  inputEl.setAttribute('inputmode', s.inputmode)
+  inputEl.setAttribute('type', s.type)
+  inputEl.value = answers[curStep] || ''
+  skipBtn.style.display = s.optional ? 'block' : 'none'
+  stepDisplayEl.innerHTML = `${curStep+1}<span class="of5">/5</span>`
+  renderDots()
+  // speech bubble animation
+  speechBubble.style.animation = 'none'
+  void speechBubble.offsetWidth
+  speechBubble.style.animation = 'swapIn .3s ease'
+}
+
+function renderDots(){
+  progressDots.innerHTML = ''
+  for(let i=0;i<TOTAL;i++){
+    const d = document.createElement('div')
+    d.className = 'progress-dot'
+    d.style.width = (i===curStep) ? '28px' : '8px'
+    if(i < curStep) d.classList.add('done')
+    if(i === curStep) d.classList.add('active')
+    progressDots.appendChild(d)
+  }
+}
+
+renderStep()
+
+// ── AUDIO ───────────────────────────────────────────────────
+let audioCtx = null
+function getAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)()
+  return audioCtx
+}
+function playPop(){
+  try{
+    const ctx = getAudio()
+    const o = ctx.createOscillator()
+    const g = ctx.createGain()
+    o.connect(g); g.connect(ctx.destination)
+    o.type='sine'; o.frequency.setValueAtTime(520, ctx.currentTime)
+    o.frequency.exponentialRampToValueAtTime(260, ctx.currentTime+.12)
+    g.gain.setValueAtTime(.22, ctx.currentTime)
+    g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime+.15)
+    o.start(); o.stop(ctx.currentTime+.16)
+  }catch(e){}
+}
+function playSuccess(){
+  try{
+    const ctx = getAudio()
+    const notes=[523,659,784,1047]
+    notes.forEach((f,i)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain()
+      o.connect(g); g.connect(ctx.destination)
+      o.type='sine'; o.frequency.value=f
+      const t=ctx.currentTime+i*.12
+      g.gain.setValueAtTime(.18,t)
+      g.gain.exponentialRampToValueAtTime(.001,t+.3)
+      o.start(t); o.stop(t+.32)
+    })
+  }catch(e){}
+}
+
+// ── HAMSTER TAP ─────────────────────────────────────────────
+function setPopped(val){
+  isPopped = val
+  eyesNormal.setAttribute('display', val ? 'none' : '')
+  eyesPopped.setAttribute('display', val ? '' : 'none')
+  mouthNormal.setAttribute('display', val ? 'none' : '')
+  mouthPopped.setAttribute('display', val ? '' : 'none')
+  blushL.setAttribute('opacity', val ? '.78' : '0')
+  blushR.setAttribute('opacity', val ? '.78' : '0')
+  hamsterHero.classList.toggle('popped', val)
+}
+
+hamsterHero.addEventListener('pointerdown', e=>{
+  e.preventDefault()
+  tapScore++
+  tapScoreEl.textContent = tapScore
+  setPopped(true)
+  playPop()
+  spawnHeart(e.clientX, e.clientY)
+  spawnRipple(e.clientX, e.clientY)
+  // update pops
+  popsCount = Math.min(100, popsCount + 1)
+  popsDisplay.innerHTML = popsCount + '<span>&nbsp;/ 100</span>'
+  popsFill.style.width = popsCount + '%'
+  clearTimeout(popTimeout)
+  popTimeout = setTimeout(()=> setPopped(false), 220)
+})
+
+function spawnHeart(x, y){
+  const el = document.createElement('div')
+  el.className = 'floating-heart'
+  el.textContent = HEARTS[Math.floor(Math.random()*HEARTS.length)]
+  el.style.left = (x - 16 + (Math.random()-0.5)*40) + 'px'
+  el.style.top  = (y - 16) + 'px'
+  heartsLayer.appendChild(el)
+  setTimeout(()=> el.remove(), 1000)
+}
+
+function spawnRipple(x, y){
+  const r = document.createElement('div')
+  r.className = 'ripple'
+  const size = 60 + Math.random()*30
+  r.style.cssText = `left:${x-size/2}px;top:${y-size/2}px;width:${size}px;height:${size}px;position:fixed`
+  hamsterHero.appendChild(r)
+  setTimeout(()=> r.remove(), 700)
+}
+
+// ── FORM LOGIC ──────────────────────────────────────────────
+function showShake(){
+  inputRow.classList.add('shake')
+  nextBtn.classList.add('shake')
+  setTimeout(()=>{
+    inputRow.classList.remove('shake')
+    nextBtn.classList.remove('shake')
+  }, 400)
+  // force reflow trick via animation restart
+  inputRow.style.animation = 'none'
+  void inputRow.offsetWidth
+  inputRow.style.animation = 'shake .38s ease'
+  nextBtn.style.animation = 'none'
+  void nextBtn.offsetWidth
+  nextBtn.style.animation = 'shake .38s ease'
+}
+
+function advance(skip){
+  const val = inputEl.value.trim()
+  if(!skip && !STEPS[curStep].optional && !val){
+    showShake()
+    return
+  }
+  answers[curStep] = val
+  if(curStep < TOTAL-1){
+    curStep++
+    renderStep()
+    inputEl.focus()
+  } else {
+    showSuccess()
+  }
+}
+
+nextBtn.addEventListener('click', ()=> advance(false))
+skipBtn.addEventListener('click', ()=> advance(true))
+inputEl.addEventListener('keydown', e=>{
+  if(e.key==='Enter') advance(false)
+})
+
+// ── SUCCESS ──────────────────────────────────────────────────
+function showSuccess(){
+  playSuccess()
+  const overlay = document.createElement('div')
+  overlay.className = 'success-overlay'
+  overlay.innerHTML = `
+    <div class="success-card">
+      <span class="success-ham">🐹</span>
+      <div class="success-title">ยินดีด้วยครับ! 🎉</div>
+      <div class="success-sub">
+        ขอบคุณที่สมัคร Hamster Pop Camp<br/>
+        เราจะส่งรายละเอียดให้ทาง SMS เร็วๆ นี้<br/>
+        <b>Tap Score ของคุณ: ${tapScore} 🏆</b>
+      </div>
+      <button class="success-close" id="success-close">เยี่ยมมาก! 🐾</button>
+    </div>`
+  document.body.appendChild(overlay)
+  overlay.querySelector('#success-close').addEventListener('click',()=>{
+    overlay.remove()
+    curStep = 0
+    answers = Array(TOTAL).fill('')
+    renderStep()
+    inputEl.value = ''
+    tapScore = 0
+    tapScoreEl.textContent = '0'
+  })
+  // burst hearts
+  for(let i=0;i<20;i++){
+    setTimeout(()=>{
+      const x = 200 + Math.random()*(window.innerWidth-400)
+      const y = 100 + Math.random()*(window.innerHeight-200)
+      spawnHeart(x,y)
+    }, i*60)
+  }
+}
+
+// ── SPARKLE CANVAS ───────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('sparkle-canvas')
+  const ctx2d  = canvas.getContext('2d')
+  let W, H, stars = []
+  function resize(){
+    W = canvas.width  = window.innerWidth
+    H = canvas.height = window.innerHeight
+  }
+  resize()
+  window.addEventListener('resize', resize)
+  for(let i=0;i<70;i++) stars.push(mkStar())
+  function mkStar(){
+    return {
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: .5 + Math.random()*1.5,
+      a: Math.random()*Math.PI*2,
+      sp: .005 + Math.random()*.01,
+      op: .1 + Math.random()*.5,
+      fy: -.1 - Math.random()*.3,
+    }
+  }
+  function frame(){
+    ctx2d.clearRect(0,0,W,H)
+    stars.forEach(s=>{
+      s.a += s.sp; s.y += s.fy; s.op -= .0008
+      if(s.y < -10 || s.op <= 0){ Object.assign(s, mkStar()); s.y=H+5 }
+      ctx2d.save()
+      ctx2d.globalAlpha = Math.max(0,s.op)
+      // 4-pointed star
+      ctx2d.translate(s.x, s.y)
+      ctx2d.rotate(s.a)
+      ctx2d.fillStyle = Math.random() > 0.5 ? '#FBBF24' : '#A5B4FC'
+      const r=s.r*2.5, ri=s.r*.6
+      ctx2d.beginPath()
+      for(let k=0;k<8;k++){
+        const ang = (k/8)*Math.PI*2
+        const rad = k%2===0 ? r : ri
+        k===0 ? ctx2d.moveTo(Math.cos(ang)*rad, Math.sin(ang)*rad)
+              : ctx2d.lineTo(Math.cos(ang)*rad, Math.sin(ang)*rad)
+      }
+      ctx2d.closePath()
+      ctx2d.fill()
+      ctx2d.restore()
+    })
+    requestAnimationFrame(frame)
+  }
+  frame()
+})()
+
+// ── PARALLAX ─────────────────────────────────────────────────
+document.addEventListener('mousemove', e=>{
+  const hamSvg = document.querySelector('#hamster-hero svg')
+  if(!hamSvg) return
+  const cx = window.innerWidth/2, cy = window.innerHeight/2
+  const dx = (e.clientX-cx)/cx, dy = (e.clientY-cy)/cy
+  if(!isPopped){
+    hamSvg.style.transform = `translateY(${-8+dy*4}px) rotate(${dx*2}deg)`
+  }
+})
+</script>
+</body>
+</html>
