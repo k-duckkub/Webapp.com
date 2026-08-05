@@ -1,0 +1,107 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import { formatSize, formatThaiDate, type OwnedAsset } from '@/lib/library'
+
+export function AssetCard({ asset }: { asset: OwnedAsset }) {
+  return (
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4 }}
+      className="group flex flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
+    >
+      {/* Thumbnail */}
+      <div
+        className="relative flex h-32 items-center justify-center overflow-hidden"
+        style={{ background: `linear-gradient(145deg, ${asset.color}22 0%, #f5f4f2 100%)` }}
+      >
+        <motion.span
+          className="select-none text-5xl font-black"
+          style={{ color: asset.color, opacity: 0.35 }}
+          whileHover={{ scale: 1.08 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        >
+          {asset.category.slice(0, 2)}
+        </motion.span>
+
+        {asset.hasUpdate && (
+          <span className="absolute right-2 top-2 rounded bg-brand px-2 py-0.5 text-[10px] font-black text-white">
+            อัปเดตใหม่
+          </span>
+        )}
+
+        {!asset.downloaded && (
+          <span className="absolute left-2 top-2 rounded bg-neutral-900/80 px-2 py-0.5 text-[10px] font-bold text-white">
+            ยังไม่ดาวน์โหลด
+          </span>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col p-3">
+        <p className="mb-0.5 truncate text-xs text-neutral-500">{asset.publisher}</p>
+        <h3 className="mb-2 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">
+          {asset.title}
+        </h3>
+
+        {/* Pipelines */}
+        <div className="mb-2 flex flex-wrap gap-1">
+          {asset.pipelines.map(p => (
+            <span
+              key={p}
+              className="rounded-sm bg-neutral-100 px-1.5 py-0.5 text-[10px] font-medium text-neutral-600"
+            >
+              {p}
+            </span>
+          ))}
+        </div>
+
+        {/* Meta — this is a library, so it's version/size/date, not price */}
+        <dl className="mb-3 space-y-1 text-[11px] text-neutral-500">
+          <div className="flex justify-between gap-2">
+            <dt>เวอร์ชัน</dt>
+            <dd className="font-semibold tabular-nums text-neutral-700">v{asset.version}</dd>
+          </div>
+          <div className="flex justify-between gap-2">
+            <dt>ขนาด</dt>
+            <dd className="font-semibold tabular-nums text-neutral-700">{formatSize(asset.size)}</dd>
+          </div>
+          <div className="flex justify-between gap-2">
+            <dt>ซื้อเมื่อ</dt>
+            <dd className="font-semibold text-neutral-700">{formatThaiDate(asset.purchasedAt)}</dd>
+          </div>
+          <div className="flex justify-between gap-2">
+            <dt>License</dt>
+            <dd className="font-semibold text-neutral-700">{asset.license}</dd>
+          </div>
+        </dl>
+
+        <div className="mt-auto flex gap-2">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            className={`flex-1 rounded py-1.5 text-xs font-bold text-white transition-colors ${
+              asset.hasUpdate ? 'bg-brand hover:bg-brand-hover' : 'bg-neutral-900 hover:bg-neutral-700'
+            }`}
+          >
+            {asset.hasUpdate ? 'อัปเดต' : asset.downloaded ? 'ดาวน์โหลดซ้ำ' : 'ดาวน์โหลด'}
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="ใบเสร็จ"
+            aria-label={`ใบเสร็จของ ${asset.title} — จ่ายไป ${asset.paidCoins} HamCoin`}
+            className="rounded border border-neutral-200 px-2 py-1.5 text-xs text-neutral-500 transition-colors hover:bg-neutral-50"
+          >
+            🧾
+          </motion.button>
+        </div>
+      </div>
+    </motion.article>
+  )
+}
