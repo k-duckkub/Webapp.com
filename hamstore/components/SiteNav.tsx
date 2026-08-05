@@ -47,20 +47,12 @@ export function SiteNav() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden items-center gap-1.5 rounded-full border border-ink-600 bg-ink-800 px-3 py-1.5 sm:flex">
-            <span className="text-sm leading-none" aria-hidden>🪙</span>
-            <span className="text-xs font-black tabular-nums text-coin">1,240</span>
-            <span className="sr-only">HamCoin คงเหลือ 1,240</span>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            className="rounded bg-brand px-3 py-1.5 text-xs font-bold text-white"
-          >
-            เติม HamCoin
-          </motion.button>
+        {/* Wallet only — HamCoin is earned by learning, never bought, so there
+            is no top-up action here. */}
+        <div className="flex items-center gap-1.5 rounded-full border border-ink-600 bg-ink-800 px-3 py-1.5">
+          <span className="text-sm leading-none" aria-hidden>🪙</span>
+          <span className="text-xs font-black tabular-nums text-coin">1,240</span>
+          <span className="sr-only">HamCoin คงเหลือ 1,240 เหรียญ</span>
         </div>
       </div>
 

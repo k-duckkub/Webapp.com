@@ -10,9 +10,11 @@ type Filter = 'ALL' | ItemKind
 
 const FILTERS: { id: Filter; label: string; icon: string }[] = [
   { id: 'ALL', label: 'ทั้งหมด', icon: '✨' },
-  ...(Object.keys(KIND_META) as ItemKind[])
-    .filter(k => k !== 'coin')
-    .map(k => ({ id: k as Filter, label: KIND_META[k].label, icon: KIND_META[k].icon })),
+  ...(Object.keys(KIND_META) as ItemKind[]).map(k => ({
+    id: k as Filter,
+    label: KIND_META[k].label,
+    icon: KIND_META[k].icon,
+  })),
 ]
 
 export function ItemGrid() {

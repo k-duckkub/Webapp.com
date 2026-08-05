@@ -3,7 +3,7 @@
  * Deliberately NOT Unity assets: those live in the library (page 2).
  */
 
-export type ItemKind = 'skin' | 'pet' | 'theme' | 'emoji' | 'frame' | 'coin'
+export type ItemKind = 'skin' | 'pet' | 'theme' | 'emoji' | 'frame'
 
 export interface PlatformItem {
   id: number
@@ -25,7 +25,6 @@ export const KIND_META: Record<ItemKind, { label: string; icon: string; color: s
   theme: { label: 'ธีมหน้าเว็บ',    icon: '🎨', color: '#7C3AED' },
   emoji: { label: 'อิโมจิ',         icon: '😊', color: '#0891B2' },
   frame: { label: 'กรอบโปรไฟล์',    icon: '🖼', color: '#059669' },
-  coin:  { label: 'HamCoin',       icon: '🪙', color: '#FACC15' },
 }
 
 export const RARITY_META: Record<PlatformItem['rarity'], { label: string; color: string }> = {
@@ -60,23 +59,11 @@ export const PLATFORM_ITEMS: PlatformItem[] = [
   { id: 18, kind: 'frame', name: 'กรอบกาแล็กซี',       blurb: 'ดาวหมุนช้าๆ รอบรูป พร้อมฝุ่นดาวจางๆ',                coins: 300, sale: 0,  rarity: 'epic',      owned: false, art: ['#2563EB', '#7C3AED'] },
 ]
 
-export interface CoinPack {
-  id: number
-  name: string
-  coins: number
-  bonus: number
-  price: string
-  popular: boolean
-}
-
-export const COIN_PACKS: CoinPack[] = [
-  { id: 1, name: 'ถุงเล็ก',   coins: 300,  bonus: 0,   price: '฿59',  popular: false },
-  { id: 2, name: 'ถุงกลาง',   coins: 800,  bonus: 80,  price: '฿149', popular: true  },
-  { id: 3, name: 'ถุงใหญ่',   coins: 1800, bonus: 300, price: '฿299', popular: false },
-  { id: 4, name: 'กระสอบ',    coins: 4000, bonus: 900, price: '฿599', popular: false },
-]
-
-/** The three "chapters" the GSAP pathway scroll walks the visitor through. */
+/**
+ * The three "chapters" the GSAP pathway scroll walks the visitor through.
+ * Note stop 03: HamCoin is *earned* through learning — it is never sold for
+ * money, so there is deliberately no coin-purchase flow anywhere in HamStore.
+ */
 export const PATHWAY_STOPS = [
   {
     id: 'dress',

@@ -7,10 +7,13 @@
 
 | Route | คืออะไร | อ้างอิงสไตล์ |
 |---|---|---|
-| `/` | **ของที่ซื้อได้** — ไอเทมในแพลตฟอร์ม: สกินแฮมสเตอร์, เพื่อนซี้, ธีมหน้าเว็บ, อิโมจิ, กรอบโปรไฟล์ ซื้อด้วย HamCoin | Minecraft.net (dark editorial) |
+| `/` | **ของที่ซื้อได้** — ไอเทมในแพลตฟอร์ม: สกินแฮมสเตอร์, เพื่อนซี้, ธีมหน้าเว็บ, อิโมจิ, กรอบโปรไฟล์ แลกด้วย HamCoin | Minecraft.net (dark editorial) |
 | `/library` | **คลัง Unity Asset** — asset ที่ซื้อไปแล้ว เป็น *library* ไม่ใช่หน้าร้าน: มีเวอร์ชัน, ขนาดไฟล์, วันที่ซื้อ, license, ปุ่มดาวน์โหลด/อัปเดต | Unity Asset Store (light grid) |
 
 หน้าแรก **ไม่มี** Unity asset เลย — ของพวกนั้นอยู่ในหน้า `/library` อย่างเดียว
+
+**HamCoin ได้จากการเรียนเท่านั้น** (เรียนจบบทเรียน ส่งงาน ตอบคำถามในฟอรัม)
+ไม่มีการขายเหรียญด้วยเงินจริงที่ไหนในเว็บ — อย่าเพิ่มหน้าเติมเหรียญหรือปุ่มซื้อเหรียญกลับเข้ามา
 
 > เอาเฉพาะ layout กับภาษาทางภาพของสองเว็บนั้นมาเป็นแรงบันดาลใจ ไม่ได้ใช้โลโก้
 > เครื่องหมายการค้า หรืองานภาพจริงของ Minecraft และ Unity — แบรนด์ทั้งหมดเป็นของ HamsterHub เอง
@@ -37,7 +40,6 @@ npm start
 - `components/store/Hero.tsx` — timeline ตอนโหลด + parallax ตอน scroll ออก
 - `components/store/Pathway.tsx` — **pathway scroll**: เส้นทางโค้งวาดตาม scroll (`strokeDashoffset` scrub) พร้อมตัวแฮมสเตอร์วิ่งตามเส้นด้วย `MotionPathPlugin` และจุดหมายที่ติดสว่างเมื่อเส้นวิ่งถึง
 - `components/store/Showcase.tsx` — pinned horizontal scroll (desktop เท่านั้น)
-- `components/store/CoinPacks.tsx` — stagger reveal + sparkle loop
 - `components/library/LibraryHero.tsx` — count-up ตัวเลขสถิติ
 
 หมายเหตุ: ใช้เฉพาะปลั๊กอิน GSAP ที่ฟรี (`ScrollTrigger`, `MotionPathPlugin`)
