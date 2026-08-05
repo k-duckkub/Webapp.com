@@ -98,9 +98,9 @@ export function LibraryBrowser() {
   }
 
   return (
-    <section ref={root} className="bg-[#f5f4f2]">
+    <section ref={root} className="bg-ink-900">
       {/* Category pills */}
-      <div className="border-b border-neutral-200 bg-white">
+      <div className="border-b border-ink-700 bg-ink-850">
         <div className="no-scrollbar mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-3">
           {LIBRARY_CATEGORIES.map(c => {
             const active = category === c.id
@@ -115,20 +115,20 @@ export function LibraryBrowser() {
                 onClick={() => update(setCategory)(c.id)}
                 aria-pressed={active}
                 className={`relative shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-colors ${
-                  active ? 'text-white' : 'text-neutral-600 hover:text-neutral-900'
+                  active ? 'text-white' : 'text-muted-bright hover:text-white'
                 }`}
               >
                 {active && (
                   <motion.span
                     layoutId="lib-pill"
-                    className="absolute inset-0 rounded-full bg-neutral-900"
+                    className="absolute inset-0 rounded-full bg-brand"
                     transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                   />
                 )}
                 <span className="relative flex items-center gap-1.5">
                   <span aria-hidden>{c.icon}</span>
                   {c.label}
-                  <span className={active ? 'text-white/60' : 'text-neutral-400'}>{count}</span>
+                  <span className={active ? 'text-white/70' : 'text-muted-dim'}>{count}</span>
                 </span>
               </button>
             )
@@ -139,9 +139,9 @@ export function LibraryBrowser() {
       <div className="mx-auto flex max-w-7xl gap-8 px-6 py-8">
         {/* Sidebar */}
         <aside className="hidden w-56 shrink-0 md:block">
-          <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
-            <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
-              <p className="text-sm font-black text-neutral-900">ตัวกรอง</p>
+          <div className="overflow-hidden rounded-lg border border-ink-600 bg-ink-750">
+            <div className="flex items-center justify-between border-b border-ink-600 px-4 py-3">
+              <p className="text-sm font-black text-white">ตัวกรอง</p>
               {activeFilterCount > 0 && (
                 <button
                   onClick={clearFilters}
@@ -200,23 +200,23 @@ export function LibraryBrowser() {
           <div data-lib-toolbar className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <label className="relative flex-1 sm:max-w-xs">
               <span className="sr-only">ค้นหาใน asset ที่ซื้อไว้</span>
-              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-dim">
                 🔍
               </span>
               <input
                 value={query}
                 onChange={e => update(setQuery)(e.target.value)}
                 placeholder="ค้นหาชื่อ asset หรือผู้พัฒนา…"
-                className="w-full rounded border border-neutral-300 bg-white py-2 pl-9 pr-3 text-sm text-neutral-800 outline-none transition-colors placeholder:text-neutral-400 focus:border-brand"
+                className="w-full rounded border border-ink-600 bg-ink-800 py-2 pl-9 pr-3 text-sm text-white outline-none transition-colors placeholder:text-muted-dim focus:border-brand"
               />
             </label>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-neutral-500">เรียงโดย:</span>
+              <span className="text-xs text-muted-dim">เรียงโดย:</span>
               <select
                 value={sort}
                 onChange={e => update(setSort)(e.target.value as Sort)}
-                className="rounded border border-neutral-300 bg-white px-3 py-1.5 text-xs text-neutral-800 outline-none focus:border-brand"
+                className="rounded border border-ink-600 bg-ink-800 px-3 py-1.5 text-xs text-white outline-none focus:border-brand"
               >
                 {SORTS.map(s => (
                   <option key={s.id} value={s.id}>
@@ -227,15 +227,15 @@ export function LibraryBrowser() {
             </div>
           </div>
 
-          <p className="mb-4 text-sm text-neutral-600">
-            พบ <strong className="text-neutral-900">{filtered.length}</strong> จากทั้งหมด{' '}
+          <p className="mb-4 text-sm text-muted">
+            พบ <strong className="text-white">{filtered.length}</strong> จากทั้งหมด{' '}
             {OWNED_ASSETS.length} ชิ้น
           </p>
 
           {paginated.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-16 text-center">
+            <div className="rounded-lg border border-dashed border-ink-600 bg-ink-750 py-16 text-center">
               <p className="mb-1 text-3xl">🔍</p>
-              <p className="text-sm font-bold text-neutral-700">ไม่เจอ asset ที่ตรงกับตัวกรอง</p>
+              <p className="text-sm font-bold text-muted-bright">ไม่เจอ asset ที่ตรงกับตัวกรอง</p>
               <button onClick={clearFilters} className="mt-3 text-xs font-bold text-brand hover:underline">
                 ล้างตัวกรองทั้งหมด
               </button>
@@ -262,8 +262,8 @@ export function LibraryBrowser() {
                   aria-current={n === safePage ? 'page' : undefined}
                   className={`h-8 w-8 rounded border text-xs font-bold transition-colors ${
                     n === safePage
-                      ? 'border-neutral-900 bg-neutral-900 text-white'
-                      : 'border-neutral-300 bg-white text-neutral-700 hover:border-neutral-400'
+                      ? 'border-brand bg-brand text-white'
+                      : 'border-ink-600 bg-ink-750 text-muted-bright hover:border-ink-500'
                   }`}
                 >
                   {n}
@@ -293,8 +293,8 @@ function FilterGroup({
   last?: boolean
 }) {
   return (
-    <div className={`px-4 py-3 ${last ? '' : 'border-b border-neutral-100'}`}>
-      <p className="mb-2 text-xs font-bold uppercase tracking-wide text-neutral-500">{title}</p>
+    <div className={`px-4 py-3 ${last ? '' : 'border-b border-ink-700'}`}>
+      <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-dim">{title}</p>
       {children}
     </div>
   )
@@ -317,7 +317,7 @@ function CheckRow({
         onChange={onChange}
         className="rounded accent-brand"
       />
-      <span className="text-xs text-neutral-700">{label}</span>
+      <span className="text-xs text-muted-bright">{label}</span>
     </label>
   )
 }
@@ -335,7 +335,7 @@ function PageBtn({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="rounded border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-700 transition-colors enabled:hover:border-neutral-400 disabled:cursor-not-allowed disabled:text-neutral-300"
+      className="rounded border border-ink-600 bg-ink-750 px-3 py-2 text-xs text-muted-bright transition-colors enabled:hover:border-ink-500 disabled:cursor-not-allowed disabled:text-ink-500"
     >
       {children}
     </button>

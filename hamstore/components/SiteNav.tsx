@@ -9,8 +9,19 @@ const LINKS = [
   { href: '/library', label: 'คลัง Unity Asset' },
 ]
 
+/**
+ * Static hosts serve the same route as `/library`, `/library/` or
+ * `/library.html` depending on their rewrite rules. Fold all three onto the
+ * canonical form so the active tab is right everywhere — and so the client
+ * agrees with the prerendered markup instead of tripping a hydration mismatch.
+ */
+function canonicalPath(pathname: string | null) {
+  const stripped = (pathname ?? '/').replace(/(?:index)?\.html$/, '').replace(/(.+)\/$/, '$1')
+  return stripped || '/'
+}
+
 export function SiteNav() {
-  const pathname = usePathname()
+  const pathname = canonicalPath(usePathname())
 
   return (
     <nav className="sticky top-0 z-50 border-b border-ink-700 bg-ink-850/95 backdrop-blur">

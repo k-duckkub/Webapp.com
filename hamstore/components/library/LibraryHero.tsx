@@ -56,10 +56,11 @@ export function LibraryHero() {
 
   return (
     <section ref={root} className="relative overflow-hidden bg-ink-950">
-      <div
-        className="absolute inset-0"
-        style={{ background: 'linear-gradient(135deg, #1a0a3a 0%, #0a1a3a 55%, #0d2a1a 100%)' }}
-      />
+      {/* Same split-dark treatment as the store hero, so both pages open the same way. */}
+      <div className="absolute inset-0 flex">
+        <div className="flex-1 bg-[linear-gradient(135deg,#0d1117_0%,#1a1020_100%)]" />
+        <div className="w-2/5 bg-[linear-gradient(135deg,#1a0a00_0%,#2d1500_100%)]" />
+      </div>
       <div className="bg-grid absolute inset-0 opacity-[0.06]" />
 
       <div className="relative mx-auto max-w-7xl px-6 py-14">
@@ -70,7 +71,7 @@ export function LibraryHero() {
           <h1 className="mb-3 text-3xl font-black leading-tight text-white sm:text-4xl">
             Unity Asset ที่คุณซื้อไว้
           </h1>
-          <p className="text-sm leading-relaxed text-white/60">
+          <p className="text-sm leading-relaxed text-muted">
             ทุกชิ้นที่แลกด้วย HamCoin ไปแล้วจะมาอยู่ที่นี่ถาวร — ดาวน์โหลดซ้ำได้ไม่จำกัด
             และดูได้ว่าชิ้นไหนมีเวอร์ชันใหม่ให้อัปเดต
           </p>
@@ -80,7 +81,7 @@ export function LibraryHero() {
           {STATS.map(stat => (
             <div
               key={stat.id}
-              className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 backdrop-blur"
+              className="rounded-lg border border-ink-600 bg-black/40 px-4 py-3 backdrop-blur"
             >
               <dd
                 data-stat-value={stat.value}
@@ -89,7 +90,7 @@ export function LibraryHero() {
               >
                 {stat.format ? stat.format(stat.value) : stat.value.toLocaleString('th-TH')}
               </dd>
-              <dt className="mt-0.5 text-xs text-white/50">{stat.label}</dt>
+              <dt className="mt-0.5 text-xs text-muted-dim">{stat.label}</dt>
             </div>
           ))}
         </dl>
