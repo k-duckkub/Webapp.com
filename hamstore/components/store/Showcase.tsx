@@ -4,11 +4,11 @@ import { useRef } from 'react'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { KIND_META, PLATFORM_ITEMS, type ItemKind } from '@/lib/items'
 
-/** One panel per item kind, each showing that kind's headline pieces. */
-const PANELS = (['skin', 'pet', 'theme', 'frame'] as ItemKind[]).map(kind => ({
+/** One panel per item kind, each listing every piece in that kind. */
+const PANELS = (['skin', 'pet', 'theme', 'emoji', 'frame'] as ItemKind[]).map(kind => ({
   kind,
   meta: KIND_META[kind],
-  items: PLATFORM_ITEMS.filter(i => i.kind === kind).slice(0, 3),
+  items: PLATFORM_ITEMS.filter(i => i.kind === kind),
 }))
 
 export function Showcase() {
@@ -43,13 +43,18 @@ export function Showcase() {
   return (
     <section ref={root} className="overflow-hidden bg-ink-900 py-16 md:py-0">
       <div className="md:flex md:h-screen md:flex-col md:justify-center">
-        <div className="mx-auto mb-10 max-w-7xl px-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-brand">
-            เลื่อนดูทีละหมวด
+        <div className="mx-auto mb-8 flex max-w-7xl flex-wrap items-end justify-between gap-3 px-6">
+          <div>
+            <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-brand">
+              เลื่อนดูทีละหมวด
+            </p>
+            <h2 className="text-3xl font-black leading-tight text-white sm:text-4xl">
+              มีอะไรให้เลือกบ้าง
+            </h2>
+          </div>
+          <p className="hidden items-center gap-2 text-xs text-muted-dim md:flex">
+            เลื่อนลงเพื่อดูหมวดถัดไป <span aria-hidden>→</span>
           </p>
-          <h2 className="text-3xl font-black leading-tight text-white sm:text-4xl">
-            มีอะไรให้เลือกบ้าง
-          </h2>
         </div>
 
         <div
@@ -59,7 +64,7 @@ export function Showcase() {
           {PANELS.map(panel => (
             <article
               key={panel.kind}
-              className="flex w-[min(85vw,340px)] shrink-0 flex-col rounded-xl border border-ink-600 bg-ink-750 p-6 md:w-[380px]"
+              className="flex w-[min(85vw,340px)] shrink-0 flex-col rounded-xl border border-ink-600 bg-ink-750 p-6 md:min-h-[520px] md:w-[380px]"
             >
               <div className="mb-5 flex items-center gap-3">
                 <span
