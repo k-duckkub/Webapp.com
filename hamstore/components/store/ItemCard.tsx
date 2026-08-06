@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { T, pressableCard, SPRING_SOFT } from '@/lib/motion'
+import { T, pressableCard, SPRING_SOFT, GRID_ITEM } from '@/lib/motion'
 import { ITEM_DETAILS, KIND_META, RARITY_META, type PlatformItem } from '@/lib/items'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
@@ -30,6 +30,7 @@ export function ItemCard({
   return (
     /* Entry and layout belong to the grid, not to each card — see ItemGrid. */
     <motion.article
+      variants={GRID_ITEM}
       {...pressableCard}
       className="group relative flex flex-col overflow-hidden rounded-card bg-paper"
     >

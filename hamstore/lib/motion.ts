@@ -78,6 +78,28 @@ export const pressableCard = {
   whileTap: { scale: 0.985, transition: SPRING_SOFT },
 } as const
 
+/**
+ * Filtering a grid.
+ *
+ * Two failure modes sit either side of this. Animating each card to a new
+ * grid slot makes them slide over each other and takes a second to settle;
+ * cutting straight to the new set reads as a flicker, not a change. So the
+ * cards never travel between slots — each one fades up in the place it will
+ * end in — and a small stagger gives the set a direction to arrive from.
+ *
+ * Keep the stagger short: at 0.03s even an eighteen-card grid is fully in
+ * under a second, and the last card is never left behind on its own.
+ */
+export const GRID_REVEAL = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.03, delayChildren: 0.02 } },
+} as const
+
+export const GRID_ITEM = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } },
+} as const
+
 /** Framer variants for the same reveal, for non-GSAP components. */
 export const fadeUp = {
   hidden: { opacity: 0, y: 40 },

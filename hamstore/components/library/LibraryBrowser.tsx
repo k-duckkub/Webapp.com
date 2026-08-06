@@ -6,7 +6,7 @@ import { AssetCard } from './AssetCard'
 import { FilterPanel, type FilterGroup } from './FilterPanel'
 import { Icon } from '@/components/Icon'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
-import { EASE_OUT, REVEAL, REVEAL_START, T } from '@/lib/motion'
+import { GRID_REVEAL, REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { LIBRARY_CATEGORIES, OWNED_ASSETS } from '@/lib/library'
 
 type Sort = 'recent' | 'oldest' | 'name' | 'size' | 'updated'
@@ -260,9 +260,9 @@ export function LibraryBrowser() {
                blink once per keystroke. */
             <motion.div
               key={gridKey}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.28, ease: EASE_OUT }}
+              variants={GRID_REVEAL}
+              initial="hidden"
+              animate="show"
               className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4"
             >
               {paginated.map(asset => (

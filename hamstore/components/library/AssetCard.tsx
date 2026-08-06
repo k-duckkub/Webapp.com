@@ -1,20 +1,20 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { T, SPRING_SOFT } from '@/lib/motion'
+import { T, SPRING_SOFT, GRID_ITEM } from '@/lib/motion'
 import { formatSize, formatThaiDate, CATEGORY_MOTIF, type OwnedAsset } from '@/lib/library'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 
 /**
- * No layout or enter animation per card: filtering a list is a state change,
- * not a reveal. When each card animated to its new grid slot, the ones on
- * their way out floated over the ones staying put for the best part of a
- * second. The grid fades as a whole instead — see LibraryBrowser.
+ * The card never animates between grid slots — that is what made the ones on
+ * their way out float over the ones staying put. It only fades up in the
+ * place it will end in, on the grid's stagger. See GRID_ITEM in lib/motion.
  */
 export function AssetCard({ asset }: { asset: OwnedAsset }) {
   return (
     <motion.article
+      variants={GRID_ITEM}
       whileHover={{ y: -4, transition: SPRING_SOFT }}
       className="flex flex-col overflow-hidden rounded-card bg-paper"
     >

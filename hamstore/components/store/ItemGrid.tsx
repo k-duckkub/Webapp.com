@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { ItemCard } from './ItemCard'
 import { ItemSheet } from './ItemSheet'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
-import { EASE_OUT, REVEAL, REVEAL_START, T } from '@/lib/motion'
+import { GRID_REVEAL, REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, type ItemKind, type PlatformItem } from '@/lib/items'
 
 type Filter = 'ALL' | ItemKind
@@ -81,9 +81,9 @@ export function ItemGrid() {
             the cards that stayed. */}
         <motion.div
           key={filter}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, ease: EASE_OUT }}
+          variants={GRID_REVEAL}
+          initial="hidden"
+          animate="show"
           className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
         >
           {items.map(item => (
