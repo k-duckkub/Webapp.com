@@ -93,7 +93,7 @@ export function Pathway() {
   return (
     <section
       ref={root}
-      className="relative overflow-hidden bg-ink-900 px-6 py-20 md:h-[1400px] md:py-0"
+      className="relative w-full overflow-hidden bg-ink-900 px-6 py-20 md:h-[1400px] md:py-0"
     >
       <div className="mx-auto mb-14 max-w-2xl text-center md:pt-20">
         <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-brand">

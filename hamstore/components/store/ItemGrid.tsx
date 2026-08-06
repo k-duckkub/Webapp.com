@@ -40,8 +40,8 @@ export function ItemGrid() {
   })
 
   return (
-    <section ref={root} id="items" className="bg-ink-850 py-16">
-      <div className="mx-auto max-w-7xl px-6">
+    <section ref={root} id="items" className="w-full bg-ink-850 py-20">
+      <div className="w-full px-6 sm:px-10 lg:px-16">
         <div data-grid-head className="mb-8 text-center">
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-brand">
             ของที่ซื้อได้
@@ -84,7 +84,7 @@ export function ItemGrid() {
         </div>
 
         {/* Grid */}
-        <motion.div layout className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <motion.div layout className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           <AnimatePresence mode="popLayout">
             {items.map(item => (
               <ItemCard key={item.id} item={item} />
