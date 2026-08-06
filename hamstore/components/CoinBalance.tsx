@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useWallet } from './WalletProvider'
+import { Icon } from './Icon'
 
 /**
  * The wallet chip. When the balance drops it counts down rather than jumping,
@@ -31,7 +32,7 @@ export function CoinBalance() {
       transition={{ duration: 0.45, times: [0, 0.35, 1], ease: [0.28, 0.11, 0.32, 1] }}
       className="ml-1 inline-flex shrink-0 items-center gap-1 rounded-full bg-mist px-2.5 py-1 text-[12px] font-medium tabular-nums text-graphite sm:ml-0 sm:px-3"
     >
-      <span aria-hidden>🪙</span>
+      <Icon name="coin" className="h-3.5 w-3.5 text-slate-soft" />
       <motion.span aria-hidden>{shown}</motion.span>
       <span className="sr-only">HamCoin คงเหลือ {balance.toLocaleString('th-TH')} เหรียญ</span>
     </motion.span>

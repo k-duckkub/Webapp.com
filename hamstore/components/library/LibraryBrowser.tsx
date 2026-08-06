@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AssetCard } from './AssetCard'
 import { FilterPanel, type FilterGroup } from './FilterPanel'
+import { Icon } from '@/components/Icon'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { LIBRARY_CATEGORIES, OWNED_ASSETS } from '@/lib/library'
@@ -178,7 +179,7 @@ export function LibraryBrowser() {
                   />
                 )}
                 <span className="relative flex items-center gap-1.5">
-                  <span aria-hidden>{c.icon}</span>
+                  <Icon name={c.icon} className="h-3.5 w-3.5" />
                   {c.label}
                   <span className={active ? 'text-paper/60' : 'text-slate-soft'}>{count}</span>
                 </span>
@@ -199,9 +200,10 @@ export function LibraryBrowser() {
           <div data-lib-toolbar className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <label className="relative flex-1 sm:max-w-xs">
               <span className="sr-only">ค้นหาใน asset ที่ซื้อไว้</span>
-              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-soft">
-                🔍
-              </span>
+              <Icon
+                name="search"
+                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-soft"
+              />
               <input
                 value={query}
                 onChange={e => update(setQuery)(e.target.value)}
@@ -233,7 +235,7 @@ export function LibraryBrowser() {
 
           {paginated.length === 0 ? (
             <div className="rounded-card bg-paper py-20 text-center">
-              <p className="mb-1 text-3xl">🔍</p>
+              <Icon name="search" className="mx-auto mb-3 h-7 w-7 text-slate-soft" />
               <p className="text-[15px] font-medium text-graphite">ไม่เจอ asset ที่ตรงกับตัวกรอง</p>
               <button onClick={clearFilters} className="btn-ghost mt-4">
                 ล้างตัวกรองทั้งหมด
@@ -252,7 +254,8 @@ export function LibraryBrowser() {
           {totalPages > 1 && (
             <div className="mt-8 flex items-center justify-center gap-1">
               <PageBtn disabled={safePage === 1} onClick={() => setPage(p => Math.max(1, p - 1))}>
-                ← ก่อนหน้า
+                <Icon name="chevronRight" className="h-3.5 w-3.5 rotate-180" strokeWidth={2} />
+                ก่อนหน้า
               </PageBtn>
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
                 <button
@@ -272,7 +275,8 @@ export function LibraryBrowser() {
                 disabled={safePage === totalPages}
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               >
-                ถัดไป →
+                ถัดไป
+                <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
               </PageBtn>
             </div>
           )}
@@ -297,7 +301,7 @@ function PageBtn({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="rounded-full bg-paper px-4 py-2 text-[13px] text-slate transition-colors enabled:hover:text-graphite disabled:cursor-not-allowed disabled:text-slate-soft/50"
+      className="inline-flex items-center gap-1.5 rounded-full bg-paper px-4 py-2 text-[13px] text-slate transition-colors enabled:hover:text-graphite disabled:cursor-not-allowed disabled:text-slate-soft/50"
     >
       {children}
     </button>

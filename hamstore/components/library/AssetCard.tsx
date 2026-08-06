@@ -2,8 +2,9 @@
 
 import { motion } from 'framer-motion'
 import { T } from '@/lib/motion'
-import { formatSize, formatThaiDate, type OwnedAsset } from '@/lib/library'
+import { formatSize, formatThaiDate, CATEGORY_MOTIF, type OwnedAsset } from '@/lib/library'
 import { Artwork } from '@/components/Artwork'
+import { Icon } from '@/components/Icon'
 
 export function AssetCard({ asset }: { asset: OwnedAsset }) {
   return (
@@ -21,6 +22,7 @@ export function AssetCard({ asset }: { asset: OwnedAsset }) {
         <Artwork
           seed={asset.id + 100}
           title={asset.title}
+          motif={CATEGORY_MOTIF[asset.category] ?? 'blocks'}
           from={asset.color}
           to="#0b0a09"
           src={asset.image}
@@ -70,7 +72,10 @@ export function AssetCard({ asset }: { asset: OwnedAsset }) {
                 : 'bg-graphite text-white hover:bg-graphite/85'
             }`}
           >
-            {asset.hasUpdate ? 'อัปเดต' : asset.downloaded ? 'ดาวน์โหลดซ้ำ' : 'ดาวน์โหลด'}
+            <span className="flex items-center justify-center gap-1.5">
+              <Icon name={asset.hasUpdate ? 'refresh' : 'download'} className="h-3.5 w-3.5" />
+              {asset.hasUpdate ? 'อัปเดต' : asset.downloaded ? 'ดาวน์โหลดซ้ำ' : 'ดาวน์โหลด'}
+            </span>
           </motion.button>
 
           <motion.button
@@ -79,9 +84,9 @@ export function AssetCard({ asset }: { asset: OwnedAsset }) {
             transition={T.hover}
             title="ใบเสร็จ"
             aria-label={`ใบเสร็จของ ${asset.title} — จ่ายไป ${asset.paidCoins} HamCoin`}
-            className="rounded-full bg-mist px-3 py-2 text-[13px] text-slate transition-colors hover:text-graphite"
+            className="rounded-full bg-mist px-3 py-2 text-slate transition-colors hover:text-graphite"
           >
-            🧾
+            <Icon name="receipt" className="h-4 w-4" />
           </motion.button>
         </div>
       </div>

@@ -36,18 +36,18 @@ export function ItemGrid() {
   return (
     <section ref={root} id="items" className="bg-mist py-24 sm:py-32">
       <div className="bleed">
-        <div className="mb-12 text-center">
-          <h2 className="display-lg mb-4 text-graphite" data-grid-el>
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b border-hairline pb-6">
+          <h2 className="display-lg text-graphite" data-grid-el>
             ไอเทมทั้งหมด
           </h2>
-          <p className="lede mx-auto max-w-xl" data-grid-el>
-            ของพวกนี้ใช้ตกแต่งโปรไฟล์และหน้าเว็บ HamsterHub ของคุณ — ไม่ใช่ Unity asset
+          <p className="max-w-sm text-[15px] leading-relaxed text-slate" data-grid-el>
+            ของแต่งโปรไฟล์และหน้าเว็บ ไม่ใช่ Unity asset
           </p>
         </div>
 
         {/* Filters — Apple keeps these as a quiet segmented row, not loud pills. */}
         <div
-          className="no-scrollbar mb-12 flex justify-start gap-1 overflow-x-auto sm:justify-center"
+          className="no-scrollbar mb-10 flex justify-start gap-1 overflow-x-auto"
           data-grid-el
         >
           {FILTERS.map(f => {

@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { gsap, useGsapContext, MOTION_OK, MOTION_REDUCED } from '@/lib/gsap'
 import { GSAP_EASE } from '@/lib/motion'
 import { PATHWAY_STOPS } from '@/lib/items'
+import { Icon } from '@/components/Icon'
 
 /**
  * The scroll-scrubbed set piece: the section pins, and the three steps trade
@@ -73,7 +74,7 @@ export function PinnedStory() {
         aria-hidden
         className="pointer-events-none absolute inset-0 flex items-center justify-center"
       >
-        <span className="select-none text-[38vw] leading-none md:text-[28vw]">🪙</span>
+        <Icon name="coin" className="h-[64vw] w-[64vw] text-white md:h-[42vw] md:w-[42vw]" strokeWidth={0.5} />
       </div>
 
       {/* Darkens the middle so the copy always clears the mark behind it. */}
@@ -84,8 +85,6 @@ export function PinnedStory() {
       />
 
       <div className="shell relative">
-        <p className="eyebrow mb-10 text-center">HamCoin ใช้ยังไง</p>
-
         {/* On desktop the steps stack in one place and cross-fade; on mobile
             they simply flow down the page. */}
         <div className="relative mx-auto max-w-2xl md:h-64">

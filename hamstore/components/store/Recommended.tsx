@@ -7,6 +7,7 @@ import { REVEAL, REVEAL_START, T, SPRING_SOFT } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, RECOMMENDED } from '@/lib/items'
 import { useWallet, priceOf } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
+import { Icon } from '@/components/Icon'
 
 const PICKS = RECOMMENDED.map(pick => ({
   ...pick,
@@ -30,15 +31,12 @@ export function Recommended() {
   return (
     <section ref={root} className="bg-paper py-24 sm:py-32">
       <div className="bleed">
-        <div className="mb-14 text-center">
-          <p className="eyebrow mb-4" data-rec-el>
-            คัดมาให้แล้ว
-          </p>
-          <h2 className="display-lg mb-4 text-graphite" data-rec-el>
+        <div className="mb-12 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b border-hairline pb-6">
+          <h2 className="display-lg text-graphite" data-rec-el>
             ของที่เราแนะนำ
           </h2>
-          <p className="lede mx-auto max-w-xl" data-rec-el>
-            สี่ชิ้นนี้เลือกจากยอดแลกจริงและความเข้ากันกับของชิ้นอื่น — พร้อมเหตุผลว่าทำไมถึงเลือก
+          <p className="max-w-sm text-[15px] leading-relaxed text-slate" data-rec-el>
+            สี่ชิ้นนี้มาจากยอดแลกจริงของเดือนนี้
           </p>
         </div>
 
@@ -67,6 +65,7 @@ export function Recommended() {
                     seed={item.id}
                     title={item.name}
                     label={kind.label}
+                    motif={kind.motif}
                     from={from}
                     to={to}
                     src={item.image}
@@ -84,8 +83,15 @@ export function Recommended() {
                   <p className="mb-5 text-sm leading-relaxed text-slate">{note}</p>
 
                   <div className="mt-auto flex items-center justify-between gap-3">
-                    <span className="text-[15px] font-semibold text-graphite">
-                      {item.coins === 0 ? 'ฟรี' : `🪙 ${priceOf(item)}`}
+                    <span className="flex items-center gap-1.5 text-[15px] font-semibold text-graphite">
+                      {item.coins === 0 ? (
+                        'ฟรี'
+                      ) : (
+                        <>
+                          <Icon name="coin" className="h-4 w-4 text-slate-soft" />
+                          {priceOf(item)}
+                        </>
+                      )}
                     </span>
 
                     <motion.button
@@ -113,7 +119,7 @@ export function Recommended() {
                         >
                           {owned
                             ? celebrating
-                              ? 'ได้แล้ว ✓'
+                              ? 'ได้แล้ว'
                               : 'ใช้งาน'
                             : affordable
                               ? 'แลกเลย'

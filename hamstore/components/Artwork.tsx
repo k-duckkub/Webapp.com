@@ -1,23 +1,29 @@
 /**
- * Generated cover art.
+ * Cover art.
  *
- * Real product photography is what a store like this would ship, but until
- * those files exist every card was a lone emoji on a wash of colour, which
- * reads as a placeholder rather than a product. This draws a cover per item
- * instead: a two-tone field, a few large shapes, a pattern, and the title set
- * over it — the shape of asset-store key art, generated rather than borrowed.
+ * The first pass drew the same thing on every card — a gradient with soft
+ * blobs, dots and a diagonal hatch — which is the look of filler, not of a
+ * product someone designed. This draws a composition that belongs to the
+ * thing it's selling instead: swatches for a theme, a sticker sheet for a
+ * sticker pack, nested rules for a frame, terrain for an environment pack.
  *
- * Everything is derived from the item's id, so a given item always gets the
- * same cover. That determinism matters: a random layout would differ between
- * the server render and the client and trip a hydration mismatch.
- *
- * The type is HTML on top of the SVG rather than <text> inside it. The field
- * has a fixed viewBox and is cropped to whatever aspect the card is, so text
- * inside it loses its edges on a square card — and SVG text gets none of the
- * wrapping, clamping or Thai shaping the webfont gives us in HTML.
+ * Layout varies within a motif but never between renders: everything comes
+ * from a seeded PRNG keyed on the item id. Random would differ between the
+ * server render and the client and trip a hydration mismatch.
  */
 
-/* Small deterministic PRNG (mulberry32) — same seed, same sequence, anywhere. */
+export type Motif =
+  | 'swatches'
+  | 'sheet'
+  | 'nested'
+  | 'figure'
+  | 'tracks'
+  | 'terrain'
+  | 'burst'
+  | 'waveform'
+  | 'blocks'
+
+/* mulberry32 — same seed, same sequence, anywhere. */
 function rng(seed: number) {
   let a = seed + 0x6d2b79f5
   return () => {
@@ -29,37 +35,175 @@ function rng(seed: number) {
   }
 }
 
+const W = 400
+const H = 300
+
+function draw(motif: Motif, rand: () => number, ink: string) {
+  const p = (o: number) => ({ fill: ink, opacity: o })
+
+  switch (motif) {
+    /* A row of uneven colour bars, the way a palette is sampled. */
+    case 'swatches': {
+      let x = 26
+      return Array.from({ length: 6 }, (_, i) => {
+        const w = 26 + rand() * 34
+        const h = 120 + rand() * 120
+        const el = <rect key={i} x={x} y={(H - h) / 2} width={w} height={h} rx={8} {...p(0.14 + (i % 3) * 0.1)} />
+        x += w + 12
+        return el
+      })
+    }
+
+    /* A sticker sheet: a loose grid of discs, a few sitting proud. */
+    case 'sheet':
+      return Array.from({ length: 15 }, (_, i) => {
+        const col = i % 5
+        const row = Math.floor(i / 5)
+        return (
+          <circle
+            key={i}
+            cx={58 + col * 72 + (rand() - 0.5) * 12}
+            cy={78 + row * 74 + (rand() - 0.5) * 12}
+            r={20 + rand() * 12}
+            {...p(0.1 + rand() * 0.28)}
+          />
+        )
+      })
+
+    /* Concentric rules — a frame around a frame. */
+    case 'nested':
+      return Array.from({ length: 5 }, (_, i) => {
+        const inset = 22 + i * 26
+        return (
+          <rect
+            key={i}
+            x={inset}
+            y={inset * 0.75}
+            width={W - inset * 2}
+            height={H - inset * 1.5}
+            rx={10}
+            fill="none"
+            stroke={ink}
+            strokeWidth={i === 1 ? 10 : 4}
+            opacity={0.14 + i * 0.07}
+          />
+        )
+      })
+
+    /* A blocked-in figure: head, shoulders, a stance. */
+    case 'figure':
+      return (
+        <>
+          <circle cx={W / 2} cy={96} r={44} {...p(0.3)} />
+          <path d={`M${W / 2 - 74} ${H} q0-92 74-92 t74 92 Z`} {...p(0.22)} />
+          <rect x={W / 2 - 16} y={150} width={32} height={90} rx={16} {...p(0.16)} />
+        </>
+      )
+
+    /* A trail of prints crossing the field. */
+    case 'tracks':
+      return Array.from({ length: 5 }, (_, i) => {
+        const cx = 52 + i * 76
+        const cy = 210 - i * 30 + (rand() - 0.5) * 26
+        return (
+          <g key={i} opacity={0.16 + rand() * 0.2}>
+            <ellipse cx={cx} cy={cy} rx={22} ry={18} fill={ink} />
+            {[-1, 0, 1].map(k => (
+              <circle key={k} cx={cx + k * 17} cy={cy - 26 + Math.abs(k) * 6} r={7.5} fill={ink} />
+            ))}
+          </g>
+        )
+      })
+
+    /* Layered ridges receding into the distance. */
+    case 'terrain':
+      return Array.from({ length: 3 }, (_, i) => {
+        const base = H - i * 46
+        const peak = base - 78 - rand() * 54
+        const mid = 90 + i * 110 + rand() * 40
+        return (
+          <path
+            key={i}
+            d={`M-20 ${base} L${mid} ${peak} L${mid + 120} ${base - 20} L${W + 20} ${peak + 40} L${W + 20} ${H + 20} L-20 ${H + 20} Z`}
+            {...p(0.14 + i * 0.1)}
+          />
+        )
+      })
+
+    /* Rays out of one point. */
+    case 'burst':
+      return (
+        <>
+          {Array.from({ length: 12 }, (_, i) => {
+            const a = (i / 12) * Math.PI * 2 + rand() * 0.12
+            const r1 = 46
+            const r2 = 108 + rand() * 76
+            return (
+              <line
+                key={i}
+                x1={W / 2 + Math.cos(a) * r1}
+                y1={H / 2 + Math.sin(a) * r1}
+                x2={W / 2 + Math.cos(a) * r2}
+                y2={H / 2 + Math.sin(a) * r2}
+                stroke={ink}
+                strokeWidth={7}
+                strokeLinecap="round"
+                opacity={0.16 + rand() * 0.2}
+              />
+            )
+          })}
+          <circle cx={W / 2} cy={H / 2} r={30} {...p(0.32)} />
+        </>
+      )
+
+    /* Level meter. */
+    case 'waveform':
+      return Array.from({ length: 17 }, (_, i) => {
+        const h = 26 + rand() * 176
+        return (
+          <rect key={i} x={22 + i * 22} y={(H - h) / 2} width={11} height={h} rx={5.5} {...p(0.16 + rand() * 0.24)} />
+        )
+      })
+
+    /* Stacked slabs, read as a kit of parts. */
+    case 'blocks':
+    default:
+      return Array.from({ length: 6 }, (_, i) => {
+        const col = i % 3
+        const row = Math.floor(i / 3)
+        return (
+          <rect
+            key={i}
+            x={44 + col * 108 + (rand() - 0.5) * 10}
+            y={72 + row * 96}
+            width={84}
+            height={68}
+            rx={12}
+            {...p(0.13 + rand() * 0.24)}
+          />
+        )
+      })
+  }
+}
+
 export type ArtworkProps = {
   /** Stable per item — drives the whole composition. */
   seed: number
   title: string
-  /** Small label in the corner, e.g. the category. */
-  label?: string
-  /** Two-tone field the cover is built from. */
+  motif: Motif
+  /** Two-tone field the composition sits on. */
   from: string
   to: string
+  /** Small label in the corner. */
+  label?: string
   /** A real image, when one exists, wins over the generated cover. */
   src?: string
-  /** Larger covers get bigger type. */
   size?: 'sm' | 'lg'
 }
 
-export function Artwork({ seed, title, label, from, to, src, size = 'sm' }: ArtworkProps) {
+export function Artwork({ seed, title, motif, from, to, label, src, size = 'sm' }: ArtworkProps) {
   const rand = rng(seed)
-  const angle = 90 + rand() * 120
   const gid = `art-${seed}`
-
-  const blobs = Array.from({ length: 3 }, () => ({
-    cx: 40 + rand() * 320,
-    cy: 30 + rand() * 200,
-    r: 60 + rand() * 110,
-    o: 0.16 + rand() * 0.2,
-  }))
-  const dots = Array.from({ length: 14 }, () => ({
-    x: rand() * 400,
-    y: rand() * 300,
-    r: 1.5 + rand() * 3,
-  }))
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -73,42 +217,27 @@ export function Artwork({ seed, title, label, from, to, src, size = 'sm' }: Artw
         />
       ) : (
         <svg
-          viewBox="0 0 400 300"
+          viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="xMidYMid slice"
           aria-hidden
           className="absolute inset-0 h-full w-full"
         >
           <defs>
-            <linearGradient id={`${gid}-bg`} gradientTransform={`rotate(${angle} 0.5 0.5)`}>
+            <linearGradient id={`${gid}-bg`} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor={from} />
               <stop offset="100%" stopColor={to} />
             </linearGradient>
           </defs>
-
-          <rect width="400" height="300" fill={`url(#${gid}-bg)`} />
-
-          {blobs.map((b, i) => (
-            <circle key={i} cx={b.cx} cy={b.cy} r={b.r} fill="#fff" opacity={b.o} />
-          ))}
-          {dots.map((d, i) => (
-            <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#fff" opacity="0.32" />
-          ))}
-
-          {/* Diagonal hatch, the way key art often carries a texture. */}
-          <path
-            d="M-80 300 L140 0 M-20 300 L200 0 M40 300 L260 0 M100 300 L320 0 M160 300 L380 0 M220 300 L440 0 M280 300 L500 0"
-            stroke="#fff"
-            strokeOpacity="0.1"
-            strokeWidth="18"
-          />
+          <rect width={W} height={H} fill={`url(#${gid}-bg)`} />
+          {draw(motif, rand, '#ffffff')}
         </svg>
       )}
 
       {/* Darkens the lower half so the title always clears the field. */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.66)_0%,rgba(0,0,0,0.18)_45%,transparent_72%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.68)_0%,rgba(0,0,0,0.2)_46%,transparent_74%)]" />
 
       {label && (
-        <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-black/40 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-label text-white backdrop-blur-sm">
+        <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-black/35 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-label text-white backdrop-blur-sm">
           {label}
         </span>
       )}

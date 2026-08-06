@@ -3,14 +3,15 @@
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
+import { Icon, type IconName } from '@/components/Icon'
 import { GSAP_EASE, DURATION, pressable } from '@/lib/motion'
 
-/** Marks drifting across the hero art. Positions are viewport-relative. */
-const MARKS = [
-  { emoji: '🐹', size: 200, top: '18%', left: '58%', tint: '#F97316', delay: 0 },
-  { emoji: '🎨', size: 132, top: '54%', left: '76%', tint: '#7C3AED', delay: 0.7 },
-  { emoji: '🖼', size: 110, top: '30%', left: '86%', tint: '#059669', delay: 1.4 },
-  { emoji: '🐾', size: 96,  top: '72%', left: '61%', tint: '#DC2626', delay: 2.1 },
+/** Tiles drifting across the hero art. Positions are viewport-relative. */
+const MARKS: { icon: IconName; size: number; top: string; left: string; tint: string; delay: number }[] = [
+  { icon: 'skin',    size: 200, top: '18%', left: '58%', tint: '#F97316', delay: 0 },
+  { icon: 'theme',   size: 132, top: '54%', left: '76%', tint: '#7C3AED', delay: 0.7 },
+  { icon: 'frame',   size: 110, top: '30%', left: '86%', tint: '#059669', delay: 1.4 },
+  { icon: 'pet',     size: 96,  top: '72%', left: '61%', tint: '#DC2626', delay: 2.1 },
 ]
 
 export function Hero() {
@@ -52,7 +53,7 @@ export function Hero() {
         <div className="pointer-events-none absolute inset-0 hidden md:block">
           {MARKS.map(m => (
             <motion.div
-              key={m.emoji}
+              key={m.icon}
               data-hero-mark
               animate={{ y: [0, -18, 0] }}
               transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: m.delay }}
@@ -62,11 +63,14 @@ export function Hero() {
                 height: m.size,
                 top: m.top,
                 left: m.left,
-                fontSize: m.size * 0.46,
                 boxShadow: `0 30px 60px -20px ${m.tint}33, inset 0 0 70px ${m.tint}12`,
               }}
             >
-              {m.emoji}
+              <Icon
+                name={m.icon}
+                style={{ width: m.size * 0.44, height: m.size * 0.44, color: m.tint }}
+                strokeWidth={1.3}
+              />
             </motion.div>
           ))}
         </div>
@@ -97,7 +101,7 @@ export function Hero() {
             ดูของทั้งหมด
           </motion.a>
           <a href="#how" className="btn-ghost">
-            HamCoin ใช้ยังไง <span aria-hidden>›</span>
+            HamCoin ใช้ยังไง <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
           </a>
         </div>
       </div>
@@ -105,10 +109,10 @@ export function Hero() {
       <div
         data-hero-cue
         aria-hidden
-        className="absolute inset-x-0 bottom-6 flex justify-center text-[13px] text-slate-soft"
+        className="absolute inset-x-0 bottom-6 flex justify-center text-slate-soft"
       >
         <motion.span animate={{ y: [0, 6, 0] }} transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}>
-          ↓ เลื่อนลง
+          <Icon name="arrowDown" className="h-4 w-4" />
         </motion.span>
       </div>
     </section>

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { T, pressableCard, SPRING_SOFT } from '@/lib/motion'
 import { KIND_META, RARITY_META, type PlatformItem } from '@/lib/items'
 import { Artwork } from '@/components/Artwork'
+import { Icon } from '@/components/Icon'
 import { useWallet, priceOf } from '@/components/WalletProvider'
 
 export function ItemCard({ item, featured = false }: { item: PlatformItem; featured?: boolean }) {
@@ -40,6 +41,7 @@ export function ItemCard({ item, featured = false }: { item: PlatformItem; featu
             seed={item.id}
             title={item.name}
             label={kind.label}
+            motif={kind.motif}
             from={from}
             to={to}
             src={item.image}
@@ -80,8 +82,15 @@ export function ItemCard({ item, featured = false }: { item: PlatformItem; featu
         <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-slate">{item.blurb}</p>
 
         <div className="mt-auto flex items-center justify-between gap-3 pb-1">
-          <span className="text-[15px] font-semibold text-graphite">
-            {item.coins === 0 ? 'ฟรี' : `🪙 ${price}`}
+          <span className="flex items-center gap-1.5 text-[15px] font-semibold text-graphite">
+            {item.coins === 0 ? (
+              'ฟรี'
+            ) : (
+              <>
+                <Icon name="coin" className="h-4 w-4 text-slate-soft" />
+                {price}
+              </>
+            )}
           </span>
 
           <motion.button
@@ -115,7 +124,20 @@ export function ItemCard({ item, featured = false }: { item: PlatformItem; featu
                 transition={T.hover}
                 className="block"
               >
-                {owned ? (celebrating ? 'ได้แล้ว ✓' : 'ใช้งาน') : affordable ? 'แลกเลย' : 'เหรียญไม่พอ'}
+                {owned ? (
+                  celebrating ? (
+                    <span className="flex items-center gap-1">
+                      <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.4} />
+                      ได้แล้ว
+                    </span>
+                  ) : (
+                    'ใช้งาน'
+                  )
+                ) : affordable ? (
+                  'แลกเลย'
+                ) : (
+                  'เหรียญไม่พอ'
+                )}
               </motion.span>
             </AnimatePresence>
           </motion.button>

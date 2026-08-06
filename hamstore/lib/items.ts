@@ -1,3 +1,6 @@
+import type { IconName } from '@/components/Icon'
+import type { Motif } from '@/components/Artwork'
+
 /**
  * Page 1 data — things you buy *on the HamsterHub platform itself*.
  * Deliberately NOT Unity assets: those live in the library (page 2).
@@ -22,12 +25,15 @@ export interface PlatformItem {
   image?: string
 }
 
-export const KIND_META: Record<ItemKind, { label: string; icon: string; color: string }> = {
-  skin:  { label: 'สกินแฮมสเตอร์', icon: '🐹', color: '#F97316' },
-  pet:   { label: 'เพื่อนซี้',      icon: '🐾', color: '#DC2626' },
-  theme: { label: 'ธีมหน้าเว็บ',    icon: '🎨', color: '#7C3AED' },
-  emoji: { label: 'อิโมจิ',         icon: '😊', color: '#0891B2' },
-  frame: { label: 'กรอบโปรไฟล์',    icon: '🖼', color: '#059669' },
+export const KIND_META: Record<
+  ItemKind,
+  { label: string; icon: IconName; motif: Motif; color: string }
+> = {
+  skin:  { label: 'สกินแฮมสเตอร์', icon: 'skin',    motif: 'figure',   color: '#F97316' },
+  pet:   { label: 'เพื่อนซี้',      icon: 'pet',     motif: 'tracks',   color: '#DC2626' },
+  theme: { label: 'ธีมหน้าเว็บ',    icon: 'theme',   motif: 'swatches', color: '#7C3AED' },
+  emoji: { label: 'สติกเกอร์',     icon: 'sticker', motif: 'sheet',    color: '#0891B2' },
+  frame: { label: 'กรอบโปรไฟล์',    icon: 'frame',   motif: 'nested',   color: '#059669' },
 }
 
 export const RARITY_META: Record<PlatformItem['rarity'], { label: string; color: string }> = {
@@ -73,7 +79,7 @@ export const PATHWAY_STOPS = [
     step: '01',
     title: 'แต่งตัวแฮมของคุณ',
     body: 'สกินและเพื่อนซี้เปลี่ยนหน้าตาแฮมสเตอร์ประจำตัวคุณ ทุกคนที่เข้ามาดูโปรไฟล์จะเห็นทันที',
-    icon: '🐹',
+    icon: 'skin' as IconName,
     color: '#F97316',
   },
   {
@@ -81,7 +87,7 @@ export const PATHWAY_STOPS = [
     step: '02',
     title: 'ตกแต่งพื้นที่ของคุณ',
     body: 'ธีมเปลี่ยนสีทั้งเว็บ กรอบโปรไฟล์และอิโมจิทำให้คอมเมนต์ของคุณไม่เหมือนใคร',
-    icon: '🎨',
+    icon: 'theme' as IconName,
     color: '#7C3AED',
   },
   {
@@ -89,7 +95,7 @@ export const PATHWAY_STOPS = [
     step: '03',
     title: 'สะสม HamCoin',
     body: 'เรียนจบบทเรียน ส่งงาน หรือช่วยตอบคำถามในฟอรัม แล้วเอาเหรียญมาแลกของที่นี่',
-    icon: '🪙',
+    icon: 'coin' as IconName,
     color: '#FACC15',
   },
 ]

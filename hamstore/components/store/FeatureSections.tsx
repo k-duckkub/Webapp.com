@@ -6,6 +6,7 @@ import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, SPRING_SOFT } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, type ItemKind } from '@/lib/items'
 import { priceOf } from '@/components/WalletProvider'
+import { Icon } from '@/components/Icon'
 
 const ORDER: ItemKind[] = ['skin', 'pet', 'theme', 'emoji', 'frame']
 
@@ -86,12 +87,12 @@ export function FeatureSections() {
                   background: `radial-gradient(ellipse at 50% 45%, ${from}26 0%, ${to}0f 42%, transparent 72%)`,
                 }}
               >
-                <motion.span
-                  className="select-none text-[clamp(6rem,16vw,14rem)] leading-none"
-                  whileHover={{ scale: 1.05 }}
-                  transition={SPRING_SOFT}
-                >
-                  {section.meta.icon}
+                <motion.span whileHover={{ scale: 1.05 }} transition={SPRING_SOFT}>
+                  <Icon
+                    name={section.meta.icon}
+                    className="h-[clamp(5rem,12vw,10rem)] w-[clamp(5rem,12vw,10rem)] text-graphite/20"
+                    strokeWidth={1.1}
+                  />
                 </motion.span>
               </div>
             </div>
@@ -119,15 +120,22 @@ export function FeatureSections() {
                     className="flex items-center justify-between gap-4 border-b border-hairline/70 py-3"
                   >
                     <span className="truncate text-[15px] font-medium text-graphite">{item.name}</span>
-                    <span className="shrink-0 text-[15px] text-slate">
-                      {item.coins === 0 ? 'ฟรี' : `🪙 ${priceOf(item)}`}
+                    <span className="flex shrink-0 items-center gap-1.5 text-[15px] text-slate">
+                      {item.coins === 0 ? (
+                        'ฟรี'
+                      ) : (
+                        <>
+                          <Icon name="coin" className="h-3.5 w-3.5 text-slate-soft" />
+                          {priceOf(item)}
+                        </>
+                      )}
                     </span>
                   </li>
                 ))}
               </ul>
 
               <a href="#items" className="btn-ghost self-start" data-feature-el>
-                ดู{section.meta.label}ทั้งหมด <span aria-hidden>›</span>
+                ดู{section.meta.label}ทั้งหมด <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
               </a>
             </div>
           </section>

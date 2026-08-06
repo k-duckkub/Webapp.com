@@ -58,20 +58,19 @@ export function LibraryHero() {
 
   return (
     <section ref={root} className="bg-paper pt-32 sm:pt-40">
-      <div className="shell text-center">
-        <p className="eyebrow mb-5" data-lib-el>
-          คลังของฉัน
-        </p>
-        <h1 className="display-xl mx-auto mb-6 max-w-copy text-graphite" data-lib-el>
-          Unity Asset
-          <br />
-          ที่คุณซื้อไว้
-        </h1>
-        <p className="lede mx-auto mb-14 max-w-xl" data-lib-el>
-          ทุกชิ้นที่แลกด้วย HamCoin ไปแล้วจะอยู่ที่นี่ถาวร ดาวน์โหลดซ้ำได้ไม่จำกัด
-        </p>
+      <div className="bleed">
+        <div className="mb-12 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+          <h1 className="display-xl max-w-lg text-graphite" data-lib-el>
+            Unity Asset
+            <br />
+            ที่คุณซื้อไว้
+          </h1>
+          <p className="max-w-xs text-[15px] leading-relaxed text-slate" data-lib-el>
+            แลกแล้วอยู่กับคุณถาวร ดาวน์โหลดซ้ำได้ไม่จำกัด
+          </p>
+        </div>
 
-        <dl className="mx-auto grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-panel bg-hairline/70 sm:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-panel bg-hairline/70 sm:grid-cols-4">
           {STATS.map(stat => (
             <div key={stat.id} data-stat className="bg-paper px-5 py-7">
               <dd

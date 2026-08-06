@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { T } from '@/lib/motion'
 import { CoinBalance } from './CoinBalance'
+import { Icon } from './Icon'
 
 const LINKS = [
   { href: '/',        label: 'ของที่ซื้อได้' },
@@ -46,7 +47,7 @@ export function SiteNav() {
           href="/"
           className="flex shrink-0 items-center gap-1.5 text-[15px] font-semibold tracking-tight text-graphite"
         >
-          <span aria-hidden>🐹</span>
+          <Icon name="hamster" className="h-[18px] w-[18px] text-brand" strokeWidth={1.9} />
           {/* The wordmark costs more width than the links can spare on a phone. */}
           <span className="hidden sm:inline">HamsterHub</span>
           <span className="sr-only sm:hidden">HamsterHub</span>

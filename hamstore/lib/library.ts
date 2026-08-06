@@ -1,3 +1,6 @@
+import type { IconName } from '@/components/Icon'
+import type { Motif } from '@/components/Artwork'
+
 /**
  * Page 2 data — Unity assets the hamster has ALREADY BOUGHT.
  * This is a personal library, not a storefront: no prices, no cart.
@@ -29,16 +32,27 @@ export interface OwnedAsset {
   image?: string
 }
 
-export const LIBRARY_CATEGORIES = [
-  { id: 'ALL',          label: 'ทั้งหมด',       icon: '📚' },
-  { id: 'CHARACTER',    label: 'Characters',    icon: '🧑' },
-  { id: 'ENVIRONMENTS', label: 'Environments',  icon: '🌲' },
-  { id: 'GUI',          label: 'GUI',           icon: '🖼' },
-  { id: 'VFX',          label: 'VFX',           icon: '✨' },
-  { id: 'AUDIO',        label: 'Audio',         icon: '🎵' },
-  { id: 'TOOLS',        label: 'Tools',         icon: '🔧' },
-  { id: 'TEMPLATE',     label: 'Templates',     icon: '📦' },
+export const LIBRARY_CATEGORIES: { id: string; label: string; icon: IconName }[] = [
+  { id: 'ALL',          label: 'ทั้งหมด',      icon: 'all' },
+  { id: 'CHARACTER',    label: 'Characters',   icon: 'character' },
+  { id: 'ENVIRONMENTS', label: 'Environments', icon: 'environment' },
+  { id: 'GUI',          label: 'GUI',          icon: 'gui' },
+  { id: 'VFX',          label: 'VFX',          icon: 'vfx' },
+  { id: 'AUDIO',        label: 'Audio',        icon: 'audio' },
+  { id: 'TOOLS',        label: 'Tools',        icon: 'tools' },
+  { id: 'TEMPLATE',     label: 'Templates',    icon: 'template' },
 ]
+
+/** Which composition a category's covers are drawn from. */
+export const CATEGORY_MOTIF: Record<string, Motif> = {
+  GUI: 'blocks',
+  VFX: 'burst',
+  TOOLS: 'blocks',
+  CHARACTER: 'figure',
+  TEMPLATE: 'blocks',
+  ENVIRONMENTS: 'terrain',
+  AUDIO: 'waveform',
+}
 
 export const CATEGORY_COLORS: Record<string, string> = {
   GUI: '#7C3AED',
