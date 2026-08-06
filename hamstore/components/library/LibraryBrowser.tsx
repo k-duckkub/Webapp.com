@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AssetCard } from './AssetCard'
+import { FilterPanel, type FilterGroup } from './FilterPanel'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { LIBRARY_CATEGORIES, OWNED_ASSETS } from '@/lib/library'
@@ -70,6 +71,59 @@ export function LibraryBrowser() {
     })
   }, [category, query, pipelines, licenses, onlyUpdates, onlyNotDownloaded, sort])
 
+  /* Counts are taken against category + search only, so a pipeline count still
+     means something while other pipelines are ticked. */
+  const scoped = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return OWNED_ASSETS.filter(a => {
+      if (category !== 'ALL' && a.category !== category) return false
+      if (q && !a.title.toLowerCase().includes(q) && !a.publisher.toLowerCase().includes(q)) return false
+      return true
+    })
+  }, [category, query])
+
+  const filterGroups: FilterGroup[] = [
+    {
+      title: 'สถานะ',
+      options: [
+        {
+          id: 'updates',
+          label: 'มีอัปเดตใหม่',
+          count: scoped.filter(a => a.hasUpdate).length,
+          checked: onlyUpdates,
+          onToggle: () => { setOnlyUpdates(v => !v); setPage(1) },
+        },
+        {
+          id: 'not-downloaded',
+          label: 'ยังไม่ได้ดาวน์โหลด',
+          count: scoped.filter(a => !a.downloaded).length,
+          checked: onlyNotDownloaded,
+          onToggle: () => { setOnlyNotDownloaded(v => !v); setPage(1) },
+        },
+      ],
+    },
+    {
+      title: 'Render Pipeline',
+      options: PIPELINES.map(pipe => ({
+        id: pipe,
+        label: pipe,
+        count: scoped.filter(a => a.pipelines.includes(pipe)).length,
+        checked: pipelines.includes(pipe),
+        onToggle: () => toggle(pipelines, setPipelines)(pipe),
+      })),
+    },
+    {
+      title: 'License',
+      options: LICENSES.map(lic => ({
+        id: lic,
+        label: lic,
+        count: scoped.filter(a => a.license === lic).length,
+        checked: licenses.includes(lic),
+        onToggle: () => toggle(licenses, setLicenses)(lic),
+      })),
+    },
+  ]
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE))
   /* Clamp rather than store a page that no longer exists after filtering. */
   const safePage = Math.min(page, totalPages)
@@ -136,61 +190,8 @@ export function LibraryBrowser() {
 
       <div className="shell flex gap-10 pt-10">
         {/* Sidebar */}
-        <aside className="hidden w-56 shrink-0 md:block">
-          <div className="overflow-hidden rounded-card bg-paper">
-            <div className="flex items-center justify-between border-b border-hairline px-5 py-4">
-              <p className="text-[15px] font-semibold text-graphite">ตัวกรอง</p>
-              {activeFilterCount > 0 && (
-                <button
-                  onClick={clearFilters}
-                  className="text-[13px] font-medium text-brand transition-opacity hover:opacity-70"
-                >
-                  ล้าง ({activeFilterCount})
-                </button>
-              )}
-            </div>
-
-            <FilterGroup title="สถานะ">
-              <CheckRow
-                label="มีอัปเดตใหม่"
-                checked={onlyUpdates}
-                onChange={() => {
-                  setOnlyUpdates(v => !v)
-                  setPage(1)
-                }}
-              />
-              <CheckRow
-                label="ยังไม่ได้ดาวน์โหลด"
-                checked={onlyNotDownloaded}
-                onChange={() => {
-                  setOnlyNotDownloaded(v => !v)
-                  setPage(1)
-                }}
-              />
-            </FilterGroup>
-
-            <FilterGroup title="Render Pipeline">
-              {PIPELINES.map(p => (
-                <CheckRow
-                  key={p}
-                  label={p}
-                  checked={pipelines.includes(p)}
-                  onChange={() => toggle(pipelines, setPipelines)(p)}
-                />
-              ))}
-            </FilterGroup>
-
-            <FilterGroup title="License" last>
-              {LICENSES.map(l => (
-                <CheckRow
-                  key={l}
-                  label={l}
-                  checked={licenses.includes(l)}
-                  onChange={() => toggle(licenses, setLicenses)(l)}
-                />
-              ))}
-            </FilterGroup>
-          </div>
+        <aside className="hidden w-60 shrink-0 md:block">
+          <FilterPanel groups={filterGroups} activeCount={activeFilterCount} onClear={clearFilters} />
         </aside>
 
         {/* Content */}
@@ -281,44 +282,7 @@ export function LibraryBrowser() {
   )
 }
 
-function FilterGroup({
-  title,
-  children,
-  last,
-}: {
-  title: string
-  children: React.ReactNode
-  last?: boolean
-}) {
-  return (
-    <div className={`px-5 py-4 ${last ? '' : 'border-b border-hairline/70'}`}>
-      <p className="mb-3 text-[12px] font-semibold tracking-label text-slate-soft">{title}</p>
-      {children}
-    </div>
-  )
-}
 
-function CheckRow({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string
-  checked: boolean
-  onChange: () => void
-}) {
-  return (
-    <label className="flex cursor-pointer items-center gap-2 py-1">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        className="rounded accent-brand"
-      />
-      <span className="text-[13px] text-graphite">{label}</span>
-    </label>
-  )
-}
 
 function PageBtn({
   children,
