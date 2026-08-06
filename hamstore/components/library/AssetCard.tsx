@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { T } from '@/lib/motion'
 import { formatSize, formatThaiDate, type OwnedAsset } from '@/lib/library'
+import { Artwork } from '@/components/Artwork'
 
 export function AssetCard({ asset }: { asset: OwnedAsset }) {
   return (
@@ -15,20 +16,15 @@ export function AssetCard({ asset }: { asset: OwnedAsset }) {
       whileHover={{ y: -4 }}
       className="flex flex-col overflow-hidden rounded-card bg-paper"
     >
-      {/* Product panel */}
-      <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-mist">
-        <div
-          className="absolute inset-0"
-          style={{ background: `radial-gradient(ellipse at 50% 50%, ${asset.color}1f 0%, transparent 65%)` }}
+      {/* Cover */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-mist">
+        <Artwork
+          seed={asset.id + 100}
+          title={asset.title}
+          from={asset.color}
+          to="#0b0a09"
+          src={asset.image}
         />
-        <motion.span
-          className="relative select-none text-4xl font-semibold tracking-display"
-          style={{ color: asset.color, opacity: 0.55 }}
-          whileHover={{ scale: 1.05 }}
-          transition={T.hover}
-        >
-          {asset.category.slice(0, 2)}
-        </motion.span>
 
         {asset.hasUpdate && (
           <span className="absolute right-3 top-3 rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">

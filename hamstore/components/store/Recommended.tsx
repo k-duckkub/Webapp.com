@@ -6,6 +6,7 @@ import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T, SPRING_SOFT } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, RECOMMENDED } from '@/lib/items'
 import { useWallet, priceOf } from '@/components/WalletProvider'
+import { Artwork } from '@/components/Artwork'
 
 const PICKS = RECOMMENDED.map(pick => ({
   ...pick,
@@ -44,7 +45,7 @@ export function Recommended() {
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" data-rec-el>
           {PICKS.map(({ item, reason, note }) => {
             const kind = KIND_META[item.kind]
-            const [from] = item.art
+            const [from, to] = item.art
             const owned = owns(item.id)
             const affordable = canAfford(item)
             const celebrating = justRedeemed === item.id
@@ -56,19 +57,21 @@ export function Recommended() {
                 transition={SPRING_SOFT}
                 className="flex flex-col overflow-hidden rounded-panel bg-mist p-6 sm:flex-row sm:items-center sm:gap-6"
               >
-                {/* Mark */}
-                <div
-                  className="relative mb-5 flex aspect-square w-full shrink-0 items-center justify-center overflow-hidden rounded-card bg-paper sm:mb-0 sm:w-40"
-                  style={{ boxShadow: `inset 0 0 60px ${from}14` }}
+                {/* Cover */}
+                <motion.div
+                  className="relative mb-5 aspect-[4/3] w-full shrink-0 overflow-hidden rounded-card bg-paper sm:mb-0 sm:aspect-square sm:w-40"
+                  animate={celebrating ? { scale: [1, 1.05, 1] } : { scale: 1 }}
+                  transition={celebrating ? { duration: 0.7, ease: [0.28, 0.11, 0.32, 1] } : SPRING_SOFT}
                 >
-                  <motion.span
-                    className="select-none text-6xl leading-none"
-                    animate={celebrating ? { scale: [1, 1.25, 1], rotate: [0, -8, 0] } : { scale: 1 }}
-                    transition={celebrating ? { duration: 0.7, ease: [0.28, 0.11, 0.32, 1] } : SPRING_SOFT}
-                  >
-                    {kind.icon}
-                  </motion.span>
-                </div>
+                  <Artwork
+                    seed={item.id}
+                    title={item.name}
+                    label={kind.label}
+                    from={from}
+                    to={to}
+                    src={item.image}
+                  />
+                </motion.div>
 
                 {/* Why we picked it */}
                 <div className="flex min-w-0 flex-1 flex-col">

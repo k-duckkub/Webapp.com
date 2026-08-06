@@ -25,6 +25,8 @@ export interface OwnedAsset {
   /** paid in HamCoin at purchase time — kept for the receipt, not for sale */
   paidCoins: number
   color: string
+  /** Path to real cover art; overrides the generated cover when present. */
+  image?: string
 }
 
 export const LIBRARY_CATEGORIES = [

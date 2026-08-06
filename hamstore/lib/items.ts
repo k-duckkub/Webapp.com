@@ -15,8 +15,11 @@ export interface PlatformItem {
   sale: number
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
   owned: boolean
-  /** two-tone swatch used to build the item's placeholder art */
+  /** two-tone field the generated cover is built from */
   art: [string, string]
+  /** Path to real cover art. Drop a file in /public and set it here to
+   *  override the generated cover — nothing else needs to change. */
+  image?: string
 }
 
 export const KIND_META: Record<ItemKind, { label: string; icon: string; color: string }> = {
