@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AssetCard } from './AssetCard'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
+import { REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { LIBRARY_CATEGORIES, OWNED_ASSETS } from '@/lib/library'
 
 type Sort = 'recent' | 'oldest' | 'name' | 'size' | 'updated'
@@ -80,11 +81,8 @@ export function LibraryBrowser() {
   useGsapContext(root, ({ mm }) => {
     mm.add(MOTION_OK, () => {
       gsap.from('[data-lib-toolbar]', {
-        y: 20,
-        opacity: 0,
-        duration: 0.55,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: root.current, start: 'top 88%' },
+        ...REVEAL,
+        scrollTrigger: { trigger: root.current, start: REVEAL_START },
       })
     })
   })
@@ -98,10 +96,10 @@ export function LibraryBrowser() {
   }
 
   return (
-    <section ref={root} className="bg-ink-900">
+    <section ref={root} className="bg-mist pb-24 pt-16 sm:pb-32">
       {/* Category pills */}
-      <div className="border-b border-ink-700 bg-ink-850">
-        <div className="no-scrollbar mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-3">
+      <div className="border-b border-hairline">
+        <div className="no-scrollbar shell flex gap-1 overflow-x-auto pb-4">
           {LIBRARY_CATEGORIES.map(c => {
             const active = category === c.id
             const count =
@@ -114,21 +112,21 @@ export function LibraryBrowser() {
                 key={c.id}
                 onClick={() => update(setCategory)(c.id)}
                 aria-pressed={active}
-                className={`relative shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-colors ${
-                  active ? 'text-white' : 'text-muted-bright hover:text-white'
+                className={`relative shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
+                  active ? 'text-paper' : 'text-slate hover:text-graphite'
                 }`}
               >
                 {active && (
                   <motion.span
                     layoutId="lib-pill"
-                    className="absolute inset-0 rounded-full bg-brand"
-                    transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                    className="absolute inset-0 rounded-full bg-graphite"
+                    transition={T.hover}
                   />
                 )}
                 <span className="relative flex items-center gap-1.5">
                   <span aria-hidden>{c.icon}</span>
                   {c.label}
-                  <span className={active ? 'text-white/70' : 'text-muted-dim'}>{count}</span>
+                  <span className={active ? 'text-paper/60' : 'text-slate-soft'}>{count}</span>
                 </span>
               </button>
             )
@@ -136,16 +134,16 @@ export function LibraryBrowser() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-7xl gap-8 px-6 py-8">
+      <div className="shell flex gap-10 pt-10">
         {/* Sidebar */}
         <aside className="hidden w-56 shrink-0 md:block">
-          <div className="overflow-hidden rounded-lg border border-ink-600 bg-ink-750">
-            <div className="flex items-center justify-between border-b border-ink-600 px-4 py-3">
-              <p className="text-sm font-black text-white">ตัวกรอง</p>
+          <div className="overflow-hidden rounded-card bg-paper">
+            <div className="flex items-center justify-between border-b border-hairline px-5 py-4">
+              <p className="text-[15px] font-semibold text-graphite">ตัวกรอง</p>
               {activeFilterCount > 0 && (
                 <button
                   onClick={clearFilters}
-                  className="text-xs font-semibold text-brand hover:underline"
+                  className="text-[13px] font-medium text-brand transition-opacity hover:opacity-70"
                 >
                   ล้าง ({activeFilterCount})
                 </button>
@@ -200,23 +198,23 @@ export function LibraryBrowser() {
           <div data-lib-toolbar className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <label className="relative flex-1 sm:max-w-xs">
               <span className="sr-only">ค้นหาใน asset ที่ซื้อไว้</span>
-              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-dim">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-soft">
                 🔍
               </span>
               <input
                 value={query}
                 onChange={e => update(setQuery)(e.target.value)}
                 placeholder="ค้นหาชื่อ asset หรือผู้พัฒนา…"
-                className="w-full rounded border border-ink-600 bg-ink-800 py-2 pl-9 pr-3 text-sm text-white outline-none transition-colors placeholder:text-muted-dim focus:border-brand"
+                className="w-full rounded-full bg-paper py-2.5 pl-10 pr-4 text-[15px] text-graphite outline-none transition-shadow placeholder:text-slate-soft focus:ring-2 focus:ring-brand/40"
               />
             </label>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-dim">เรียงโดย:</span>
+              <span className="text-[13px] text-slate">เรียงโดย:</span>
               <select
                 value={sort}
                 onChange={e => update(setSort)(e.target.value as Sort)}
-                className="rounded border border-ink-600 bg-ink-800 px-3 py-1.5 text-xs text-white outline-none focus:border-brand"
+                className="rounded-full bg-paper px-4 py-2 text-[13px] text-graphite outline-none focus:ring-2 focus:ring-brand/40"
               >
                 {SORTS.map(s => (
                   <option key={s.id} value={s.id}>
@@ -227,21 +225,21 @@ export function LibraryBrowser() {
             </div>
           </div>
 
-          <p className="mb-4 text-sm text-muted">
-            พบ <strong className="text-white">{filtered.length}</strong> จากทั้งหมด{' '}
+          <p className="mb-8 text-[13px] text-slate">
+            พบ <strong className="font-medium text-graphite">{filtered.length}</strong> จากทั้งหมด{' '}
             {OWNED_ASSETS.length} ชิ้น
           </p>
 
           {paginated.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-ink-600 bg-ink-750 py-16 text-center">
+            <div className="rounded-card bg-paper py-20 text-center">
               <p className="mb-1 text-3xl">🔍</p>
-              <p className="text-sm font-bold text-muted-bright">ไม่เจอ asset ที่ตรงกับตัวกรอง</p>
-              <button onClick={clearFilters} className="mt-3 text-xs font-bold text-brand hover:underline">
+              <p className="text-[15px] font-medium text-graphite">ไม่เจอ asset ที่ตรงกับตัวกรอง</p>
+              <button onClick={clearFilters} className="btn-ghost mt-4">
                 ล้างตัวกรองทั้งหมด
               </button>
             </div>
           ) : (
-            <motion.div layout className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <motion.div layout className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
               <AnimatePresence mode="popLayout">
                 {paginated.map(asset => (
                   <AssetCard key={asset.id} asset={asset} />
@@ -260,10 +258,10 @@ export function LibraryBrowser() {
                   key={n}
                   onClick={() => setPage(n)}
                   aria-current={n === safePage ? 'page' : undefined}
-                  className={`h-8 w-8 rounded border text-xs font-bold transition-colors ${
+                  className={`h-9 w-9 rounded-full text-[13px] font-medium transition-colors ${
                     n === safePage
-                      ? 'border-brand bg-brand text-white'
-                      : 'border-ink-600 bg-ink-750 text-muted-bright hover:border-ink-500'
+                      ? 'bg-graphite text-paper'
+                      : 'bg-paper text-slate hover:text-graphite'
                   }`}
                 >
                   {n}
@@ -293,8 +291,8 @@ function FilterGroup({
   last?: boolean
 }) {
   return (
-    <div className={`px-4 py-3 ${last ? '' : 'border-b border-ink-700'}`}>
-      <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-dim">{title}</p>
+    <div className={`px-5 py-4 ${last ? '' : 'border-b border-hairline/70'}`}>
+      <p className="mb-3 text-[12px] font-semibold tracking-label text-slate-soft">{title}</p>
       {children}
     </div>
   )
@@ -317,7 +315,7 @@ function CheckRow({
         onChange={onChange}
         className="rounded accent-brand"
       />
-      <span className="text-xs text-muted-bright">{label}</span>
+      <span className="text-[13px] text-graphite">{label}</span>
     </label>
   )
 }
@@ -335,7 +333,7 @@ function PageBtn({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="rounded border border-ink-600 bg-ink-750 px-3 py-2 text-xs text-muted-bright transition-colors enabled:hover:border-ink-500 disabled:cursor-not-allowed disabled:text-ink-500"
+      className="rounded-full bg-paper px-4 py-2 text-[13px] text-slate transition-colors enabled:hover:text-graphite disabled:cursor-not-allowed disabled:text-slate-soft/50"
     >
       {children}
     </button>

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function LibraryPage() {
   return (
-    <main className="min-h-screen bg-ink-900">
+    <main className="min-h-screen bg-paper">
       <LibraryHero />
       <LibraryBrowser />
     </main>

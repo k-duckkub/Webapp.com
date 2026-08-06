@@ -1,14 +1,14 @@
 import { Hero } from '@/components/store/Hero'
-import { CategoryBands } from '@/components/store/CategoryBands'
-import { Pathway } from '@/components/store/Pathway'
+import { PinnedStory } from '@/components/store/PinnedStory'
+import { FeatureSections } from '@/components/store/FeatureSections'
 import { ItemGrid } from '@/components/store/ItemGrid'
 
 export default function StorePage() {
   return (
     <main>
       <Hero />
-      <CategoryBands />
-      <Pathway />
+      <PinnedStory />
+      <FeatureSections />
       <ItemGrid />
     </main>
   )

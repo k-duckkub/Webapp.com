@@ -8,35 +8,68 @@
   }
 
   body {
-    @apply bg-ink-900 text-white antialiased;
+    @apply bg-paper text-graphite antialiased;
   }
 
-  /* GSAP pins the pathway; a smooth-scrolling root fights ScrollTrigger, so opt out. */
-  html.gsap-pinned {
-    scroll-behavior: auto;
+  /* Lenis drives scrolling; a CSS smooth-scroll on top of it fights the library. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  ::selection {
+    @apply bg-brand/20;
+  }
+
+  :focus-visible {
+    outline: 2px solid #f97316;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Apple sets display type large, tight and centred; these keep that consistent. */
+  .display-xl {
+    @apply text-[clamp(2.75rem,7vw,5.5rem)] font-bold leading-[1.05] tracking-display;
+  }
+  .display-lg {
+    @apply text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.08] tracking-display;
+  }
+  .display-md {
+    @apply text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-[1.15] tracking-display;
+  }
+
+  .eyebrow {
+    @apply text-sm font-semibold tracking-label text-brand;
+  }
+
+  .lede {
+    @apply text-[clamp(1.05rem,1.6vw,1.3rem)] leading-relaxed text-slate;
+  }
+
+  /* Apple's pill button and its quiet inline-link sibling. */
+  .btn-pill {
+    @apply inline-flex items-center justify-center rounded-full bg-brand px-7 py-3
+           text-[15px] font-medium text-white transition-colors hover:bg-brand-hover;
+  }
+  /* Hover shifts colour, not opacity. GSAP reveals these by animating opacity,
+     and a CSS transition on the same property fights it — the transition is
+     still mid-flight when GSAP samples the end value, so it records ~0 and the
+     element never appears. Never transition a property GSAP also animates. */
+  .btn-ghost {
+    @apply inline-flex items-center gap-1 text-[15px] font-medium text-brand
+           transition-colors hover:text-brand-hover;
+  }
+
+  .shell {
+    @apply mx-auto w-full max-w-shell px-6 sm:px-8;
   }
 }
 
 @layer utilities {
-  /* Hairline grid used behind the dark editorial panels on page 1. */
-  .bg-grid {
-    background-image:
-      linear-gradient(rgba(249, 115, 22, 0.5) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(249, 115, 22, 0.5) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  .bg-diag {
-    background-image: repeating-linear-gradient(
-      45deg,
-      #fff 0,
-      #fff 1px,
-      transparent 0,
-      transparent 50%
-    );
-    background-size: 8px 8px;
-  }
-
   .no-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -53,6 +86,14 @@
   }
 }
 
-/* NOTE: reveal start-states are set by GSAP itself (gsap.from + immediateRender
-   inside useLayoutEffect), never by CSS. If JS never runs the content stays
-   visible instead of being stuck at opacity:0. */
+/* NOTE: reveal start-states come from GSAP (gsap.from inside useLayoutEffect),
+   never from CSS — if JS never runs the content stays visible. */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

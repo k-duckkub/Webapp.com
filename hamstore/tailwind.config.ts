@@ -8,44 +8,41 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        /* HamsterHub brand */
+        /* HamsterHub's orange stays the accent — Apple's structure, our brand. */
         brand: {
           DEFAULT: '#F97316',
           hover: '#EA6C00',
-          soft: '#FFB27A',
+          soft: '#FFF1E6',
         },
-        /* Dark "Minecraft-ish" editorial surfaces (page 1) */
-        ink: {
-          950: '#0b0a09',
-          900: '#0f0e0d',
-          850: '#141414',
-          800: '#1a1814',
-          750: '#1e1c19',
-          700: '#242220',
-          600: '#2a2520',
-          500: '#3a3530',
+        /* Apple's two grounds: paper white, and the off-white it alternates with. */
+        paper: '#ffffff',
+        mist: '#f5f5f7',
+        /* Near-black rather than pure black — pure #000 on white is too harsh. */
+        graphite: '#1d1d1f',
+        slate: {
+          DEFAULT: '#6e6e73',
+          soft: '#86868b',
         },
-        muted: {
-          DEFAULT: '#a09880',
-          dim: '#7a7060',
-          bright: '#b0a898',
-        },
-        coin: '#FACC15',
+        hairline: '#d2d2d7',
+        coin: '#B7791F',
+        /* Kept for the dark showcase sections. */
+        obsidian: '#000000',
       },
       fontFamily: {
         sans: ['var(--font-thai)', 'Noto Sans Thai', 'system-ui', 'sans-serif'],
       },
+      letterSpacing: {
+        /* Apple sets big display type tight; small caps labels wide. */
+        display: '-0.025em',
+        label: '0.06em',
+      },
       borderRadius: {
-        card: '10px',
+        card: '18px',
+        panel: '28px',
       },
-      keyframes: {
-        shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
-      },
-      animation: {
-        shimmer: 'shimmer 2.4s linear infinite',
+      maxWidth: {
+        copy: '46rem',
+        shell: '1120px',
       },
     },
   },
