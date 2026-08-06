@@ -4,6 +4,7 @@ import './globals.css'
 import { SiteNav } from '@/components/SiteNav'
 import { SmoothScroll } from '@/components/SmoothScroll'
 import { SiteFooter } from '@/components/SiteFooter'
+import { WalletProvider } from '@/components/WalletProvider'
 
 const notoThai = Noto_Sans_Thai({
   subsets: ['thai', 'latin'],
@@ -21,10 +22,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="th" className={notoThai.variable}>
       <body className="font-sans">
-        <SmoothScroll />
-        <SiteNav />
-        {children}
-        <SiteFooter />
+        <WalletProvider>
+          <SmoothScroll />
+          <SiteNav />
+          {children}
+          <SiteFooter />
+        </WalletProvider>
       </body>
     </html>
   )

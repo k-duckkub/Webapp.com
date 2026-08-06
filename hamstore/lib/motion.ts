@@ -41,11 +41,41 @@ export const REVEAL = {
 /** Where a reveal fires relative to the viewport. */
 export const REVEAL_START = 'top 82%'
 
+/**
+ * A spring with real mass and enough damping that it settles without a visible
+ * wobble — the press reads as pressing something soft rather than clicking a
+ * rectangle. This is the one place a spring is allowed: touch should feel
+ * physical, everything else stays on the eased curves above.
+ */
+export const SPRING_SOFT = {
+  type: 'spring',
+  stiffness: 260,
+  damping: 24,
+  mass: 0.9,
+} as const
+
 /** Framer transition presets so components don't hand-roll timings. */
 export const T = {
   hover: { duration: DURATION.fast, ease: EASE_OUT },
   enter: { duration: DURATION.base, ease: EASE_OUT },
   slow: { duration: DURATION.slow, ease: EASE_OUT },
+  press: SPRING_SOFT,
+} as const
+
+/**
+ * Spread onto any pressable element so touch feedback is identical site-wide.
+ * The spring rides inside each gesture rather than on a top-level `transition`,
+ * so spreading these never clobbers a component's own enter transition.
+ */
+export const pressable = {
+  whileHover: { scale: 1.03, transition: SPRING_SOFT },
+  whileTap: { scale: 0.94, transition: SPRING_SOFT },
+} as const
+
+/** For large surfaces (cards), where a 6% squeeze would be too much. */
+export const pressableCard = {
+  whileHover: { y: -6, transition: SPRING_SOFT },
+  whileTap: { scale: 0.985, transition: SPRING_SOFT },
 } as const
 
 /** Framer variants for the same reveal, for non-GSAP components. */

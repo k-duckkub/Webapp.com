@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { T } from '@/lib/motion'
+import { CoinBalance } from './CoinBalance'
 
 const LINKS = [
   { href: '/',        label: 'ของที่ซื้อได้' },
@@ -75,11 +76,7 @@ export function SiteNav() {
             )
           })}
 
-          <span className="ml-1 inline-flex shrink-0 items-center gap-1 rounded-full bg-mist px-2.5 py-1 text-[12px] font-medium tabular-nums text-graphite sm:ml-0 sm:px-3">
-            <span aria-hidden>🪙</span>
-            1,240
-            <span className="sr-only">HamCoin คงเหลือ 1,240 เหรียญ</span>
-          </span>
+          <CoinBalance />
         </div>
       </nav>
     </header>

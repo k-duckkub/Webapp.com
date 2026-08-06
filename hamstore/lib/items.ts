@@ -90,3 +90,14 @@ export const PATHWAY_STOPS = [
     color: '#FACC15',
   },
 ]
+
+/**
+ * The editor's picks. Each carries the reason it was chosen — a recommendation
+ * without a stated reason is just a bigger card.
+ */
+export const RECOMMENDED: { id: number; reason: string; note: string }[] = [
+  { id: 1,  reason: 'ขายดีที่สุดเดือนนี้', note: 'คนเลือกมากที่สุดในบรรดาสกินทั้งหมด และเป็นชิ้นเดียวที่ลอยได้ตอนไอเดิล' },
+  { id: 9,  reason: 'คู่กับสกินได้ทุกตัว',  note: 'โทนนีออนเข้ากับสกินเกือบทุกแบบ เลยเป็นธีมที่คนใส่คู่กันบ่อยที่สุด' },
+  { id: 17, reason: 'เริ่มต้นแค่ 60',       note: 'ถูกที่สุดในหมวดกรอบ เหมาะกับคนที่เพิ่งเก็บเหรียญได้ก้อนแรก' },
+  { id: 7,  reason: 'ของหายาก',            note: 'ระดับตำนาน มีเอฟเฟกต์บินวนรอบการ์ดโปรไฟล์ที่ไม่มีในชิ้นอื่น' },
+]
