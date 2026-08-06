@@ -16,6 +16,7 @@ export type IconName =
   | 'check'
   | 'chevronRight'
   | 'arrowDown'
+  | 'close'
   | 'download'
   | 'refresh'
   /* item kinds */
@@ -57,6 +58,7 @@ const PATHS: Record<IconName, { d: string; fill?: boolean }[]> = {
   check: [{ d: 'm4.5 12.8 4.8 4.7L19.5 6.9' }],
   chevronRight: [{ d: 'm9.5 5.5 7 6.5-7 6.5' }],
   arrowDown: [{ d: 'M12 4.5v15M6 13.5l6 6 6-6' }],
+  close: [{ d: 'm6 6 12 12M18 6 6 18' }],
   download: [
     { d: 'M12 3.5v11M7.5 10.5 12 15l4.5-4.5' },
     { d: 'M4.5 17v2.5h15V17' },

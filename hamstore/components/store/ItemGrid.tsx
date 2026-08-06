@@ -3,9 +3,10 @@
 import { useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ItemCard } from './ItemCard'
+import { ItemSheet } from './ItemSheet'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T } from '@/lib/motion'
-import { KIND_META, PLATFORM_ITEMS, type ItemKind } from '@/lib/items'
+import { KIND_META, PLATFORM_ITEMS, type ItemKind, type PlatformItem } from '@/lib/items'
 
 type Filter = 'ALL' | ItemKind
 
@@ -17,6 +18,7 @@ const FILTERS: { id: Filter; label: string }[] = [
 export function ItemGrid() {
   const root = useRef<HTMLElement>(null)
   const [filter, setFilter] = useState<Filter>('ALL')
+  const [selected, setSelected] = useState<PlatformItem | null>(null)
 
   const items = useMemo(
     () => (filter === 'ALL' ? PLATFORM_ITEMS : PLATFORM_ITEMS.filter(i => i.kind === filter)),
@@ -81,11 +83,13 @@ export function ItemGrid() {
         >
           <AnimatePresence mode="popLayout">
             {items.map(item => (
-              <ItemCard key={item.id} item={item} />
+              <ItemCard key={item.id} item={item} onOpen={setSelected} />
             ))}
           </AnimatePresence>
         </motion.div>
       </div>
+
+      <ItemSheet item={selected} onClose={() => setSelected(null)} />
     </section>
   )
 }

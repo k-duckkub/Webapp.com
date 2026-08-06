@@ -110,3 +110,45 @@ export const RECOMMENDED: { id: number; reason: string; note: string }[] = [
   { id: 17, reason: 'เริ่มต้นแค่ 60',       note: 'ถูกที่สุดในหมวดกรอบ เหมาะกับคนที่เพิ่งเก็บเหรียญได้ก้อนแรก' },
   { id: 7,  reason: 'ของหายาก',            note: 'ระดับตำนาน มีเอฟเฟกต์บินวนรอบการ์ดโปรไฟล์ที่ไม่มีในชิ้นอื่น' },
 ]
+
+/**
+ * What a buyer needs before they commit.
+ *
+ * The catalogue above is enough to render a card; it is not enough to decide
+ * with. Someone choosing a thing to actually use wants to know who made it,
+ * how many people already run it, exactly what lands in their account, where
+ * it shows up, and whether it is still being maintained. Kept beside the
+ * catalogue rather than inside it so a card stays cheap to render.
+ */
+export interface ItemDetail {
+  maker: string
+  /** How many accounts already have it — the only honest social proof here. */
+  owners: number
+  /** Exactly what arrives. Counts, not adjectives. */
+  includes: string[]
+  /** Where it actually appears, so nobody buys it for the wrong surface. */
+  showsUp: string[]
+  version: string
+  updatedAt: string
+}
+
+export const ITEM_DETAILS: Record<number, ItemDetail> = {
+  1:  { maker: 'สตูดิโอแฮมสเตอร์', owners: 4820, version: '1.3', updatedAt: '2026-07-18', includes: ['ท่ายืน 6 ท่า', 'หมวกกระจกแยกชิ้น ถอดได้', 'เอฟเฟกต์ลอยตอนไอเดิล'], showsUp: ['โปรไฟล์', 'คอมเมนต์', 'กระดานอันดับ'] },
+  2:  { maker: 'ครัวแฮมสเตอร์',    owners: 7310, version: '2.0', updatedAt: '2026-06-02', includes: ['ท่ายืน 4 ท่า', 'หมวกเชฟ + ผ้ากันเปื้อน', 'ควันตอนพิมพ์โค้ด'], showsUp: ['โปรไฟล์', 'คอมเมนต์'] },
+  3:  { maker: 'สตูดิโอแฮมสเตอร์', owners: 3190, version: '1.1', updatedAt: '2026-05-11', includes: ['ท่ายืน 5 ท่า', 'เอฟเฟกต์เดินไร้เสียง'], showsUp: ['โปรไฟล์', 'คอมเมนต์'] },
+  4:  { maker: 'HamsterHub',      owners: 12040, version: '1.0', updatedAt: '2026-01-09', includes: ['ท่ายืน 3 ท่า', 'ชุดครุย + หมวก'], showsUp: ['โปรไฟล์'] },
+  5:  { maker: 'บ้านสัตว์เลี้ยง',  owners: 2870, version: '1.4', updatedAt: '2026-07-02', includes: ['อนิเมชันเดิน 8 เฟรม', 'ตามเคอร์เซอร์ทุกหน้า'], showsUp: ['ทุกหน้าในเว็บ'] },
+  6:  { maker: 'บ้านสัตว์เลี้ยง',  owners: 5240, version: '1.2', updatedAt: '2026-04-27', includes: ['อนิเมชันเด้ง 6 เฟรม', 'เปลี่ยนสีตามธีมอัตโนมัติ'], showsUp: ['ทุกหน้าในเว็บ'] },
+  7:  { maker: 'Origami Lab',     owners: 940,  version: '1.0', updatedAt: '2026-07-25', includes: ['อนิเมชันบิน 12 เฟรม', 'เงาตกกระทบบนการ์ด'], showsUp: ['การ์ดโปรไฟล์'] },
+  8:  { maker: 'HamsterHub',      owners: 18600, version: '3.1', updatedAt: '2026-06-14', includes: ['โทนสีครบทั้งเว็บ', 'ปรับความสว่างได้ 3 ระดับ'], showsUp: ['ทั้งเว็บ'] },
+  9:  { maker: 'Neon Works',      owners: 6120, version: '2.2', updatedAt: '2026-07-09', includes: ['โทนสีครบทั้งเว็บ', 'เส้นสแกนไลน์เปิด/ปิดได้', 'ฟอนต์หัวข้อเฉพาะธีม'], showsUp: ['ทั้งเว็บ'] },
+  10: { maker: 'HamsterHub',      owners: 8730, version: '1.5', updatedAt: '2026-03-20', includes: ['โทนสีครบทั้งเว็บ'], showsUp: ['ทั้งเว็บ'] },
+  11: { maker: 'Pixel Press',     owners: 4410, version: '1.8', updatedAt: '2026-05-30', includes: ['โทนสีครบทั้งเว็บ', 'ฟอนต์พิกเซล', 'ขอบแบบเกมเก่า'], showsUp: ['ทั้งเว็บ'] },
+  12: { maker: 'สตูดิโอแฮมสเตอร์', owners: 9980, version: '2.0', updatedAt: '2026-06-28', includes: ['สติกเกอร์ 24 แบบ', 'ไฟล์ความละเอียด 2x'], showsUp: ['คอมเมนต์', 'ฟอรัม', 'แชท'] },
+  13: { maker: 'Dev Sticker Co.', owners: 11250, version: '2.3', updatedAt: '2026-07-21', includes: ['สติกเกอร์ 18 แบบ', 'ไฟล์ความละเอียด 2x'], showsUp: ['คอมเมนต์', 'ฟอรัม', 'แชท'] },
+  14: { maker: 'Dev Sticker Co.', owners: 2130, version: '1.1', updatedAt: '2026-07-30', includes: ['สติกเกอร์ขยับได้ 12 แบบ', 'ไฟล์ 2x + เวอร์ชันนิ่ง'], showsUp: ['คอมเมนต์', 'ฟอรัม', 'แชท'] },
+  15: { maker: 'Frame Atelier',   owners: 1580, version: '1.0', updatedAt: '2026-07-12', includes: ['กรอบ + ประกายวิ่งรอบขอบ', 'ปรับความเร็วประกายได้'], showsUp: ['รูปโปรไฟล์'] },
+  16: { maker: 'Frame Atelier',   owners: 3360, version: '1.2', updatedAt: '2026-05-05', includes: ['กรอบ + เปลวไฟ 24 เฟรม'], showsUp: ['รูปโปรไฟล์'] },
+  17: { maker: 'HamsterHub',      owners: 15900, version: '1.0', updatedAt: '2026-02-14', includes: ['กรอบนิ่ง 1 แบบ'], showsUp: ['รูปโปรไฟล์'] },
+  18: { maker: 'Frame Atelier',   owners: 2740, version: '1.1', updatedAt: '2026-06-19', includes: ['กรอบ + ดาวหมุน', 'ฝุ่นดาวเปิด/ปิดได้'], showsUp: ['รูปโปรไฟล์'] },
+}

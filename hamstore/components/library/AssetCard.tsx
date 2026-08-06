@@ -21,30 +21,49 @@ export function AssetCard({ asset }: { asset: OwnedAsset }) {
       <div className="relative aspect-[4/3] overflow-hidden bg-mist">
         <Artwork
           seed={asset.id + 100}
-          title={asset.title}
+          /* Title is the h3 below; the cover carries the category instead. */
+          label={asset.category}
           motif={CATEGORY_MOTIF[asset.category] ?? 'blocks'}
           from={asset.color}
           to="#0b0a09"
           src={asset.image}
         />
 
-        {asset.hasUpdate && (
-          <span className="absolute right-3 top-3 rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
-            อัปเดตใหม่
-          </span>
-        )}
-        {!asset.downloaded && (
-          <span className="absolute left-3 top-3 rounded-full bg-graphite px-2.5 py-0.5 text-[11px] font-medium text-white">
-            ยังไม่ดาวน์โหลด
-          </span>
-        )}
+        {/* Status sits along the bottom, out of the category chip's corner —
+            stacked in the same corner the two clipped each other. */}
+        <div className="absolute inset-x-3 bottom-3 flex flex-wrap gap-1.5">
+          {asset.hasUpdate && (
+            <span className="rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
+              อัปเดตใหม่
+            </span>
+          )}
+          {!asset.downloaded && (
+            <span className="rounded-full bg-graphite px-2.5 py-0.5 text-[11px] font-medium text-white">
+              ยังไม่ดาวน์โหลด
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col px-1 pt-4">
         <p className="mb-1 truncate text-xs text-slate-soft">{asset.publisher}</p>
-        <h3 className="mb-3 line-clamp-2 text-[17px] font-semibold leading-snug tracking-tight text-graphite">
+        <h3 className="mb-2.5 line-clamp-2 text-[17px] font-semibold leading-snug tracking-tight text-graphite">
           {asset.title}
         </h3>
+
+        {/* The first question anyone opening a package asks is whether it runs
+            on their pipeline. It was filterable but never shown, so the answer
+            was only available to someone who already knew to look for it. */}
+        <ul className="mb-3.5 flex flex-wrap gap-1.5">
+          {asset.pipelines.map(pipe => (
+            <li
+              key={pipe}
+              className="rounded-md bg-mist px-2 py-0.5 text-[11px] font-medium text-slate"
+            >
+              {pipe}
+            </li>
+          ))}
+        </ul>
 
         {/* A library, so the detail is version and licence — never a price. */}
         <dl className="mb-4 space-y-1.5 text-[13px] text-slate">

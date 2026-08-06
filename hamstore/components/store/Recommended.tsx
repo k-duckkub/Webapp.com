@@ -1,10 +1,11 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { ItemSheet } from './ItemSheet'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T, SPRING_SOFT } from '@/lib/motion'
-import { KIND_META, PLATFORM_ITEMS, RECOMMENDED } from '@/lib/items'
+import { KIND_META, PLATFORM_ITEMS, RECOMMENDED, type PlatformItem } from '@/lib/items'
 import { useWallet, priceOf } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
@@ -17,6 +18,7 @@ const PICKS = RECOMMENDED.map(pick => ({
 export function Recommended() {
   const root = useRef<HTMLElement>(null)
   const { owns, canAfford, redeem, justRedeemed } = useWallet()
+  const [selected, setSelected] = useState<PlatformItem | null>(null)
 
   useGsapContext(root, ({ mm }) => {
     mm.add(MOTION_OK, () => {
@@ -53,7 +55,7 @@ export function Recommended() {
                 key={item.id}
                 whileHover={{ y: -6 }}
                 transition={SPRING_SOFT}
-                className="flex flex-col overflow-hidden rounded-panel bg-mist p-6 sm:flex-row sm:items-center sm:gap-6"
+                className="relative flex flex-col overflow-hidden rounded-panel bg-mist p-6 sm:flex-row sm:items-center sm:gap-6"
               >
                 {/* Cover */}
                 <motion.div
@@ -63,7 +65,7 @@ export function Recommended() {
                 >
                   <Artwork
                     seed={item.id}
-                    title={item.name}
+                    /* Name lives in the h3 beside the cover. */
                     label={kind.label}
                     motif={kind.motif}
                     from={from}
@@ -100,7 +102,7 @@ export function Recommended() {
                       whileHover={owned || !affordable ? undefined : { scale: 1.05 }}
                       whileTap={owned || !affordable ? undefined : { scale: 0.92 }}
                       transition={SPRING_SOFT}
-                      className={`rounded-full px-5 py-2 text-[13px] font-medium transition-colors ${
+                      className={`relative z-20 rounded-full px-5 py-2 text-[13px] font-medium transition-colors ${
                         owned
                           ? 'cursor-default bg-paper text-slate-soft'
                           : affordable
@@ -129,11 +131,23 @@ export function Recommended() {
                     </motion.button>
                   </div>
                 </div>
+
+                {/* Same stretched hit area as the grid cards: recommending
+                    something and then not letting anyone read about it is
+                    where a shelf stops being a recommendation. */}
+                <button
+                  type="button"
+                  onClick={() => setSelected(item)}
+                  aria-label={`ดูรายละเอียด ${item.name}`}
+                  className="absolute inset-0 z-10 rounded-panel"
+                />
               </motion.article>
             )
           })}
         </div>
       </div>
+
+      <ItemSheet item={selected} onClose={() => setSelected(null)} />
     </section>
   )
 }

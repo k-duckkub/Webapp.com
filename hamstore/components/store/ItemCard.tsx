@@ -2,15 +2,24 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import { T, pressableCard, SPRING_SOFT } from '@/lib/motion'
-import { KIND_META, RARITY_META, type PlatformItem } from '@/lib/items'
+import { ITEM_DETAILS, KIND_META, RARITY_META, type PlatformItem } from '@/lib/items'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 import { useWallet, priceOf } from '@/components/WalletProvider'
 
-export function ItemCard({ item, featured = false }: { item: PlatformItem; featured?: boolean }) {
+export function ItemCard({
+  item,
+  featured = false,
+  onOpen,
+}: {
+  item: PlatformItem
+  featured?: boolean
+  onOpen?: (item: PlatformItem) => void
+}) {
   const { owns, canAfford, redeem, justRedeemed } = useWallet()
   const kind = KIND_META[item.kind]
   const rarity = RARITY_META[item.rarity]
+  const detail = ITEM_DETAILS[item.id]
   const [from, to] = item.art
 
   const owned = owns(item.id)
@@ -39,7 +48,8 @@ export function ItemCard({ item, featured = false }: { item: PlatformItem; featu
         >
           <Artwork
             seed={item.id}
-            title={item.name}
+            /* The name is set in the h3 directly below. Printing it over the
+               art as well made every card say the same word twice. */
             label={kind.label}
             motif={kind.motif}
             from={from}
@@ -79,7 +89,15 @@ export function ItemCard({ item, featured = false }: { item: PlatformItem; featu
         <h3 className="mb-1.5 text-[17px] font-semibold leading-snug tracking-tight text-graphite">
           {item.name}
         </h3>
-        <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-slate">{item.blurb}</p>
+        <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-slate">{item.blurb}</p>
+
+        {/* The only social proof we can state honestly, and the one thing a
+            buyer checks first: is anyone else actually running this. */}
+        {detail && (
+          <p className="mb-4 text-[12px] text-slate-soft">
+            <span className="tabular-nums">{detail.owners.toLocaleString('th-TH')}</span> คนมีแล้ว
+          </p>
+        )}
 
         <div className="mt-auto flex items-center justify-between gap-3 pb-1">
           <span className="flex items-center gap-1.5 text-[15px] font-semibold text-graphite">
@@ -106,7 +124,7 @@ export function ItemCard({ item, featured = false }: { item: PlatformItem; featu
                   ? `แลก ${item.name} ราคา ${price} HamCoin`
                   : `${item.name} — เหรียญไม่พอ`
             }
-            className={`relative overflow-hidden rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+            className={`relative z-20 overflow-hidden rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
               owned
                 ? 'cursor-default bg-mist text-slate-soft'
                 : affordable
@@ -143,6 +161,18 @@ export function ItemCard({ item, featured = false }: { item: PlatformItem; featu
           </motion.button>
         </div>
       </div>
+
+      {/* A stretched hit area rather than a click handler on the article: it is
+          a real focusable control with a name, and it keeps the redeem button
+          out of a nested-button situation — that one sits above it on z-20. */}
+      {onOpen && (
+        <button
+          type="button"
+          onClick={() => onOpen(item)}
+          aria-label={`ดูรายละเอียด ${item.name}`}
+          className="absolute inset-0 z-10 rounded-card"
+        />
+      )}
     </motion.article>
   )
 }
