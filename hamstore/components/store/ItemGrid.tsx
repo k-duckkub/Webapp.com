@@ -35,7 +35,7 @@ export function ItemGrid() {
 
   return (
     <section ref={root} id="items" className="bg-mist py-24 sm:py-32">
-      <div className="shell">
+      <div className="bleed">
         <div className="mb-12 text-center">
           <h2 className="display-lg mb-4 text-graphite" data-grid-el>
             ไอเทมทั้งหมด
@@ -76,7 +76,7 @@ export function ItemGrid() {
 
         <motion.div
           layout
-          className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4"
+          className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
           data-grid-el
         >
           <AnimatePresence mode="popLayout">

@@ -28,7 +28,7 @@ export function Recommended() {
 
   return (
     <section ref={root} className="bg-paper py-24 sm:py-32">
-      <div className="shell">
+      <div className="bleed">
         <div className="mb-14 text-center">
           <p className="eyebrow mb-4" data-rec-el>
             คัดมาให้แล้ว
@@ -41,7 +41,7 @@ export function Recommended() {
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2" data-rec-el>
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" data-rec-el>
           {PICKS.map(({ item, reason, note }) => {
             const kind = KIND_META[item.kind]
             const [from] = item.art

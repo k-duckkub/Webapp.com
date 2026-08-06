@@ -67,6 +67,13 @@
   .shell {
     @apply mx-auto w-full max-w-shell px-6 sm:px-8;
   }
+
+  /* Full-bleed: runs to the screen edges instead of sitting in the 1120px
+     shell. Padding only, no max-width — used by the sections that should read
+     as edge-to-edge bands rather than centred columns. */
+  .bleed {
+    @apply w-full px-6 sm:px-10 lg:px-16;
+  }
 }
 
 @layer utilities {
