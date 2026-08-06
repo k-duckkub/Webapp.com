@@ -31,15 +31,20 @@
 }
 
 @layer components {
-  /* Apple sets display type large, tight and centred; these keep that consistent. */
+  /* Optical sizing: tracking tightens as type grows and leading closes up.
+     One tracking value across every size is what makes a scale look
+     mechanical — the eye wants big text tighter than small text. */
   .display-xl {
-    @apply text-[clamp(2.75rem,7vw,5.5rem)] font-bold leading-[1.05] tracking-display;
+    @apply text-[clamp(2.75rem,7vw,5.5rem)] font-bold leading-[1.02];
+    letter-spacing: -0.035em;
   }
   .display-lg {
-    @apply text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.08] tracking-display;
+    @apply text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.07];
+    letter-spacing: -0.028em;
   }
   .display-md {
-    @apply text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-[1.15] tracking-display;
+    @apply text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-[1.14];
+    letter-spacing: -0.02em;
   }
 
   .eyebrow {
@@ -48,6 +53,7 @@
 
   .lede {
     @apply text-[clamp(1.05rem,1.6vw,1.3rem)] leading-relaxed text-slate;
+    letter-spacing: -0.006em;
   }
 
   /* Apple's pill button and its quiet inline-link sibling. */

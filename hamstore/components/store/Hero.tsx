@@ -92,8 +92,8 @@ export function Hero() {
             ให้เป็นตัวคุณ
           </span>
         </h1>
-        <p className="lede mb-9 max-w-xl" data-hero-sub>
-          สกิน เพื่อนซี้ ธีมหน้าเว็บ อิโมจิ และกรอบโปรไฟล์ — แลกด้วย HamCoin ที่คุณสะสมจากการเรียน
+        <p className="lede mb-9 max-w-md" data-hero-sub>
+          สกิน เพื่อนซี้ ธีม อิโมจิ กรอบ — แลกด้วยเหรียญที่ได้จากการเรียน
         </p>
 
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4" data-hero-cta>

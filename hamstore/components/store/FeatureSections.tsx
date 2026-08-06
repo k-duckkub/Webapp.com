@@ -6,27 +6,48 @@ import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, SPRING_SOFT } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, type ItemKind } from '@/lib/items'
 import { priceOf } from '@/components/WalletProvider'
+import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 
-const ORDER: ItemKind[] = ['skin', 'pet', 'theme', 'emoji', 'frame']
+/**
+ * Two feature bands and a facts strip — not five identical bands.
+ *
+ * The previous version ran the same two-column band once per category, which
+ * is the tell that a template produced the page rather than someone laying it
+ * out. A product page varies what each section *is*: one leads with the art,
+ * one leads with the range, one is only numbers. Categories that don't earn a
+ * band of their own are still one click away in the grid below.
+ */
 
-const COPY: Record<ItemKind, string> = {
-  skin:  'เปลี่ยนหน้าตาแฮมสเตอร์ประจำตัวคุณ ทุกคนที่เปิดโปรไฟล์คุณจะเห็นทันที',
-  pet:   'เพื่อนตัวเล็กที่เดินตามคุณไปทั่วเว็บ บางตัวเปลี่ยนสีตามธีมที่ใช้อยู่ด้วย',
-  theme: 'เปลี่ยนสีทั้งเว็บ HamsterHub ตั้งแต่พื้นหลังยันปุ่ม เลือกให้เข้ากับเวลาที่คุณนั่งโค้ด',
-  emoji: 'ชุดอิโมจิเฉพาะของ HamsterHub ใช้ได้ทั้งในคอมเมนต์ ฟอรัม และแชท',
-  frame: 'กรอบรอบรูปโปรไฟล์ บางอันมีประกายหรือเปลวไฟขยับได้',
+const BAND_KINDS: ItemKind[] = ['skin', 'theme']
+
+const BAND_COPY: Record<string, { headline: string; body: string }> = {
+  skin: {
+    headline: 'ใส่แล้วคนทั้งเว็บเห็น',
+    body: 'สกินเปลี่ยนแฮมสเตอร์ประจำตัวคุณทุกที่ที่มันโผล่ — โปรไฟล์ คอมเมนต์ กระดานอันดับ',
+  },
+  theme: {
+    headline: 'เปลี่ยนทั้งเว็บ ไม่ใช่แค่พื้นหลัง',
+    body: 'ธีมคุมสีตั้งแต่พื้น ปุ่ม ยันเส้นขอบ เลือกให้เข้ากับเวลาที่คุณนั่งโค้ดจริงๆ',
+  },
 }
 
-const SECTIONS = ORDER.map((kind, i) => ({
+const BANDS = BAND_KINDS.map((kind, i) => ({
   kind,
   meta: KIND_META[kind],
-  copy: COPY[kind],
+  ...BAND_COPY[kind],
   items: PLATFORM_ITEMS.filter(item => item.kind === kind),
-  /* Art swaps sides band to band, and the ground alternates with it. */
   artRight: i % 2 === 1,
   onMist: i % 2 === 0,
 }))
+
+/* Facts, not adjectives. Each one is computed from the catalogue. */
+const FACTS = [
+  { value: String(PLATFORM_ITEMS.length), label: 'ชิ้นในร้านตอนนี้' },
+  { value: String(PLATFORM_ITEMS.filter(i => i.coins === 0).length), label: 'ชิ้นที่ปลดล็อกได้ฟรี' },
+  { value: `${Math.min(...PLATFORM_ITEMS.filter(i => i.coins > 0).map(priceOf))}`, label: 'เหรียญ สำหรับชิ้นที่ถูกที่สุด' },
+  { value: '0', label: 'บาท — เหรียญได้จากการเรียนเท่านั้น' },
+]
 
 export function FeatureSections() {
   const root = useRef<HTMLDivElement>(null)
@@ -40,17 +61,16 @@ export function FeatureSections() {
           scrollTrigger: { trigger: section, start: REVEAL_START },
         })
 
-        /* Fades on its own element; the drift below writes a transform to the
-           inner layer, so the two never fight over one node. */
-        gsap.from(section.querySelector('[data-feature-art]'), {
+        const art = section.querySelector('[data-feature-art]')
+        if (!art) return
+
+        gsap.from(art, {
           opacity: 0,
           duration: 1,
           ease: 'power2.out',
           scrollTrigger: { trigger: section, start: REVEAL_START },
         })
-
-        /* The inner layer overscans its cell by 10% each way, so drifting it
-           7.2% of the cell height never uncovers the panel edge. */
+        /* Inner layer overscans by 10%, so a 7.2% drift never shows an edge. */
         gsap.to(section.querySelector('[data-feature-art-inner]'), {
           yPercent: -6,
           ease: 'none',
@@ -62,22 +82,19 @@ export function FeatureSections() {
 
   return (
     <div ref={root}>
-      {SECTIONS.map(section => {
-        const [from, to] = section.items[0]?.art ?? ['#F97316', '#DC2626']
+      {BANDS.map(band => {
+        const [from, to] = band.items[0]?.art ?? ['#F97316', '#DC2626']
 
         return (
           <section
-            key={section.kind}
+            key={band.kind}
             data-feature
-            className={`grid w-full items-stretch md:grid-cols-2 ${
-              section.onMist ? 'bg-mist' : 'bg-paper'
-            }`}
+            className={`grid w-full items-stretch md:grid-cols-2 ${band.onMist ? 'bg-mist' : 'bg-paper'}`}
           >
-            {/* Art — runs to the screen edge on its side. */}
             <div
               data-feature-art
-              className={`relative min-h-[340px] overflow-hidden md:min-h-[620px] ${
-                section.artRight ? 'md:order-2' : ''
+              className={`relative min-h-[340px] overflow-hidden md:min-h-[600px] ${
+                band.artRight ? 'md:order-2' : ''
               }`}
             >
               <div
@@ -89,32 +106,28 @@ export function FeatureSections() {
               >
                 <motion.span whileHover={{ scale: 1.05 }} transition={SPRING_SOFT}>
                   <Icon
-                    name={section.meta.icon}
-                    className="h-[clamp(5rem,12vw,10rem)] w-[clamp(5rem,12vw,10rem)] text-graphite/20"
-                    strokeWidth={1.1}
+                    name={band.meta.icon}
+                    className="h-[clamp(5rem,12vw,9rem)] w-[clamp(5rem,12vw,9rem)] text-graphite/[0.18]"
+                    strokeWidth={1}
                   />
                 </motion.span>
               </div>
             </div>
 
-            {/* Copy */}
             <div
               className={`flex flex-col justify-center px-6 py-20 sm:px-10 md:px-14 lg:px-20 ${
-                section.artRight ? 'md:order-1' : ''
+                band.artRight ? 'md:order-1' : ''
               }`}
             >
-              <p className="eyebrow mb-4" data-feature-el>
-                {section.items.length} ชิ้น
-              </p>
               <h2 className="display-lg mb-5 max-w-md text-graphite" data-feature-el>
-                {section.meta.label}
+                {band.headline}
               </h2>
               <p className="lede mb-10 max-w-md" data-feature-el>
-                {section.copy}
+                {band.body}
               </p>
 
               <ul className="mb-10 flex max-w-md flex-col" data-feature-el>
-                {section.items.slice(0, 3).map(item => (
+                {band.items.slice(0, 3).map(item => (
                   <li
                     key={item.id}
                     className="flex items-center justify-between gap-4 border-b border-hairline/70 py-3"
@@ -135,12 +148,68 @@ export function FeatureSections() {
               </ul>
 
               <a href="#items" className="btn-ghost self-start" data-feature-el>
-                ดู{section.meta.label}ทั้งหมด <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
+                ดู{band.meta.label}ทั้งหมด
+                <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
               </a>
             </div>
           </section>
         )
       })}
+
+      {/* A different kind of section: no art, no prose, only figures. */}
+      <section data-feature className="bg-paper py-24 sm:py-28">
+        <dl className="bleed grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-4">
+          {FACTS.map(fact => (
+            <div key={fact.label} data-feature-el>
+              <dt className="text-[clamp(2.75rem,6vw,4.5rem)] font-semibold leading-none tracking-display text-graphite">
+                {fact.value}
+              </dt>
+              <dd className="mt-3 max-w-[16rem] text-[15px] leading-relaxed text-slate">{fact.label}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* The categories that don't get a band still get a shelf. */}
+      <section data-feature className="bg-mist py-20 sm:py-24">
+        <div className="bleed">
+          <h2 className="display-md mb-8 text-graphite" data-feature-el>
+            และอีกสามหมวด
+          </h2>
+          <div className="grid gap-5 sm:grid-cols-3" data-feature-el>
+            {(['pet', 'emoji', 'frame'] as ItemKind[]).map(kind => {
+              const meta = KIND_META[kind]
+              const items = PLATFORM_ITEMS.filter(i => i.kind === kind)
+              /* The category's own hue, not the first item's — pulling from
+                 items made all three shelves come out the same warm orange. */
+              const from = meta.color
+              const to = '#1d1d1f'
+
+              return (
+                <motion.a
+                  key={kind}
+                  href="#items"
+                  whileHover={{ y: -6 }}
+                  transition={SPRING_SOFT}
+                  className="group relative block aspect-[5/3] overflow-hidden rounded-panel"
+                >
+                  <Artwork
+                    seed={kind.length * 31 + items.length}
+                    title={meta.label}
+                    motif={meta.motif}
+                    from={from}
+                    to={to}
+                    size="lg"
+                  />
+                  <span className="absolute right-4 top-4 rounded-full bg-black/35 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
+                    {items.length} ชิ้น
+                  </span>
+                </motion.a>
+              )
+            })}
+          </div>
+        </div>
+      </section>
     </div>
   )
 }
