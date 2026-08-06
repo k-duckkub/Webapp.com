@@ -1,20 +1,21 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { T } from '@/lib/motion'
+import { T, SPRING_SOFT } from '@/lib/motion'
 import { formatSize, formatThaiDate, CATEGORY_MOTIF, type OwnedAsset } from '@/lib/library'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 
+/**
+ * No layout or enter animation per card: filtering a list is a state change,
+ * not a reveal. When each card animated to its new grid slot, the ones on
+ * their way out floated over the ones staying put for the best part of a
+ * second. The grid fades as a whole instead — see LibraryBrowser.
+ */
 export function AssetCard({ asset }: { asset: OwnedAsset }) {
   return (
     <motion.article
-      layout
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.98 }}
-      transition={T.enter}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -4, transition: SPRING_SOFT }}
       className="flex flex-col overflow-hidden rounded-card bg-paper"
     >
       {/* Cover */}

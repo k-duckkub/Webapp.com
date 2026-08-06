@@ -1,11 +1,11 @@
 'use client'
 
 import { useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ItemCard } from './ItemCard'
 import { ItemSheet } from './ItemSheet'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
-import { REVEAL, REVEAL_START, T } from '@/lib/motion'
+import { EASE_OUT, REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, type ItemKind, type PlatformItem } from '@/lib/items'
 
 type Filter = 'ALL' | ItemKind
@@ -76,16 +76,19 @@ export function ItemGrid() {
           })}
         </div>
 
+        {/* One short fade for the whole grid when the category changes, rather
+            than every card animating to a new slot for 0.9s and crossing over
+            the cards that stayed. */}
         <motion.div
-          layout
+          key={filter}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, ease: EASE_OUT }}
           className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
-          data-grid-el
         >
-          <AnimatePresence mode="popLayout">
-            {items.map(item => (
-              <ItemCard key={item.id} item={item} onOpen={setSelected} />
-            ))}
-          </AnimatePresence>
+          {items.map(item => (
+            <ItemCard key={item.id} item={item} onOpen={setSelected} />
+          ))}
         </motion.div>
       </div>
 

@@ -28,12 +28,8 @@ export function ItemCard({
   const celebrating = justRedeemed === item.id
 
   return (
+    /* Entry and layout belong to the grid, not to each card — see ItemGrid. */
     <motion.article
-      layout
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.98 }}
-      transition={T.enter}
       {...pressableCard}
       className="group relative flex flex-col overflow-hidden rounded-card bg-paper"
     >

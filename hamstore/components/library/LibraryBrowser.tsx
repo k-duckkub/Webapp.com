@@ -1,12 +1,12 @@
 'use client'
 
 import { useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { AssetCard } from './AssetCard'
 import { FilterPanel, type FilterGroup } from './FilterPanel'
 import { Icon } from '@/components/Icon'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
-import { REVEAL, REVEAL_START, T } from '@/lib/motion'
+import { EASE_OUT, REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { LIBRARY_CATEGORIES, OWNED_ASSETS } from '@/lib/library'
 
 type Sort = 'recent' | 'oldest' | 'name' | 'size' | 'updated'
@@ -133,6 +133,16 @@ export function LibraryBrowser() {
   const activeFilterCount =
     pipelines.length + licenses.length + (onlyUpdates ? 1 : 0) + (onlyNotDownloaded ? 1 : 0)
 
+  const gridKey = [
+    category,
+    sort,
+    safePage,
+    pipelines.join(','),
+    licenses.join(','),
+    onlyUpdates,
+    onlyNotDownloaded,
+  ].join('|')
+
   useGsapContext(root, ({ mm }) => {
     mm.add(MOTION_OK, () => {
       gsap.from('[data-lib-toolbar]', {
@@ -242,12 +252,22 @@ export function LibraryBrowser() {
               </button>
             </div>
           ) : (
-            <motion.div layout className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
-              <AnimatePresence mode="popLayout">
-                {paginated.map(asset => (
-                  <AssetCard key={asset.id} asset={asset} />
-                ))}
-              </AnimatePresence>
+            /* Keyed on the filter set, so a change fades the whole grid in one
+               short move. Per-card layout animation was doing the opposite:
+               eight cards each taking 0.9s to travel to a new slot, sliding
+               over each other on the way. Typing in the search box is left out
+               of the key on purpose — results should update as you type, not
+               blink once per keystroke. */
+            <motion.div
+              key={gridKey}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.28, ease: EASE_OUT }}
+              className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4"
+            >
+              {paginated.map(asset => (
+                <AssetCard key={asset.id} asset={asset} />
+              ))}
             </motion.div>
           )}
 
