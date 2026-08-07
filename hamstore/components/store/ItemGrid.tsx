@@ -6,14 +6,14 @@ import { ItemCard } from './ItemCard'
 import { ItemSheet } from './ItemSheet'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { GRID_REVEAL, REVEAL, REVEAL_START, T } from '@/lib/motion'
-import { KIND_META, PLATFORM_ITEMS, type ItemKind, type PlatformItem } from '@/lib/items'
+import { KIND_ORDER, kindMeta, PLATFORM_ITEMS, type ItemKind, type PlatformItem } from '@/lib/items'
 import { COPY } from '@/lib/content'
 
 type Filter = 'ALL' | ItemKind
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: 'ALL', label: 'ทั้งหมด' },
-  ...(Object.keys(KIND_META) as ItemKind[]).map(k => ({ id: k as Filter, label: KIND_META[k].label })),
+  ...KIND_ORDER.map(k => ({ id: k as Filter, label: kindMeta(k).label })),
 ]
 
 export function ItemGrid() {

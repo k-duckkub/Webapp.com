@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import { T, pressableCard, SPRING_SOFT, GRID_ITEM } from '@/lib/motion'
-import { ITEM_DETAILS, KIND_META, RARITY_META, type PlatformItem } from '@/lib/items'
+import { ITEM_DETAILS, kindMeta, rarityMeta, type PlatformItem } from '@/lib/items'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
@@ -17,8 +17,8 @@ export function ItemCard({
   onOpen?: (item: PlatformItem) => void
 }) {
   const { owns, inCart, toggleCart, isEquipped, equip } = useWallet()
-  const kind = KIND_META[item.kind]
-  const rarity = RARITY_META[item.rarity]
+  const kind = kindMeta(item.kind)
+  const rarity = rarityMeta(item.rarity)
   const detail = ITEM_DETAILS[item.id]
   const [from, to] = item.art
 

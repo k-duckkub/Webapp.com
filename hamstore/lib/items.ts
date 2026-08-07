@@ -12,7 +12,8 @@ import { CONTENT } from '@/lib/content'
  * a drawing decision rather than something to type into a text field.
  */
 
-export type ItemKind = 'skin' | 'pet' | 'theme' | 'emoji' | 'frame'
+/* Kinds are data now, so this is a string rather than a closed union. */
+export type ItemKind = string
 
 export interface PlatformItem {
   id: number
@@ -22,7 +23,7 @@ export interface PlatformItem {
   coins: number
   /** 0 = no discount */
   sale: number
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
+  rarity: string
   owned: boolean
   /** two-tone field the generated cover is built from */
   art: [string, string]
@@ -31,22 +32,35 @@ export interface PlatformItem {
   image?: string
 }
 
-export const KIND_META: Record<
-  ItemKind,
-  { label: string; icon: IconName; motif: Motif; color: string }
-> = {
-  skin:  { label: 'สกินแฮมสเตอร์', icon: 'skin',    motif: 'figure',   color: '#F97316' },
-  pet:   { label: 'เพื่อนซี้',      icon: 'pet',     motif: 'tracks',   color: '#DC2626' },
-  theme: { label: 'ธีมหน้าเว็บ',    icon: 'theme',   motif: 'swatches', color: '#7C3AED' },
-  emoji: { label: 'สติกเกอร์',     icon: 'sticker', motif: 'sheet',    color: '#0891B2' },
-  frame: { label: 'กรอบโปรไฟล์',    icon: 'frame',   motif: 'nested',   color: '#059669' },
+export interface KindMeta {
+  label: string
+  icon: IconName
+  motif: Motif
+  color: string
 }
 
-export const RARITY_META: Record<PlatformItem['rarity'], { label: string; color: string }> = {
-  common:    { label: 'ธรรมดา',   color: '#7a7060' },
-  rare:      { label: 'หายาก',    color: '#2563EB' },
-  epic:      { label: 'เอพิค',    color: '#7C3AED' },
-  legendary: { label: 'ตำนาน',    color: '#F59E0B' },
+/* Built from the content file, so a category can be renamed, recoloured or
+   given a different drawing without touching code. The fallback matters: an
+   item pointing at a kind someone deleted must render plainly rather than
+   crash the whole grid on an undefined lookup. */
+export const KIND_META: Record<string, KindMeta> = Object.fromEntries(
+  CONTENT.kinds.map(k => [k.id, { label: k.label, icon: k.icon as IconName, motif: k.motif as Motif, color: k.color }]),
+)
+
+export const KIND_ORDER: ItemKind[] = CONTENT.kinds.map(k => k.id)
+
+export const FALLBACK_KIND: KindMeta = { label: '—', icon: 'all', motif: 'blocks', color: '#6e6e73' }
+
+export function kindMeta(kind: string): KindMeta {
+  return KIND_META[kind] ?? FALLBACK_KIND
+}
+
+export const RARITY_META: Record<string, { label: string; color: string }> = Object.fromEntries(
+  CONTENT.rarities.map(r => [r.id, { label: r.label, color: r.color }]),
+)
+
+export function rarityMeta(rarity: string) {
+  return RARITY_META[rarity] ?? { label: '—', color: '#6e6e73' }
 }
 
 export const PLATFORM_ITEMS: PlatformItem[] = CONTENT.items as PlatformItem[]

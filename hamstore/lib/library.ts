@@ -44,37 +44,17 @@ export interface StoreAsset {
   image?: string
 }
 
-export const LIBRARY_CATEGORIES: { id: string; label: string; icon: IconName }[] = [
-  { id: 'ALL',          label: 'ทั้งหมด',      icon: 'all' },
-  { id: 'CHARACTER',    label: 'Characters',   icon: 'character' },
-  { id: 'ENVIRONMENTS', label: 'Environments', icon: 'environment' },
-  { id: 'GUI',          label: 'GUI',          icon: 'gui' },
-  { id: 'VFX',          label: 'VFX',          icon: 'vfx' },
-  { id: 'AUDIO',        label: 'Audio',        icon: 'audio' },
-  { id: 'TOOLS',        label: 'Tools',        icon: 'tools' },
-  { id: 'TEMPLATE',     label: 'Templates',    icon: 'template' },
-]
+export const LIBRARY_CATEGORIES: { id: string; label: string; icon: IconName }[] =
+  CONTENT.assetCategories.map(c => ({ id: c.id, label: c.label, icon: c.icon as IconName }))
 
 /** Which composition a category's covers are drawn from. */
-export const CATEGORY_MOTIF: Record<string, Motif> = {
-  GUI: 'blocks',
-  VFX: 'burst',
-  TOOLS: 'blocks',
-  CHARACTER: 'figure',
-  TEMPLATE: 'blocks',
-  ENVIRONMENTS: 'terrain',
-  AUDIO: 'waveform',
-}
+export const CATEGORY_MOTIF: Record<string, Motif> = Object.fromEntries(
+  CONTENT.assetCategories.map(c => [c.id, c.motif as Motif]),
+)
 
-export const CATEGORY_COLORS: Record<string, string> = {
-  GUI: '#7C3AED',
-  VFX: '#0891B2',
-  TOOLS: '#059669',
-  CHARACTER: '#DC2626',
-  TEMPLATE: '#D97706',
-  ENVIRONMENTS: '#2563EB',
-  AUDIO: '#DB2777',
-}
+export const CATEGORY_COLORS: Record<string, string> = Object.fromEntries(
+  CONTENT.assetCategories.map(c => [c.id, c.color]),
+)
 
 export const STORE_ASSETS: StoreAsset[] = CONTENT.assets as StoreAsset[]
 

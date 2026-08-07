@@ -10,7 +10,7 @@ import { Icon } from '@/components/Icon'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { GRID_REVEAL, REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { LIBRARY_CATEGORIES, STORE_ASSETS, type StoreAsset } from '@/lib/library'
-import { COPY } from '@/lib/content'
+import { COPY, CONTENT } from '@/lib/content'
 import { useWallet, assetKey, priceOf } from '@/components/WalletProvider'
 
 type Sort = 'updated' | 'cheap' | 'expensive' | 'name' | 'size'
@@ -25,7 +25,7 @@ const SORTS: { id: Sort; label: string }[] = [
 
 const PIPELINES = ['Built-in', 'URP', 'HDRP']
 const LICENSES = ['Single Entity', 'Multi Entity']
-const PER_PAGE = 8
+const PER_PAGE = CONTENT.settings.assetsPerPage
 
 export function LibraryBrowser() {
   const root = useRef<HTMLElement>(null)

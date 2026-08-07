@@ -15,6 +15,7 @@
  *   POST /api/upload      → save an image, return its public path
  *   POST /api/build       → run `npm run build` so the change goes live
  *   GET  /uploads/<file>  → serve an uploaded image back to the editor
+ *   GET  /site/<path>     → the built site, for the preview pane
  *
  * Auth is a shared token in HAMSTORE_STUDIO_TOKEN. When it isn't set the
  * server binds to 127.0.0.1 and says so — fine on your own machine, not
@@ -31,6 +32,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const CONTENT = path.join(ROOT, 'content', 'site.json')
 const BACKUPS = path.join(ROOT, 'content', 'backups')
 const UPLOADS = path.join(ROOT, 'public', 'uploads')
+const SITE = path.join(ROOT, 'out')
 const EDITOR = path.join(ROOT, 'studio', 'index.html')
 
 const PORT = Number(process.env.PORT || 4321)
@@ -47,6 +49,20 @@ const IMAGE_TYPES = {
   'image/avif': '.avif',
 }
 const MAX_UPLOAD = 8 * 1024 * 1024
+
+/* Mirrored from components/Icon.tsx and components/Artwork.tsx. An unknown
+   name renders nothing at all, so it is rejected here rather than shipped. */
+const ICONS = new Set(['hamster','coin','search','receipt','check','chevronRight','arrowDown','close',
+  'cart','download','refresh','skin','pet','theme','sticker','frame','all','character','environment',
+  'gui','vfx','audio','tools','template'])
+const MOTIFS = new Set(['swatches','sheet','nested','figure','tracks','terrain','burst','waveform','blocks'])
+const HEX = /^#[0-9a-fA-F]{6}$/
+
+const MIME = {
+  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css',
+  '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
+  '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8',
+}
 
 const json = (res, code, body) => {
   res.writeHead(code, { 'content-type': 'application/json; charset=utf-8' })
@@ -102,8 +118,62 @@ function validate(next) {
     need(!asset.owned || asset.purchasedAt, `asset ${asset.id}: ตั้งเป็นซื้อแล้วต้องมีวันที่แลก`)
   }
 
+  /* Taxonomy. Everything below is referenced by id from the catalogue, so a
+     rename that leaves items pointing at nothing is caught here. */
+  const kindIds = new Set()
+  for (const k of next.kinds ?? []) {
+    need(k.id && !kindIds.has(k.id), `หมวด "${k.label ?? k.id}": รหัสว่างหรือซ้ำ`)
+    kindIds.add(k.id)
+    need(k.label?.trim(), `หมวด ${k.id}: ชื่อว่างไม่ได้`)
+    need(ICONS.has(k.icon), `หมวด ${k.id}: ไอคอน "${k.icon}" ไม่มีอยู่จริง`)
+    need(MOTIFS.has(k.motif), `หมวด ${k.id}: ลายปก "${k.motif}" ไม่มีอยู่จริง`)
+    need(HEX.test(k.color ?? ''), `หมวด ${k.id}: สีต้องเป็น #rrggbb`)
+  }
+  const rarityIds = new Set()
+  for (const r of next.rarities ?? []) {
+    need(r.id && !rarityIds.has(r.id), `ระดับ "${r.label ?? r.id}": รหัสว่างหรือซ้ำ`)
+    rarityIds.add(r.id)
+    need(HEX.test(r.color ?? ''), `ระดับ ${r.id}: สีต้องเป็น #rrggbb`)
+  }
+  const catIds = new Set()
+  for (const c of next.assetCategories ?? []) {
+    need(c.id && !catIds.has(c.id), `หมวด asset "${c.label ?? c.id}": รหัสว่างหรือซ้ำ`)
+    catIds.add(c.id)
+    need(ICONS.has(c.icon), `หมวด asset ${c.id}: ไอคอน "${c.icon}" ไม่มีอยู่จริง`)
+    need(MOTIFS.has(c.motif), `หมวด asset ${c.id}: ลายปก "${c.motif}" ไม่มีอยู่จริง`)
+    need(HEX.test(c.color ?? ''), `หมวด asset ${c.id}: สีต้องเป็น #rrggbb`)
+  }
+  need(catIds.has('ALL'), 'หมวด asset ต้องมี ALL ไว้เป็นตัวเลือก “ทั้งหมด”')
+
+  for (const item of next.items ?? []) {
+    need(kindIds.has(item.kind), `item ${item.id}: หมวด "${item.kind}" ไม่มีอยู่แล้ว`)
+    need(rarityIds.has(item.rarity), `item ${item.id}: ระดับ "${item.rarity}" ไม่มีอยู่แล้ว`)
+    need((item.art ?? []).every(c => HEX.test(c)), `item ${item.id}: สีปกต้องเป็น #rrggbb`)
+  }
+  for (const asset of next.assets ?? []) {
+    need(catIds.has(asset.category), `asset ${asset.id}: หมวด "${asset.category}" ไม่มีอยู่แล้ว`)
+    need(HEX.test(asset.color ?? ''), `asset ${asset.id}: สีปกต้องเป็น #rrggbb`)
+    need(Array.isArray(asset.pipelines) && asset.pipelines.length, `asset ${asset.id}: ต้องมี pipeline อย่างน้อยหนึ่ง`)
+  }
+  for (const stop of next.pathway ?? []) {
+    need(ICONS.has(stop.icon), `ขั้นตอน ${stop.id}: ไอคอน "${stop.icon}" ไม่มีอยู่จริง`)
+    need(HEX.test(stop.color ?? ''), `ขั้นตอน ${stop.id}: สีต้องเป็น #rrggbb`)
+  }
+
+  const st = next.settings ?? {}
+  need(Number.isFinite(st.startingBalance) && st.startingBalance >= 0, 'เหรียญตั้งต้นต้องเป็นตัวเลขไม่ติดลบ')
+  need(Number.isInteger(st.assetsPerPage) && st.assetsPerPage > 0, 'จำนวนต่อหน้าต้องเป็นจำนวนเต็มบวก')
+  for (const k of st.shelfKinds ?? []) need(kindIds.has(k), `ชั้นล่างหน้าแรกอ้างหมวด "${k}" ที่ไม่มีแล้ว`)
+
+  for (const band of next.store?.bands ?? []) {
+    need(kindIds.has(band.kind), `แถบใหญ่อ้างหมวด "${band.kind}" ที่ไม่มีแล้ว`)
+  }
+
   const ids = (next.items ?? []).map(i => i.id)
   need(new Set(ids).size === ids.length, 'มี item id ซ้ำกัน')
+  const assetIds = (next.assets ?? []).map(a => a.id)
+  need(new Set(assetIds).size === assetIds.length, 'มี asset id ซ้ำกัน')
+  need(ids.length > 0, 'ต้องมีไอเทมอย่างน้อยหนึ่งชิ้น')
 
   /* Every recommendation has to point at something that still exists —
      otherwise the shelf renders four empty cards after a delete. */
@@ -150,6 +220,24 @@ const server = http.createServer(async (req, res) => {
       const ext = path.extname(file)
       const type = Object.entries(IMAGE_TYPES).find(([, e]) => e === ext)?.[0] || 'application/octet-stream'
       res.writeHead(200, { 'content-type': type, 'cache-control': 'no-store' })
+      return res.end(body)
+    }
+
+    /* The built site, for the preview pane. Paths are resolved and then
+       checked to still be inside `out/` — a preview must not become a way to
+       read the rest of the disk. */
+    if (url.pathname.startsWith('/site/')) {
+      const rel = decodeURIComponent(url.pathname.slice('/site/'.length)) || 'index.html'
+      const file = path.resolve(SITE, rel)
+      if (!file.startsWith(SITE + path.sep) && file !== SITE) return json(res, 403, { error: 'นอกขอบเขต' })
+      const body = await fs.readFile(file).catch(() => null)
+      if (!body) {
+        return json(res, 404, { error: 'ยังไม่ได้ build — กด “สร้างเว็บใหม่” ก่อน' })
+      }
+      res.writeHead(200, {
+        'content-type': MIME[path.extname(file)] || 'application/octet-stream',
+        'cache-control': 'no-store',
+      })
       return res.end(body)
     }
 

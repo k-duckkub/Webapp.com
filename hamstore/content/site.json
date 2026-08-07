@@ -1083,5 +1083,131 @@
     "short": "เหรียญไม่พอ",
     "done": "แลกเรียบร้อย",
     "note": "เหรียญได้จากการเรียนเท่านั้น ไม่มีการตัดเงินจริง"
+  },
+  "kinds": [
+    {
+      "id": "skin",
+      "label": "สกินแฮมสเตอร์",
+      "icon": "skin",
+      "motif": "figure",
+      "color": "#F97316"
+    },
+    {
+      "id": "pet",
+      "label": "เพื่อนซี้",
+      "icon": "pet",
+      "motif": "tracks",
+      "color": "#DC2626"
+    },
+    {
+      "id": "theme",
+      "label": "ธีมหน้าเว็บ",
+      "icon": "theme",
+      "motif": "swatches",
+      "color": "#7C3AED"
+    },
+    {
+      "id": "emoji",
+      "label": "สติกเกอร์",
+      "icon": "sticker",
+      "motif": "sheet",
+      "color": "#0891B2"
+    },
+    {
+      "id": "frame",
+      "label": "กรอบโปรไฟล์",
+      "icon": "frame",
+      "motif": "nested",
+      "color": "#059669"
+    }
+  ],
+  "rarities": [
+    {
+      "id": "common",
+      "label": "ธรรมดา",
+      "color": "#7a7060"
+    },
+    {
+      "id": "rare",
+      "label": "หายาก",
+      "color": "#2563EB"
+    },
+    {
+      "id": "epic",
+      "label": "เอพิค",
+      "color": "#7C3AED"
+    },
+    {
+      "id": "legendary",
+      "label": "ตำนาน",
+      "color": "#F59E0B"
+    }
+  ],
+  "assetCategories": [
+    {
+      "id": "ALL",
+      "label": "ทั้งหมด",
+      "icon": "all",
+      "motif": "blocks",
+      "color": "#6e6e73"
+    },
+    {
+      "id": "CHARACTER",
+      "label": "Characters",
+      "icon": "character",
+      "motif": "figure",
+      "color": "#DC2626"
+    },
+    {
+      "id": "ENVIRONMENTS",
+      "label": "Environments",
+      "icon": "environment",
+      "motif": "terrain",
+      "color": "#2563EB"
+    },
+    {
+      "id": "GUI",
+      "label": "GUI",
+      "icon": "gui",
+      "motif": "blocks",
+      "color": "#7C3AED"
+    },
+    {
+      "id": "VFX",
+      "label": "VFX",
+      "icon": "vfx",
+      "motif": "burst",
+      "color": "#0891B2"
+    },
+    {
+      "id": "AUDIO",
+      "label": "Audio",
+      "icon": "audio",
+      "motif": "waveform",
+      "color": "#DB2777"
+    },
+    {
+      "id": "TOOLS",
+      "label": "Tools",
+      "icon": "tools",
+      "motif": "blocks",
+      "color": "#059669"
+    },
+    {
+      "id": "TEMPLATE",
+      "label": "Templates",
+      "icon": "template",
+      "motif": "blocks",
+      "color": "#D97706"
+    }
+  ],
+  "settings": {
+    "startingBalance": 1240,
+    "assetsPerPage": 8,
+    "shelfKinds": [
+      "pet",
+      "emoji",
+      "frame"
+    ]
   }
 }

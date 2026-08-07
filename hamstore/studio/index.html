@@ -94,6 +94,22 @@
   .img .drop.over { border-color: var(--brand); background: #fff7ed; }
   .img input[type=file] { display: none; }
 
+  .field input[type=color] { padding: 3px; height: 38px; cursor: pointer; }
+  .swatch { display: flex; align-items: center; gap: 8px; }
+  .swatch code { font-size: 11px; color: var(--slate); }
+
+  .rowbar { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+  .rowbar button { padding: 5px 10px; font-size: 12px; background: var(--mist); color: var(--slate); }
+  .rowbar button:hover { color: var(--graphite); }
+  .rowbar button.danger:hover { background: #fef2f2; color: var(--bad); }
+  .addbar { display: flex; gap: 8px; margin: 4px 0 18px; }
+
+  .preview { position: fixed; inset: 0; z-index: 40; background: rgba(29,29,31,.5); display: none; }
+  .preview.on { display: block; }
+  .preview .frame { position: absolute; inset: 24px; background: #fff; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+  .preview .bar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--hair); }
+  .preview iframe { flex: 1; width: 100%; border: 0; }
+
   .problems { background: #fef2f2; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
   .problems li { color: var(--bad); font-size: 13px; }
   pre.log { background: var(--graphite); color: #e8e6e3; border-radius: 12px; padding: 14px; font-size: 12px; overflow: auto; max-height: 260px; }
@@ -107,6 +123,7 @@
   <span class="spacer"></span>
   <button class="quiet" id="reload">โหลดใหม่</button>
   <button class="quiet" id="build">สร้างเว็บใหม่</button>
+  <button class="quiet" id="preview">ดูตัวอย่าง</button>
   <button class="primary" id="save" disabled>บันทึก</button>
 </header>
 
@@ -114,6 +131,22 @@
   <nav id="nav"></nav>
   <div id="panels"></div>
 </main>
+
+<!-- The built site, in a frame. Editing a catalogue without seeing the shelf
+     is guesswork; this is the shelf. -->
+<div class="preview" id="previewLayer">
+  <div class="frame">
+    <div class="bar">
+      <strong style="font-size:14px">ตัวอย่าง</strong>
+      <span style="font-size:12px;color:var(--slate)" id="previewNote">จากไฟล์ที่ build ล่าสุด</span>
+      <span class="spacer" style="flex:1"></span>
+      <button class="quiet" id="previewStore">หน้าร้าน</button>
+      <button class="quiet" id="previewLibrary">Unity Asset</button>
+      <button class="quiet" id="previewClose">ปิด</button>
+    </div>
+    <iframe id="previewFrame" title="ตัวอย่างเว็บ"></iframe>
+  </div>
+</div>
 
 <script>
 /* ------------------------------------------------------------------ state */
@@ -169,6 +202,72 @@ function checkField(obj, key, label) {
     el('div', { style: 'display:flex;align-items:center;gap:8px;padding:9px 0' },
       input, el('span', { style: 'font-size:13px;color:var(--slate)', textContent: label })))
 }
+
+/** A colour, as a picker and as a hex you can paste. */
+function colorField(obj, key, label) {
+  const picker = el('input', { type: 'color', value: /^#[0-9a-f]{6}$/i.test(obj[key] || '') ? obj[key] : '#888888' })
+  const hex = el('input', { type: 'text', value: obj[key] ?? '' })
+  picker.addEventListener('input', () => { obj[key] = picker.value; hex.value = picker.value; touch() })
+  hex.addEventListener('input', () => {
+    obj[key] = hex.value
+    if (/^#[0-9a-f]{6}$/i.test(hex.value)) picker.value = hex.value
+    touch()
+  })
+  return el('div', { className: 'field' },
+    el('label', { textContent: label }),
+    el('div', { className: 'swatch' }, picker, hex))
+}
+
+/** A choice from a fixed set — icon and motif names have to stay valid. */
+function selectField(obj, key, label, options) {
+  const sel = el('select')
+  for (const value of options) {
+    sel.append(el('option', { value, textContent: value, selected: obj[key] === value }))
+  }
+  sel.addEventListener('change', () => { obj[key] = sel.value; touch() })
+  return el('div', { className: 'field' }, el('label', { textContent: label }), sel)
+}
+
+/**
+ * Move / duplicate / delete for one row of a list.
+ *
+ * Deleting is the one destructive thing in here, so it asks — and the copy
+ * names what is going, because "ยืนยัน?" on its own tells you nothing.
+ */
+function rowTools(list, index, redraw, { label = 'รายการนี้', onDelete } = {}) {
+  const move = to => {
+    if (to < 0 || to >= list.length) return
+    const [row] = list.splice(index, 1)
+    list.splice(to, 0, row)
+    touch(); redraw()
+  }
+  const up = el('button', { type: 'button', textContent: '↑', title: 'เลื่อนขึ้น' })
+  const down = el('button', { type: 'button', textContent: '↓', title: 'เลื่อนลง' })
+  const copy = el('button', { type: 'button', textContent: 'ทำซ้ำ' })
+  const del = el('button', { type: 'button', className: 'danger', textContent: 'ลบ' })
+  up.addEventListener('click', e => { e.preventDefault(); move(index - 1) })
+  down.addEventListener('click', e => { e.preventDefault(); move(index + 1) })
+  copy.addEventListener('click', e => {
+    e.preventDefault()
+    const clone = structuredClone(list[index])
+    if ('id' in clone && typeof clone.id === 'number') clone.id = nextId(list)
+    if ('id' in clone && typeof clone.id === 'string') clone.id = clone.id + '-copy'
+    if (clone.name) clone.name += ' (สำเนา)'
+    if (clone.title) clone.title += ' (สำเนา)'
+    list.splice(index + 1, 0, clone)
+    touch(); redraw()
+  })
+  del.addEventListener('click', e => {
+    e.preventDefault()
+    if (!confirm('ลบ ' + label + ' ออกถาวร?')) return
+    const removed = list.splice(index, 1)[0]
+    onDelete?.(removed)
+    touch(); redraw()
+  })
+  return el('span', { className: 'rowbar' }, up, down, copy, del)
+}
+
+const nextId = list => list.reduce((max, r) => Math.max(max, Number(r.id) || 0), 0) + 1
 
 /** A list of plain strings, edited one per line — simpler than n inputs. */
 function listField(obj, key, label) {
@@ -249,6 +348,13 @@ function panel(id, title, hint, ...kids) {
     kids)
 }
 
+/* Kept in step with components/Icon.tsx and components/Artwork.tsx. The
+   server rejects anything outside these, so the picker is the safe path. */
+const ICONS = ['hamster','coin','search','receipt','check','chevronRight','arrowDown','close','cart',
+  'download','refresh','skin','pet','theme','sticker','frame','all','character','environment','gui',
+  'vfx','audio','tools','template']
+const MOTIFS = ['swatches','sheet','nested','figure','tracks','terrain','burst','waveform','blocks']
+
 /* ------------------------------------------------------------------ panels */
 function renderGeneral() {
   const n = data.nav, f = data.footer
@@ -318,11 +424,24 @@ function renderStore() {
 }
 
 function renderItems() {
-  const kinds = { skin: 'สกิน', pet: 'เพื่อนซี้', theme: 'ธีม', emoji: 'สติกเกอร์', frame: 'กรอบ' }
-  const rarities = { common: 'ธรรมดา', rare: 'หายาก', epic: 'เอพิค', legendary: 'ตำนาน' }
+  const kinds = Object.fromEntries(data.kinds.map(k => [k.id, k.label]))
+  const rarities = Object.fromEntries(data.rarities.map(r => [r.id, r.label]))
 
-  return panel('items', 'ไอเทมในร้าน', data.items.length + ' ชิ้น — ชื่อ คำอธิบาย ราคา และรูปปก',
-    ...data.items.map(item => {
+  const add = el('button', { className: 'primary', type: 'button', textContent: '+ เพิ่มไอเทม' })
+  add.addEventListener('click', () => {
+    const id = nextId(data.items)
+    data.items.push({
+      id, kind: data.kinds[0]?.id ?? 'skin', name: 'ไอเทมใหม่', blurb: '',
+      coins: 100, sale: 0, rarity: data.rarities[0]?.id ?? 'common', owned: false,
+      art: ['#F97316', '#DC2626'], image: '',
+    })
+    data.itemDetails[id] = { maker: '', owners: 0, includes: [], showsUp: [], version: '1.0', updatedAt: '' }
+    touch(); draw()
+  })
+
+  return panel('items', 'ไอเทมในร้าน', data.items.length + ' ชิ้น — เพิ่ม ลบ สลับลำดับ และแก้ได้ทุกช่อง',
+    el('div', { className: 'addbar' }, add),
+    ...data.items.map((item, index) => {
       const detail = data.itemDetails[item.id] || (data.itemDetails[item.id] = {
         maker: '', owners: 0, includes: [], showsUp: [], version: '1.0', updatedAt: '',
       })
@@ -343,7 +462,14 @@ function renderItems() {
 
       return el('details', { className: 'card' },
         el('summary', {}, thumb, el('span', { textContent: item.name }),
-          el('span', { className: 'tag', textContent: (kinds[item.kind] || item.kind) + ' · ' + item.coins })),
+          el('span', { className: 'tag', textContent: (kinds[item.kind] || item.kind) + ' · ' + item.coins }),
+          rowTools(data.items, index, draw, {
+            label: 'ไอเทม “' + item.name + '”',
+            onDelete: removed => {
+              delete data.itemDetails[removed.id]
+              data.recommended = data.recommended.filter(r => r.id !== removed.id)
+            },
+          })),
         bind(item, 'name', 'ชื่อ'),
         bind(item, 'blurb', 'คำอธิบายสั้น (ขึ้นบนการ์ด)', { multiline: true }),
         el('div', { className: 'row' },
@@ -352,7 +478,11 @@ function renderItems() {
           el('div', { className: 'field' }, el('label', { textContent: 'หมวด' }), kindSelect),
           el('div', { className: 'field' }, el('label', { textContent: 'ระดับ' }), raritySelect),
         ),
-        imageField(item, 'image', 'รูปปก'),
+        el('div', { className: 'row' },
+          colorField(item.art, 0, 'สีปกด้านบน'),
+          colorField(item.art, 1, 'สีปกด้านล่าง'),
+        ),
+        imageField(item, 'image', 'รูปปก (ใส่แล้วทับสีด้านบน)'),
         el('div', { className: 'row' },
           bind(detail, 'maker', 'ผู้ทำ'),
           bind(detail, 'owners', 'จำนวนคนที่มีแล้ว', { type: 'number' }),
@@ -409,12 +539,38 @@ function renderLibrary() {
         bind(data.library, 'notDownloadedBadge', 'ป้ายบนปก: ยังไม่โหลด'),
       ),
     ),
-    ...data.assets.map(asset => {
+    (() => {
+      const add = el('button', { className: 'primary', type: 'button', textContent: '+ เพิ่มแพ็กเกจ' })
+      add.addEventListener('click', () => {
+        data.assets.push({
+          id: nextId(data.assets), title: 'แพ็กเกจใหม่', publisher: '',
+          category: data.assetCategories[1]?.id ?? 'GUI', pipelines: ['URP'],
+          version: '1.0.0', size: 50, updatedAt: '', license: 'Single Entity',
+          coins: 100, sale: 0, owned: false, hasUpdate: false, downloaded: false,
+          rating: 4.5, color: '#7C3AED', image: '',
+        })
+        touch(); draw()
+      })
+      return el('div', { className: 'addbar' }, add)
+    })(),
+    ...data.assets.map((asset, index) => {
       const thumb = el('img', { className: 'thumb', src: asset.image || '', alt: '' })
       if (!asset.image) thumb.style.visibility = 'hidden'
+      const catSelect = el('select')
+      for (const c of data.assetCategories.filter(c => c.id !== 'ALL')) {
+        catSelect.append(el('option', { value: c.id, textContent: c.label, selected: asset.category === c.id }))
+      }
+      catSelect.addEventListener('change', () => { asset.category = catSelect.value; touch() })
+      const licSelect = el('select')
+      for (const l of ['Single Entity', 'Multi Entity']) {
+        licSelect.append(el('option', { value: l, textContent: l, selected: asset.license === l }))
+      }
+      licSelect.addEventListener('change', () => { asset.license = licSelect.value; touch() })
+
       return el('details', { className: 'card' },
         el('summary', {}, thumb, el('span', { textContent: asset.title }),
-          el('span', { className: 'tag', textContent: asset.category })),
+          el('span', { className: 'tag', textContent: asset.category }),
+          rowTools(data.assets, index, draw, { label: 'แพ็กเกจ “' + asset.title + '”' })),
         el('div', { className: 'row' },
           bind(asset, 'title', 'ชื่อ asset'),
           bind(asset, 'publisher', 'ผู้พัฒนา'),
@@ -424,6 +580,11 @@ function renderLibrary() {
         el('div', { className: 'row' },
           bind(asset, 'coins', 'ราคา (HamCoin)', { type: 'number' }),
           bind(asset, 'sale', 'ส่วนลด %', { type: 'number' }),
+          el('div', { className: 'field' }, el('label', { textContent: 'หมวด' }), catSelect),
+          el('div', { className: 'field' }, el('label', { textContent: 'License' }), licSelect),
+        ),
+        el('div', { className: 'row' },
+          colorField(asset, 'color', 'สีปก'),
           checkField(asset, 'owned', 'ตั้งให้เป็น “ซื้อไว้แล้ว”'),
           bind(asset, 'updatedAt', 'อัปเดตล่าสุด (YYYY-MM-DD)'),
         ),
@@ -456,13 +617,136 @@ function renderCart() {
   )
 }
 
+/**
+ * Categories, rarities and settings.
+ *
+ * These were the last things that lived in code. They are not styling — they
+ * are what the catalogue is made of — so renaming a category, giving it a
+ * different drawing, or changing how many packages fit on a page all belong
+ * here rather than in a TSX file.
+ */
+function renderTaxonomy() {
+  const kindAdd = el('button', { className: 'primary', type: 'button', textContent: '+ เพิ่มหมวดไอเทม' })
+  kindAdd.addEventListener('click', () => {
+    data.kinds.push({ id: 'kind' + (data.kinds.length + 1), label: 'หมวดใหม่', icon: 'all', motif: 'blocks', color: '#6e6e73' })
+    touch(); draw()
+  })
+  const rarityAdd = el('button', { className: 'primary', type: 'button', textContent: '+ เพิ่มระดับ' })
+  rarityAdd.addEventListener('click', () => {
+    data.rarities.push({ id: 'rarity' + (data.rarities.length + 1), label: 'ระดับใหม่', color: '#6e6e73' })
+    touch(); draw()
+  })
+  const catAdd = el('button', { className: 'primary', type: 'button', textContent: '+ เพิ่มหมวด Asset' })
+  catAdd.addEventListener('click', () => {
+    data.assetCategories.push({ id: 'CAT' + (data.assetCategories.length + 1), label: 'หมวดใหม่', icon: 'all', motif: 'blocks', color: '#6e6e73' })
+    touch(); draw()
+  })
+
+  return panel('taxonomy', 'หมวดและระดับ', 'ชื่อหมวด ไอคอน ลายปก และสีประจำหมวด — ใช้ทั้งสองหน้า',
+    el('h3', { style: 'margin:18px 0 8px;font-size:14px', textContent: 'หมวดไอเทม (หน้าร้าน)' }),
+    el('div', { className: 'addbar' }, kindAdd),
+    ...data.kinds.map((k, i) =>
+      el('details', { className: 'card' },
+        el('summary', {}, el('span', { textContent: k.label }),
+          el('span', { className: 'tag', textContent: k.id }),
+          rowTools(data.kinds, i, draw, { label: 'หมวด “' + k.label + '”' })),
+        el('div', { className: 'row' },
+          bind(k, 'id', 'รหัส (ใช้อ้างในไอเทม)'),
+          bind(k, 'label', 'ชื่อที่แสดง'),
+          selectField(k, 'icon', 'ไอคอน', ICONS),
+          selectField(k, 'motif', 'ลายปก', MOTIFS),
+        ),
+        colorField(k, 'color', 'สีประจำหมวด'),
+      )),
+
+    el('h3', { style: 'margin:26px 0 8px;font-size:14px', textContent: 'ระดับความหายาก' }),
+    el('div', { className: 'addbar' }, rarityAdd),
+    ...data.rarities.map((r, i) =>
+      el('details', { className: 'card' },
+        el('summary', {}, el('span', { textContent: r.label }),
+          el('span', { className: 'tag', textContent: r.id }),
+          rowTools(data.rarities, i, draw, { label: 'ระดับ “' + r.label + '”' })),
+        el('div', { className: 'row' }, bind(r, 'id', 'รหัส'), bind(r, 'label', 'ชื่อที่แสดง'), colorField(r, 'color', 'สี')),
+      )),
+
+    el('h3', { style: 'margin:26px 0 8px;font-size:14px', textContent: 'หมวด Unity Asset' }),
+    el('div', { className: 'addbar' }, catAdd),
+    ...data.assetCategories.map((c, i) =>
+      el('details', { className: 'card' },
+        el('summary', {}, el('span', { textContent: c.label }),
+          el('span', { className: 'tag', textContent: c.id }),
+          rowTools(data.assetCategories, i, draw, { label: 'หมวด “' + c.label + '”' })),
+        el('div', { className: 'row' },
+          bind(c, 'id', 'รหัส'),
+          bind(c, 'label', 'ชื่อที่แสดง'),
+          selectField(c, 'icon', 'ไอคอน', ICONS),
+          selectField(c, 'motif', 'ลายปก', MOTIFS),
+        ),
+        colorField(c, 'color', 'สีประจำหมวด'),
+      )),
+  )
+}
+
+function renderPathway() {
+  const add = el('button', { className: 'primary', type: 'button', textContent: '+ เพิ่มขั้น' })
+  add.addEventListener('click', () => {
+    data.pathway.push({ id: 'step' + (data.pathway.length + 1), step: String(data.pathway.length + 1).padStart(2, '0'),
+                        title: 'ขั้นใหม่', body: '', icon: 'coin', color: '#F97316' })
+    touch(); draw()
+  })
+  return panel('pathway', 'ขั้นตอนบนหน้าแรก', 'สามช่วงที่เล่าว่าเหรียญมาจากไหนและใช้ทำอะไร',
+    el('div', { className: 'addbar' }, add),
+    ...data.pathway.map((stop, i) =>
+      el('details', { className: 'card' },
+        el('summary', {}, el('span', { textContent: stop.step + ' · ' + stop.title }),
+          rowTools(data.pathway, i, draw, { label: 'ขั้น “' + stop.title + '”' })),
+        el('div', { className: 'row' },
+          bind(stop, 'step', 'เลขขั้น'),
+          bind(stop, 'title', 'หัวข้อ'),
+          selectField(stop, 'icon', 'ไอคอน', ICONS),
+          colorField(stop, 'color', 'สี'),
+        ),
+        bind(stop, 'body', 'เนื้อความ', { multiline: true }),
+      )),
+  )
+}
+
+function renderSettings() {
+  const st = data.settings
+  const shelf = el('div', { className: 'row' })
+  for (const k of data.kinds) {
+    const input = el('input', { type: 'checkbox', checked: st.shelfKinds.includes(k.id) })
+    input.style.width = 'auto'
+    input.addEventListener('change', () => {
+      st.shelfKinds = input.checked
+        ? [...st.shelfKinds, k.id]
+        : st.shelfKinds.filter(x => x !== k.id)
+      touch()
+    })
+    shelf.append(el('div', { className: 'field' },
+      el('div', { style: 'display:flex;align-items:center;gap:8px' },
+        input, el('span', { style: 'font-size:13px', textContent: k.label }))))
+  }
+  return panel('settings', 'ตั้งค่า', 'ตัวเลขที่คุมพฤติกรรมของทั้งเว็บ',
+    el('div', { className: 'row' },
+      bind(st, 'startingBalance', 'เหรียญตั้งต้นของผู้ใช้', { type: 'number' }),
+      bind(st, 'assetsPerPage', 'จำนวน asset ต่อหน้า', { type: 'number' }),
+    ),
+    el('h3', { style: 'margin:18px 0 8px;font-size:14px', textContent: 'หมวดที่ขึ้นชั้นล่างหน้าแรก' }),
+    shelf,
+  )
+}
+
 const SECTIONS = [
   { id: 'general', label: 'ทั่วไป',        render: renderGeneral },
   { id: 'store',   label: 'หน้าร้าน',      render: renderStore },
   { id: 'items',   label: 'ไอเทมในร้าน',   render: renderItems },
   { id: 'picks',   label: 'ของที่แนะนำ',   render: renderPicks },
   { id: 'library', label: 'Unity Asset',  render: renderLibrary },
-  { id: 'cart',    label: 'ตะกร้า',        render: renderCart },
+  { id: 'cart',     label: 'ตะกร้า',        render: renderCart },
+  { id: 'taxonomy', label: 'หมวดและระดับ',   render: renderTaxonomy },
+  { id: 'pathway',  label: 'ขั้นตอนหน้าแรก', render: renderPathway },
+  { id: 'settings', label: 'ตั้งค่า',        render: renderSettings },
 ]
 
 let current = 'general'
@@ -522,6 +806,27 @@ document.getElementById('build').addEventListener('click', async e => {
   e.target.disabled = false
   setStatus(body.ok ? 'สร้างเว็บเสร็จแล้ว' : 'สร้างไม่ผ่าน — ดู log ด้านล่าง', body.ok ? 'ok' : 'bad')
   if (!body.ok) document.getElementById('panels').prepend(el('pre', { className: 'log', textContent: body.log }))
+})
+
+/* ------------------------------------------------------------------ preview */
+const previewLayer = document.getElementById('previewLayer')
+const previewFrame = document.getElementById('previewFrame')
+const showPreview = page => {
+  previewFrame.src = '/site/' + page + '?t=' + Date.now()
+  previewLayer.classList.add('on')
+}
+document.getElementById('preview').addEventListener('click', () => showPreview('index.html'))
+document.getElementById('previewStore').addEventListener('click', () => showPreview('index.html'))
+document.getElementById('previewLibrary').addEventListener('click', () => showPreview('library.html'))
+document.getElementById('previewClose').addEventListener('click', () => {
+  previewLayer.classList.remove('on')
+  previewFrame.src = 'about:blank'
+})
+addEventListener('keydown', e => {
+  if (e.key === 'Escape' && previewLayer.classList.contains('on')) {
+    previewLayer.classList.remove('on')
+    previewFrame.src = 'about:blank'
+  }
 })
 
 load()

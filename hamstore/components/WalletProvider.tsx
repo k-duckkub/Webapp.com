@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { PLATFORM_ITEMS, type ItemKind, type PlatformItem } from '@/lib/items'
 import { STORE_ASSETS, type StoreAsset } from '@/lib/library'
+import { CONTENT } from '@/lib/content'
 
 /**
  * One wallet, one cart, both pages.
@@ -18,7 +19,7 @@ import { STORE_ASSETS, type StoreAsset } from '@/lib/library'
  * kind of bug that shows up as one purchase quietly unlocking two things.
  */
 
-const STARTING_BALANCE = 1240
+const STARTING_BALANCE = CONTENT.settings.startingBalance
 
 /**
  * The two pages are separate documents in a static export, so following a nav

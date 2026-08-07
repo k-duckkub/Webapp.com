@@ -4,8 +4,8 @@ import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, SPRING_SOFT } from '@/lib/motion'
-import { KIND_META, PLATFORM_ITEMS, type ItemKind } from '@/lib/items'
-import { COPY, imageSrc } from '@/lib/content'
+import { kindMeta, PLATFORM_ITEMS, type ItemKind } from '@/lib/items'
+import { COPY, CONTENT, imageSrc } from '@/lib/content'
 import { priceOf } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
@@ -25,7 +25,7 @@ import { Icon } from '@/components/Icon'
 const BANDS = COPY.store.bands.map((band, i) => ({
   ...band,
   kind: band.kind as ItemKind,
-  meta: KIND_META[band.kind as ItemKind],
+  meta: kindMeta(band.kind),
   items: PLATFORM_ITEMS.filter(item => item.kind === band.kind),
   artRight: i % 2 === 1,
   onMist: i % 2 === 0,
@@ -176,8 +176,8 @@ export function FeatureSections() {
             {COPY.store.shelf.heading}
           </h2>
           <div className="grid gap-5 sm:grid-cols-3" data-feature-el>
-            {(['pet', 'emoji', 'frame'] as ItemKind[]).map(kind => {
-              const meta = KIND_META[kind]
+            {CONTENT.settings.shelfKinds.map((kind: ItemKind) => {
+              const meta = kindMeta(kind)
               const items = PLATFORM_ITEMS.filter(i => i.kind === kind)
               /* The category's own hue, not the first item's — pulling from
                  items made all three shelves come out the same warm orange. */

@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ItemSheet } from './ItemSheet'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T, SPRING_SOFT } from '@/lib/motion'
-import { KIND_META, PLATFORM_ITEMS, RECOMMENDED, type PlatformItem } from '@/lib/items'
+import { kindMeta, PLATFORM_ITEMS, RECOMMENDED, type PlatformItem } from '@/lib/items'
 import { COPY } from '@/lib/content'
 import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
@@ -45,7 +45,7 @@ export function Recommended() {
 
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" data-rec-el>
           {PICKS.map(({ item, reason, note }) => {
-            const kind = KIND_META[item.kind]
+            const kind = kindMeta(item.kind)
             const [from, to] = item.art
             const key = itemKey(item.id)
             const owned = owns(key)

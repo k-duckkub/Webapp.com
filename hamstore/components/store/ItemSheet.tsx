@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { EASE_OUT, SPRING_SOFT } from '@/lib/motion'
-import { ITEM_DETAILS, KIND_META, RARITY_META, type PlatformItem } from '@/lib/items'
+import { ITEM_DETAILS, kindMeta, rarityMeta, type PlatformItem } from '@/lib/items'
 import { formatThaiDate } from '@/lib/library'
 import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
@@ -112,8 +112,8 @@ function Body({
   toggleCart: (line: ReturnType<typeof itemLine>) => void
   balance: number
 }) {
-  const kind = KIND_META[item.kind]
-  const rarity = RARITY_META[item.rarity]
+  const kind = kindMeta(item.kind)
+  const rarity = rarityMeta(item.rarity)
   const detail = ITEM_DETAILS[item.id]
   const [from, to] = item.art
   const price = priceOf(item)
