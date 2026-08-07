@@ -66,234 +66,300 @@ const QUALITY = 86
 
 /* ------------------------------------------------------------------ parts */
 
-/** The hamster, drawn once and dressed differently per item. */
-function hamster({ fur = '#C89B6A', belly = '#F0DCC2', pose = 'stand' } = {}) {
-  const lean = pose === 'sneak' ? 'rotate(-8 200 250)' : ''
-  return `
-  <g transform="${lean}">
-    <!-- ears -->
-    <circle cx="139" cy="132" r="34" fill="${fur}"/>
-    <circle cx="261" cy="132" r="34" fill="${fur}"/>
-    <circle cx="139" cy="132" r="19" fill="#E6A6A6" opacity=".75"/>
-    <circle cx="261" cy="132" r="19" fill="#E6A6A6" opacity=".75"/>
+/**
+ * Product-shot framing.
+ *
+ * The reference is how apparel is actually photographed for a shop: the piece
+ * alone on a pale, near-neutral ground, centred, shot at the same distance
+ * every time, with one soft contact shadow underneath. What makes a row of
+ * those read as a catalogue is not the styling of any single frame — it is
+ * that all of them share the ground, the crop and the light. So the ground
+ * lives here, once, and every item only supplies its own object.
+ */
+const GROUND = `
+  <rect width="400" height="400" fill="url(#studio)"/>
+  <ellipse cx="200" cy="336" rx="118" ry="17" fill="#0B0A09" opacity=".085"/>`
 
-    <!-- body -->
-    <path d="M200 316c-58 0-96-33-96-79 0-52 43-95 96-95s96 43 96 95c0 46-38 79-96 79Z" fill="${fur}"/>
-    <ellipse cx="200" cy="243" rx="60" ry="62" fill="${belly}"/>
+/* ---------------------------------------------------------------- garments */
 
-    <!-- paws -->
-    <ellipse cx="146" cy="300" rx="26" ry="18" fill="${fur}"/>
-    <ellipse cx="254" cy="300" rx="26" ry="18" fill="${fur}"/>
+/**
+ * A garment, laid flat.
+ *
+ * One silhouette builder rather than four hand-drawn tops: sleeve length and
+ * hem move, everything else stays put, which is what keeps the shoulders on
+ * the same line across the whole shelf.
+ */
+function garment({
+  body,
+  shade,
+  trim = null,
+  sleeve = 'short',   // 'short' | 'long'
+  hem = 316,
+  chest = '',
+  hood = false,
+} = {}) {
+  const long = sleeve === 'long'
+  const cuffY = long ? 300 : 196
+  const sleeveOuterTop = long ? 132 : 126
+  const armX = long ? 74 : 84
 
-    <!-- face -->
-    <circle cx="172" cy="196" r="10" fill="#2A211A"/>
-    <circle cx="228" cy="196" r="10" fill="#2A211A"/>
-    <circle cx="175" cy="192" r="3.4" fill="#fff"/>
-    <circle cx="231" cy="192" r="3.4" fill="#fff"/>
-    <ellipse cx="200" cy="220" rx="9" ry="6.5" fill="#8A5A4A"/>
-    <path d="M191 231c5 5 13 5 18 0" stroke="#8A5A4A" stroke-width="4" fill="none" stroke-linecap="round"/>
-    <circle cx="152" cy="218" r="13" fill="#E89A9A" opacity=".45"/>
-    <circle cx="248" cy="218" r="13" fill="#E89A9A" opacity=".45"/>
-    <g stroke="#7A5B44" stroke-width="3" stroke-linecap="round" opacity=".6">
-      <path d="M120 210h30M120 224h30M280 210h-30M280 224h-30"/>
-    </g>
-  </g>`
-}
+  /* Left half is mirrored, so the piece can never come out lopsided. */
+  const half = (dir) => {
+    const s = dir // 1 right, -1 left
+    const x = v => 200 + s * v
+    return `
+      L${x(48)},100
+      L${x(96)},${sleeveOuterTop}
+      L${x(126 - (long ? 0 : 6))},${cuffY - (long ? 8 : 0)}
+      L${x(long ? 92 : 68)},${cuffY + (long ? 8 : 2)}
+      L${x(56)},${long ? 172 : 168}
+      L${x(56)},${hem}`
+  }
 
-/** Outfits. Each is drawn over the hamster and reads as the thing you buy. */
-const OUTFITS = {
-  astronaut: `
-    <g>
-      <path d="M200 300c-52 0-84-26-84-62 0-14 4-26 11-36h146c7 10 11 22 11 36 0 36-32 62-84 62Z" fill="#E8EAF0"/>
-      <rect x="150" y="278" width="100" height="16" rx="8" fill="#F97316"/>
-      <circle cx="200" cy="196" r="112" fill="#BBD6F5" opacity=".38"/>
-      <circle cx="200" cy="196" r="112" fill="none" stroke="#fff" stroke-width="7" opacity=".9"/>
-      <path d="M124 150a112 112 0 0 1 62-48" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" opacity=".85"/>
-      <rect x="290" y="176" width="30" height="42" rx="10" fill="#E8EAF0"/>
-    </g>`,
-  chef: `
-    <g>
-      <path d="M200 296c-46 0-76-22-76-52 0-9 2-17 5-24h142c3 7 5 15 5 24 0 30-30 52-76 52Z" fill="#FBF7F2"/>
-      <path d="M158 220h84v-8h-84Z" fill="#E2DCD2"/>
-      <path d="M143 128c-15 0-26-11-26-25s11-25 26-25c3-16 17-27 34-27 12 0 22 6 28 15 6-9 16-15 28-15 17 0 31 11 34 27 15 0 26 11 26 25s-11 25-26 25Z" fill="#FBF7F2"/>
-      <rect x="139" y="126" width="122" height="22" rx="9" fill="#EFE9E0"/>
-      <circle cx="200" cy="258" r="7" fill="#D8CEC0"/>
-      <circle cx="200" cy="284" r="7" fill="#D8CEC0"/>
-    </g>`,
-  ninja: `
-    <g>
-      <path d="M200 316c-58 0-96-33-96-79 0-52 43-95 96-95s96 43 96 95c0 46-38 79-96 79Z" fill="#26262B"/>
-      <path d="M108 196c22-16 55-26 92-26s70 10 92 26v-12c0-46-42-82-92-82s-92 36-92 82Z" fill="#17171A"/>
-      <rect x="106" y="188" width="188" height="34" rx="16" fill="#17171A"/>
-      <circle cx="172" cy="205" r="9" fill="#F5F5F7"/>
-      <circle cx="228" cy="205" r="9" fill="#F5F5F7"/>
-      <circle cx="172" cy="205" r="4" fill="#26262B"/>
-      <circle cx="228" cy="205" r="4" fill="#26262B"/>
-      <!-- Headband, tied at the side. The tail trails behind the head rather
-           than jutting out of it, which read as a beak. -->
-      <path d="M292 186c26 6 42 22 46 44-18-10-34-14-48-12Z" fill="#B0121A" opacity=".95"/>
-      <rect x="104" y="176" width="192" height="16" rx="8" fill="#B0121A"/>
-    </g>`,
-  graduate: `
-    <g>
-      <path d="M200 300c-50 0-82-24-82-58 0-11 3-21 8-29h148c5 8 8 18 8 29 0 34-32 58-82 58Z" fill="#1F2233"/>
-      <!-- Gown collar: two lapels meeting in a V, not a block of white. -->
-      <path d="M160 244l40 34-6-46Z" fill="#F5F5F7"/>
-      <path d="M240 244l-40 34 6-46Z" fill="#E8E8EE"/>
-      <path d="M200 82 96 124l104 42 104-42Z" fill="#1F2233"/>
-      <rect x="176" y="150" width="48" height="16" rx="6" fill="#151827"/>
-      <path d="M296 130v54" stroke="#FBBF24" stroke-width="7" stroke-linecap="round"/>
-      <circle cx="296" cy="190" r="13" fill="#FBBF24"/>
-    </g>`,
-}
-
-/** Pets get their own creature rather than a dressed hamster. */
-const CREATURES = {
-  cat: `
-    <g>
-      <path d="M126 168 148 96l46 40Z" fill="#F5A524"/>
-      <path d="M274 168 252 96l-46 40Z" fill="#F5A524"/>
-      <ellipse cx="200" cy="212" rx="98" ry="86" fill="#F5A524"/>
-      <ellipse cx="200" cy="300" rx="74" ry="42" fill="#E08C10"/>
-      <path d="M274 300c40-6 62-32 56-64" stroke="#F5A524" stroke-width="26" fill="none" stroke-linecap="round"/>
-      <ellipse cx="168" cy="204" rx="11" ry="15" fill="#2A211A"/>
-      <ellipse cx="232" cy="204" rx="11" ry="15" fill="#2A211A"/>
-      <path d="M188 234h24l-12 12Z" fill="#E06A6A"/>
-      <g stroke="#2A211A" stroke-width="3.5" stroke-linecap="round" opacity=".55">
-        <path d="M110 220h44M110 236h44M290 220h-44M290 236h-44"/>
-      </g>
-    </g>`,
-  slime: `
-    <g>
-      <path d="M200 108c56 0 104 62 104 118 0 44-46 66-104 66S96 270 96 226c0-56 48-118 104-118Z" fill="#34D399" opacity=".92"/>
-      <path d="M200 108c56 0 104 62 104 118 0 44-46 66-104 66" fill="none" stroke="#0E9F6E" stroke-width="6" opacity=".5"/>
-      <ellipse cx="164" cy="168" rx="26" ry="34" fill="#fff" opacity=".55" transform="rotate(-18 164 168)"/>
-      <circle cx="172" cy="226" r="12" fill="#0B3B2E"/>
-      <circle cx="228" cy="226" r="12" fill="#0B3B2E"/>
-      <path d="M182 258c10 12 26 12 36 0" stroke="#0B3B2E" stroke-width="6" fill="none" stroke-linecap="round"/>
-    </g>`,
-  dragon: `
-    <g>
-      <!-- Wings meet the body instead of hovering beside it, and the folds
-           read as creases in one sheet rather than separate shapes. -->
-      <path d="M196 214 78 158l14 92Z" fill="#A855F7"/>
-      <path d="M204 214 322 158l-14 92Z" fill="#9333EA"/>
-      <path d="M200 120 130 246h140Z" fill="#EC4899"/>
-      <path d="M200 120 130 246h70Z" fill="#DB2777"/>
-      <path d="M130 246h140l-70 66Z" fill="#F472B6"/>
-      <path d="M130 246h70v66Z" fill="#EC4899"/>
-      <circle cx="182" cy="212" r="9" fill="#fff"/>
-      <circle cx="218" cy="212" r="9" fill="#fff"/>
-      <circle cx="182" cy="212" r="4" fill="#3B0A2A"/>
-      <circle cx="218" cy="212" r="4" fill="#3B0A2A"/>
-    </g>`,
-}
-
-/** A theme is a website, so the cover is one — a little page in that palette. */
-function themeMock({ bg, panel, accent, text }) {
   return `
     <g>
-      <rect x="52" y="76" width="296" height="248" rx="22" fill="${bg}"/>
-      <rect x="52" y="76" width="296" height="44" rx="22" fill="${panel}"/>
-      <rect x="52" y="98" width="296" height="22" fill="${panel}"/>
-      <circle cx="76" cy="98" r="7" fill="${accent}"/>
-      <rect x="94" y="92" width="60" height="12" rx="6" fill="${text}" opacity=".45"/>
-      <rect x="76" y="146" width="150" height="18" rx="9" fill="${text}" opacity=".85"/>
-      <rect x="76" y="176" width="210" height="10" rx="5" fill="${text}" opacity=".35"/>
-      <rect x="76" y="194" width="176" height="10" rx="5" fill="${text}" opacity=".35"/>
-      <rect x="76" y="228" width="92" height="30" rx="15" fill="${accent}"/>
-      <rect x="184" y="228" width="72" height="30" rx="15" fill="${panel}"/>
-      <rect x="76" y="280" width="248" height="12" rx="6" fill="${text}" opacity=".18"/>
+      ${hood ? `<path d="M144 118c0-34 25-56 56-56s56 22 56 56c0 20-25 30-56 30s-56-10-56-30Z" fill="${shade}"/>` : ''}
+      <path d="M200,92 ${half(1)} L${200 - 56},${hem} ${half(-1).split('\n').reverse().join('\n')} Z"
+            fill="${body}"/>
+
+      <!-- shading down the left of the body, the way a folded piece falls -->
+      <path d="M144,${hem} L144,168 L156,168 L156,${hem} Z" fill="${shade}" opacity=".55"/>
+      <path d="M244,168 L256,168 L256,${hem} L244,${hem} Z" fill="${shade}" opacity=".3"/>
+
+      <!-- collar -->
+      ${hood
+        ? `<path d="M162 116c12 22 64 22 76 0 6 14 4 26-4 34-22 14-46 14-68 0-8-8-10-20-4-34Z" fill="${shade}"/>
+           <path d="M186 148l6 44 8-10 8 10 6-44Z" fill="${body}" opacity=".85"/>
+           <g stroke="${trim ?? shade}" stroke-width="6" stroke-linecap="round" fill="none">
+             <path d="M188 150c-4 26-6 40-6 54M212 150c4 26 6 40 6 54"/>
+           </g>`
+        : `<path d="M168 96c8 26 56 26 64 0 6 6 8 14 6 22-10 20-66 20-76 0-2-8 0-16 6-22Z" fill="${shade}"/>`}
+
+      ${trim && !hood ? `<rect x="144" y="${hem - 12}" width="112" height="12" fill="${trim}" opacity=".9"/>` : ''}
+      ${chest}
     </g>`
 }
 
-/** A sticker pack is a sheet of faces. */
-function stickerSheet(tints) {
+/** A small chest print, the way a logo tee carries one. */
+const chestMark = (inner, y = 196) => `<g transform="translate(200 ${y})">${inner}</g>`
+
+const wordmark = (text, color, size = 13) =>
+  `<text x="0" y="0" text-anchor="middle" font-family="system-ui,sans-serif"
+         font-size="${size}" font-weight="700" letter-spacing="2"
+         fill="${color}">${text}</text>`
+
+/* ----------------------------------------------------------------- objects */
+
+/** The astronaut helmet — an object, shot like one. */
+const helmet = `
+  <g>
+    <ellipse cx="200" cy="322" rx="74" ry="20" fill="#D8DBE4"/>
+    <rect x="126" y="252" width="148" height="70" rx="18" fill="#EDEFF4"/>
+    <rect x="126" y="252" width="148" height="16" rx="8" fill="#F97316"/>
+    <circle cx="200" cy="196" r="106" fill="#F4F5F8"/>
+    <path d="M200 90a106 106 0 0 1 106 106c0 24-40 44-106 44S94 220 94 196A106 106 0 0 1 200 90Z" fill="#CBD8EA"/>
+    <path d="M200 104a92 92 0 0 1 92 92c0 20-36 36-92 36s-92-16-92-36a92 92 0 0 1 92-92Z" fill="#8FA9C9" opacity=".55"/>
+    <path d="M126 158a94 94 0 0 1 52-44" stroke="#fff" stroke-width="13" fill="none" stroke-linecap="round" opacity=".85"/>
+    <circle cx="200" cy="196" r="106" fill="none" stroke="#DFE3EB" stroke-width="8"/>
+  </g>`
+
+/** The mortarboard, for the graduation set. */
+const mortarboard = `
+  <g>
+    <path d="M200 176 92 218l108 42 108-42Z" fill="#20233A"/>
+    <path d="M200 260 92 218v12c0 8 46 24 108 24s108-16 108-24v-12Z" fill="#171A2C"/>
+    <path d="M296 226v56" stroke="#FBBF24" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="296" cy="290" r="14" fill="#FBBF24"/>
+    <circle cx="200" cy="218" r="9" fill="#0F1120"/>
+  </g>`
+
+/** Pets photographed as plush, which is what a cosmetic pet is: a soft toy. */
+function plush(inner) {
+  return `<g>${inner}</g>`
+}
+
+const PLUSH = {
+  cat: plush(`
+    <path d="M128 176 150 106l46 40Z" fill="#F5A524"/>
+    <path d="M272 176 250 106l-46 40Z" fill="#F5A524"/>
+    <path d="M128 176 150 118l34 30Z" fill="#F7BC5E"/>
+    <ellipse cx="200" cy="216" rx="94" ry="82" fill="#F5A524"/>
+    <ellipse cx="200" cy="296" rx="72" ry="40" fill="#EE9A12"/>
+    <path d="M270 300c40-8 60-34 54-66" stroke="#F5A524" stroke-width="26" fill="none" stroke-linecap="round"/>
+    <ellipse cx="170" cy="208" rx="11" ry="15" fill="#2A211A"/>
+    <ellipse cx="230" cy="208" rx="11" ry="15" fill="#2A211A"/>
+    <path d="M190 238h20l-10 11Z" fill="#E06A6A"/>
+    <g stroke="#2A211A" stroke-width="3.5" stroke-linecap="round" opacity=".5">
+      <path d="M116 222h44M116 238h44M284 222h-44M284 238h-44"/>
+    </g>`),
+  slime: plush(`
+    <path d="M200 116c54 0 100 60 100 114 0 42-44 62-100 62s-100-20-100-62c0-54 46-114 100-114Z" fill="#34D399"/>
+    <path d="M200 116c54 0 100 60 100 114 0 42-44 62-100 62" fill="none" stroke="#0E9F6E" stroke-width="6" opacity=".45"/>
+    <ellipse cx="166" cy="174" rx="24" ry="32" fill="#fff" opacity=".55" transform="rotate(-18 166 174)"/>
+    <circle cx="174" cy="230" r="12" fill="#0B3B2E"/>
+    <circle cx="226" cy="230" r="12" fill="#0B3B2E"/>
+    <path d="M184 260c10 12 24 12 34 0" stroke="#0B3B2E" stroke-width="6" fill="none" stroke-linecap="round"/>`),
+  dragon: plush(`
+    <path d="M196 218 82 164l14 88Z" fill="#A855F7"/>
+    <path d="M204 218 318 164l-14 88Z" fill="#9333EA"/>
+    <path d="M200 128 134 246h132Z" fill="#EC4899"/>
+    <path d="M200 128 134 246h66Z" fill="#DB2777"/>
+    <path d="M134 246h132l-66 62Z" fill="#F472B6"/>
+    <path d="M134 246h66v62Z" fill="#EC4899"/>
+    <circle cx="184" cy="214" r="9" fill="#fff"/>
+    <circle cx="216" cy="214" r="9" fill="#fff"/>
+    <circle cx="184" cy="214" r="4" fill="#3B0A2A"/>
+    <circle cx="216" cy="214" r="4" fill="#3B0A2A"/>`),
+}
+
+/** A theme is software, so it is shot as the screen it changes. */
+function screen({ bg, panel, accent, text }) {
+  return `
+    <g>
+      <rect x="66" y="92" width="268" height="196" rx="16" fill="#2A2A2E"/>
+      <rect x="74" y="100" width="252" height="180" rx="10" fill="${bg}"/>
+      <rect x="74" y="100" width="252" height="30" rx="10" fill="${panel}"/>
+      <rect x="74" y="118" width="252" height="12" fill="${panel}"/>
+      <circle cx="92" cy="115" r="5" fill="${accent}"/>
+      <rect x="106" y="110" width="48" height="10" rx="5" fill="${text}" opacity=".4"/>
+      <rect x="94" y="152" width="118" height="15" rx="7" fill="${text}" opacity=".85"/>
+      <rect x="94" y="178" width="170" height="8" rx="4" fill="${text}" opacity=".32"/>
+      <rect x="94" y="194" width="140" height="8" rx="4" fill="${text}" opacity=".32"/>
+      <rect x="94" y="220" width="76" height="24" rx="12" fill="${accent}"/>
+      <rect x="182" y="220" width="58" height="24" rx="12" fill="${panel}"/>
+      <path d="M170 288h60l8 26h-76Z" fill="#3A3A40"/>
+      <rect x="140" y="312" width="120" height="10" rx="5" fill="#2A2A2E"/>
+    </g>`
+}
+
+/** A sticker pack, shot as the physical sheet it would come on. */
+function sheet(tints) {
   const faces = []
-  const grid = [
-    [128, 150], [200, 132], [272, 150],
-    [116, 232], [200, 214], [284, 232],
-    [150, 306], [250, 306],
-  ]
+  const grid = [[140, 154], [200, 142], [260, 154], [128, 222], [200, 214], [272, 222], [158, 288], [242, 288]]
   grid.forEach(([x, y], i) => {
     const tint = tints[i % tints.length]
-    const r = i === 4 ? 52 : 40
+    const r = i === 4 ? 36 : 28
     faces.push(`
       <g>
-        <circle cx="${x}" cy="${y}" r="${r}" fill="#fff"/>
-        <circle cx="${x}" cy="${y}" r="${r - 6}" fill="${tint}"/>
+        <circle cx="${x}" cy="${y}" r="${r + 5}" fill="#fff"/>
+        <circle cx="${x}" cy="${y}" r="${r}" fill="${tint}"/>
         <circle cx="${x - r * 0.62}" cy="${y - r * 0.66}" r="${r * 0.3}" fill="${tint}"/>
         <circle cx="${x + r * 0.62}" cy="${y - r * 0.66}" r="${r * 0.3}" fill="${tint}"/>
-        <circle cx="${x - r * 0.28}" cy="${y - r * 0.06}" r="${r * 0.12}" fill="#2A211A"/>
-        <circle cx="${x + r * 0.28}" cy="${y - r * 0.06}" r="${r * 0.12}" fill="#2A211A"/>
-        <path d="M${x - r * 0.24} ${y + r * 0.3}q${r * 0.24} ${r * 0.22} ${r * 0.48} 0"
+        <circle cx="${x - r * 0.26}" cy="${y - r * 0.04}" r="${r * 0.12}" fill="#2A211A"/>
+        <circle cx="${x + r * 0.26}" cy="${y - r * 0.04}" r="${r * 0.12}" fill="#2A211A"/>
+        <path d="M${x - r * 0.22} ${y + r * 0.3}q${r * 0.22} ${r * 0.2} ${r * 0.44} 0"
               stroke="#2A211A" stroke-width="${r * 0.09}" fill="none" stroke-linecap="round"/>
       </g>`)
   })
-  return faces.join('')
-}
-
-/** A frame is a frame — shown around a portrait so the product is the border. */
-function portraitFrame(inner) {
   return `
     <g>
-      <circle cx="200" cy="200" r="118" fill="#F1EDE6"/>
-      <g transform="translate(0,26) scale(0.62) translate(122,60)">${hamster()}</g>
-      <circle cx="200" cy="200" r="118" fill="none" stroke="#fff" stroke-width="10"/>
+      <rect x="84" y="102" width="232" height="216" rx="12" fill="#fff"/>
+      <rect x="84" y="102" width="232" height="216" rx="12" fill="none" stroke="#E4E4E8" stroke-width="3"/>
+      <g stroke="#E4E4E8" stroke-width="2" stroke-dasharray="5 5">
+        <path d="M84 210h232M200 102v216"/>
+      </g>
+      ${faces.join('')}
+    </g>`
+}
+
+/** A frame, shot as the object rather than around anything. */
+function frameObject(inner) {
+  return `
+    <g>
+      <circle cx="200" cy="204" r="116" fill="#fff"/>
+      <!-- The portrait a frame is always sold around. Kept grey so the border
+           stays the product and the sitter stays the sample. -->
+      <clipPath id="portrait"><circle cx="200" cy="204" r="116"/></clipPath>
+      <g clip-path="url(#portrait)">
+        <rect x="84" y="88" width="232" height="232" fill="#EDEDF0"/>
+        <circle cx="200" cy="186" r="46" fill="#C9C9D2"/>
+        <path d="M118 330c0-46 37-72 82-72s82 26 82 72Z" fill="#C9C9D2"/>
+      </g>
+      <circle cx="200" cy="204" r="116" fill="none" stroke="#E2E2E8" stroke-width="3"/>
       ${inner}
     </g>`
 }
 
-/* ------------------------------------------------------------------ specs */
-
-/** One entry per catalogue item id. */
+/**
+ * One entry per catalogue item id.
+ *
+ * No per-item background: every one shares the studio ground, which is the
+ * whole point of shooting a catalogue this way. Only the object changes.
+ */
 const ITEM_ART = {
-  1:  { bg: ['#4C1D95', '#1E3A8A'], art: () => hamster({ fur: '#D8B78C' }) + OUTFITS.astronaut },
-  2:  { bg: ['#DC2626', '#F97316'], art: () => hamster({ fur: '#C89B6A' }) + OUTFITS.chef },
-  3:  { bg: ['#18181B', '#5B21B6'], art: () => OUTFITS.ninja },
-  4:  { bg: ['#1E1B33', '#B45309'], art: () => hamster({ fur: '#C89B6A' }) + OUTFITS.graduate },
+  // Skins, shot as the garment you would be buying.
+  1: () => garment({
+        body: '#EFF1F5', shade: '#D6DAE3', trim: '#F97316', sleeve: 'long',
+        chest: chestMark(`
+          <rect x="-34" y="-26" width="68" height="46" rx="8" fill="#D6DAE3"/>
+          <rect x="-26" y="-18" width="52" height="18" rx="4" fill="#8FA9C9"/>
+          <circle cx="-14" cy="10" r="5" fill="#F97316"/>
+          <circle cx="0" cy="10" r="5" fill="#9AA3B2"/>
+          <circle cx="14" cy="10" r="5" fill="#9AA3B2"/>`),
+      }),
+  2: () => garment({
+        body: '#FBF8F3', shade: '#E4DED4', sleeve: 'long',
+        chest: `<path d="M200 130v186" stroke="#E4DED4" stroke-width="4" fill="none"/>
+                <g fill="#E4DED4">
+                  <circle cx="176" cy="170" r="6"/><circle cx="176" cy="204" r="6"/>
+                  <circle cx="176" cy="238" r="6"/><circle cx="176" cy="272" r="6"/>
+                </g>`,
+      }),
+  3: () => garment({
+        body: '#26262B', shade: '#141417', hood: true, sleeve: 'long', trim: '#B0121A',
+        chest: chestMark(wordmark('HAMSTER', '#B0121A', 12), 250),
+      }),
+  4: () => garment({
+        body: '#20233A', shade: '#171A2C', sleeve: 'long',
+        chest: `<path d="M170 128 200 244 230 128l-14-6-16 74-16-74Z" fill="#F5F5F7" opacity=".92"/>
+                <path d="M186 268h28v10h-28Z" fill="#FBBF24"/>`,
+      }),
 
-  5:  { bg: ['#F59E0B', '#DC2626'], art: () => CREATURES.cat },
-  6:  { bg: ['#047857', '#0891B2'], art: () => CREATURES.slime },
-  7:  { bg: ['#BE185D', '#6D28D9'], art: () => CREATURES.dragon },
+  // Pets, shot as plush — which is what a cosmetic pet is: a soft toy.
+  5: () => PLUSH.cat,
+  6: () => PLUSH.slime,
+  7: () => PLUSH.dragon,
 
-  8:  { bg: ['#111014', '#F97316'], art: () => themeMock({ bg: '#17161A', panel: '#232228', accent: '#F97316', text: '#F5F5F7' }) },
-  9:  { bg: ['#4C1D95', '#0E7490'], art: () => themeMock({ bg: '#160E2E', panel: '#241546', accent: '#22D3EE', text: '#E9D5FF' }) },
-  10: { bg: ['#047857', '#CA8A04'], art: () => themeMock({ bg: '#F2FBF4', panel: '#DCF3E3', accent: '#16A34A', text: '#14532D' }) },
-  11: { bg: ['#1D4ED8', '#BE185D'], art: () => themeMock({ bg: '#0F172A', panel: '#1E293B', accent: '#F472B6', text: '#E2E8F0' }) },
+  // Themes, shot as the screen they change.
+  8:  () => screen({ bg: '#17161A', panel: '#232228', accent: '#F97316', text: '#F5F5F7' }),
+  9:  () => screen({ bg: '#160E2E', panel: '#241546', accent: '#22D3EE', text: '#E9D5FF' }),
+  10: () => screen({ bg: '#F2FBF4', panel: '#DCF3E3', accent: '#16A34A', text: '#14532D' }),
+  11: () => screen({ bg: '#0F172A', panel: '#1E293B', accent: '#F472B6', text: '#E2E8F0' }),
 
-  12: { bg: ['#F97316', '#EAB308'], art: () => stickerSheet(['#FDBA74', '#FCD34D', '#FB923C']) },
-  13: { bg: ['#0891B2', '#059669'], art: () => stickerSheet(['#67E8F9', '#6EE7B7', '#5EEAD4']) },
-  14: { bg: ['#DB2777', '#F59E0B'], art: () => stickerSheet(['#F9A8D4', '#FCD34D', '#FDA4AF']) },
+  // Sticker packs, shot as the sheet.
+  12: () => sheet(['#FDBA74', '#FCD34D', '#FB923C']),
+  13: () => sheet(['#67E8F9', '#6EE7B7', '#5EEAD4']),
+  14: () => sheet(['#F9A8D4', '#FCD34D', '#FDA4AF']),
 
-  15: { bg: ['#B45309', '#FBBF24'], art: () => portraitFrame(`
-        <circle cx="200" cy="200" r="132" fill="none" stroke="#FBBF24" stroke-width="16"/>
-        <circle cx="200" cy="200" r="150" fill="none" stroke="#F59E0B" stroke-width="6" opacity=".7"/>
-        <circle cx="318" cy="146" r="13" fill="#FDE68A"/>`) },
-  16: { bg: ['#B91C1C', '#F97316'], art: () => portraitFrame(`
-        <circle cx="200" cy="200" r="134" fill="none" stroke="#F97316" stroke-width="18"/>
-        <g fill="#FBBF24">
-          <path d="M200 48c14 22 4 34 0 46-10-14-16-24 0-46Z"/>
-          <path d="M332 200c-22 14-34 4-46 0 14-10 24-16 46 0Z"/>
-          <path d="M200 352c-14-22-4-34 0-46 10 14 16 24 0 46Z"/>
-          <path d="M68 200c22-14 34-4 46 0-14 10-24 16-46 0Z"/>
-        </g>`) },
-  17: { bg: ['#047857', '#65A30D'], art: () => portraitFrame(`
-        <circle cx="200" cy="200" r="132" fill="none" stroke="#65A30D" stroke-width="14"/>
+  // Frames, shot as the object.
+  15: () => frameObject(`
+        <circle cx="200" cy="204" r="128" fill="none" stroke="#F1B419" stroke-width="17"/>
+        <circle cx="200" cy="204" r="140" fill="none" stroke="#E09B0B" stroke-width="5" opacity=".65"/>
+        <circle cx="291" cy="139" r="11" fill="#FDE68A"/>`),
+  16: () => frameObject(`
+        <circle cx="200" cy="204" r="128" fill="none" stroke="#EF5A1E" stroke-width="18"/>
+        <g fill="#F9A825">
+          <path d="M200 62c13 21 4 32 0 44-10-14-15-23 0-44Z"/>
+          <path d="M342 204c-21 13-32 4-44 0 14-10 23-15 44 0Z"/>
+          <path d="M200 346c-13-21-4-32 0-44 10 14 15 23 0 44Z"/>
+          <path d="M58 204c21-13 32-4 44 0-14 10-23 15-44 0Z"/>
+        </g>`),
+  17: () => frameObject(`
+        <circle cx="200" cy="204" r="128" fill="none" stroke="#65A30D" stroke-width="15"/>
         <g fill="#4D7C0F">
-          <ellipse cx="200" cy="66" rx="26" ry="14"/>
-          <ellipse cx="334" cy="200" rx="14" ry="26"/>
-          <ellipse cx="200" cy="334" rx="26" ry="14"/>
-          <ellipse cx="66" cy="200" rx="14" ry="26"/>
-        </g>`) },
-  18: { bg: ['#1D4ED8', '#6D28D9'], art: () => portraitFrame(`
-        <circle cx="200" cy="200" r="134" fill="none" stroke="#818CF8" stroke-width="14"/>
-        <g fill="#E0E7FF">
-          <circle cx="200" cy="60" r="9"/><circle cx="312" cy="118" r="6"/>
-          <circle cx="340" cy="232" r="8"/><circle cx="248" cy="336" r="6"/>
-          <circle cx="126" cy="330" r="9"/><circle cx="58" cy="216" r="6"/>
-          <circle cx="92" cy="104" r="7"/>
-        </g>`) },
+          <ellipse cx="200" cy="76" rx="25" ry="13"/>
+          <ellipse cx="328" cy="204" rx="13" ry="25"/>
+          <ellipse cx="200" cy="332" rx="25" ry="13"/>
+          <ellipse cx="72" cy="204" rx="13" ry="25"/>
+        </g>`),
+  18: () => frameObject(`
+        <circle cx="200" cy="204" r="128" fill="none" stroke="#6366F1" stroke-width="15"/>
+        <g fill="#4F46E5">
+          <circle cx="200" cy="76" r="8"/><circle cx="290" cy="124" r="5"/>
+          <circle cx="328" cy="228" r="7"/><circle cx="244" cy="330" r="5"/>
+          <circle cx="130" cy="322" r="8"/><circle cx="72" cy="222" r="5"/>
+          <circle cx="106" cy="118" r="6"/>
+        </g>`),
 }
 
 /**
@@ -323,25 +389,36 @@ const GLYPHS = {
 
 /* ------------------------------------------------------------------- draw */
 
-const page = (bg, body) => `<!doctype html>
+const shell = defs => body => `<!doctype html>
 <html><head><meta charset="utf-8"><style>
-  html,body{margin:0;padding:0;background:transparent}
+  html,body{margin:0;padding:0}
   svg{display:block}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}" viewBox="0 0 400 400">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${bg[0]}"/><stop offset="100%" stop-color="${bg[1]}"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="50%" cy="42%" r="62%">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".22"/>
-      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="400" height="400" fill="url(#bg)"/>
-  <rect width="400" height="400" fill="url(#glow)"/>
+  <defs>${defs}</defs>
   ${body}
 </svg></body></html>`
+
+/* The studio ground every product shot shares: a pale neutral lifting slightly
+   toward the top, the way a paper sweep does under one soft light. */
+const productPage = shell(`
+  <linearGradient id="studio" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#FAFAFB"/>
+    <stop offset="58%" stop-color="#F1F1F3"/>
+    <stop offset="100%" stop-color="#E7E7EA"/>
+  </linearGradient>`)
+
+const placeholderPage = (bg, body) => shell(`
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="${bg[0]}"/><stop offset="100%" stop-color="${bg[1]}"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="50%" cy="42%" r="62%">
+    <stop offset="0%" stop-color="#fff" stop-opacity=".22"/>
+    <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+  </radialGradient>`)(`
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <rect width="400" height="400" fill="url(#glow)"/>
+  ${body}`)
 
 async function main() {
   const chromium = await loadChromium()
@@ -360,7 +437,7 @@ async function main() {
       console.warn(`  ! item ${item.id} (${item.name}) has no artwork — leaving its generated cover`)
       continue
     }
-    await tab.setContent(page(spec.bg, spec.art()))
+    await tab.setContent(productPage(GROUND + spec()))
     const file = `item-${item.id}.jpg`
     await tab.screenshot({ path: path.join(OUT, file), type: 'jpeg', quality: QUALITY })
     if (!dry) item.image = `/uploads/${file}`
@@ -372,7 +449,8 @@ async function main() {
     const cat = byId[asset.category]
     if (!cat || !GLYPHS[asset.category]) continue
     await tab.setContent(
-      page([asset.color, '#0b0a09'], placeholder({ label: cat.label, color: asset.color, glyph: GLYPHS[asset.category] })),
+      placeholderPage([asset.color, '#0b0a09'],
+        placeholder({ label: cat.label, color: asset.color, glyph: GLYPHS[asset.category] })),
     )
     const file = `asset-${asset.id}.jpg`
     await tab.screenshot({ path: path.join(OUT, file), type: 'jpeg', quality: QUALITY })

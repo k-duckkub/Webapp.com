@@ -303,15 +303,19 @@ export function Artwork({ seed, title, motif, from, to, label, src, size = 'sm' 
         </svg>
       )}
 
-      {/* Darkens the lower half so the title always clears the field. With no
-          title there is nothing to clear, so the art keeps its own contrast. */}
-      <div
-        className={
-          title
-            ? 'absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.68)_0%,rgba(0,0,0,0.2)_46%,transparent_74%)]'
-            : 'absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.22)_0%,transparent_38%)]'
-        }
-      />
+      {/* A scrim exists to keep type legible over art. With a title it darkens
+          the lower half; with only the category chip it darkens the top a
+          little. Over a real photograph it does neither — it just greys the
+          product — and the chip carries its own background anyway. */}
+      {(title || !src) && (
+        <div
+          className={
+            title
+              ? 'absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.68)_0%,rgba(0,0,0,0.2)_46%,transparent_74%)]'
+              : 'absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.22)_0%,transparent_38%)]'
+          }
+        />
+      )}
 
       {label && (
         <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-black/35 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-label text-white backdrop-blur-sm">
