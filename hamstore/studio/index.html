@@ -102,7 +102,15 @@
   .rowbar button { padding: 5px 10px; font-size: 12px; background: var(--mist); color: var(--slate); }
   .rowbar button:hover { color: var(--graphite); }
   .rowbar button.danger:hover { background: #fef2f2; color: var(--bad); }
-  .addbar { display: flex; gap: 8px; margin: 4px 0 18px; }
+  .addbar { display: flex; gap: 8px; margin: 4px 0 18px; align-items: center; }
+
+  .bulk {
+    border: 1px dashed var(--hair); border-radius: 12px; padding: 12px 16px;
+    font-size: 12px; color: var(--slate); cursor: pointer; flex: 1;
+    transition: border-color .2s, background-color .2s;
+  }
+  .bulk.over { border-color: var(--brand); background: #fff7ed; color: var(--graphite); }
+  .bulk b { color: var(--graphite); }
 
   .preview { position: fixed; inset: 0; z-index: 40; background: rgba(29,29,31,.5); display: none; }
   .preview.on { display: block; }
@@ -201,6 +209,84 @@ function checkField(obj, key, label) {
     el('label', { textContent: label }),
     el('div', { style: 'display:flex;align-items:center;gap:8px;padding:9px 0' },
       input, el('span', { style: 'font-size:13px;color:var(--slate)', textContent: label })))
+}
+
+/**
+ * Drop a folder of photographs onto a list and have them land on the right
+ * rows. Same filename rules as tools/import-photos.mjs: an id at the front
+ * wins, otherwise the name is matched loosely, and anything that matches
+ * nothing is reported rather than guessed at.
+ */
+function bulkDrop(rows, labelOf, prefix) {
+  const slug = v => v.toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N}]+/gu, '')
+
+  const match = filename => {
+    const base = filename.replace(/\.[^.]+$/, '')
+    const lead = base.match(/^(?:item|asset)?[-_ ]?(\d+)\b/)
+    if (lead) {
+      const byId = rows.find(r => r.id === Number(lead[1]))
+      if (byId) return byId
+    }
+    const key = slug(base)
+    if (key.length < 3) return null
+    return rows.find(r => {
+      const label = slug(labelOf(r))
+      return label.length >= 3 && (key.includes(label) || label.includes(key))
+    })
+  }
+
+  const zone = el('div', { className: 'bulk' })
+  const idle = () => {
+    zone.innerHTML = ''
+    zone.append(el('span', {}, el('b', { textContent: 'ลากรูปหลายไฟล์มาวางตรงนี้' }),
+      ' — ตั้งชื่อไฟล์ให้ขึ้นต้นด้วยเลขไอเทม (3.jpg) หรือใช้ชื่อไอเทม แล้วมันจะจับคู่ให้เอง'))
+  }
+  const picker = el('input', { type: 'file', accept: 'image/*', multiple: true })
+  picker.style.display = 'none'
+
+  async function take(files) {
+    const hits = []
+    const misses = []
+    const used = new Set()
+    for (const file of files) {
+      const row = match(file.name)
+      if (!row || used.has(row.id)) { misses.push(file.name); continue }
+      used.add(row.id)
+      hits.push({ file, row })
+    }
+
+    zone.textContent = `กำลังอัปโหลด 0/${hits.length}…`
+    let done = 0
+    for (const { file, row } of hits) {
+      const res = await fetch('/api/upload?name=' + encodeURIComponent(file.name), {
+        method: 'POST', headers: { ...headers, 'content-type': file.type }, body: file,
+      })
+      const body = await res.json()
+      if (res.ok) { row.image = body.path; done++ }
+      zone.textContent = `กำลังอัปโหลด ${done}/${hits.length}…`
+    }
+
+    touch()
+    draw()
+    setStatus(
+      `ใส่รูปแล้ว ${done} ชิ้น` + (misses.length ? ` — จับคู่ไม่ได้ ${misses.length}: ${misses.join(', ')}` : ''),
+      misses.length ? 'dirty' : 'ok',
+    )
+  }
+
+  zone.addEventListener('click', () => picker.click())
+  picker.addEventListener('change', () => picker.files.length && take([...picker.files]))
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over') })
+  zone.addEventListener('dragleave', () => zone.classList.remove('over'))
+  zone.addEventListener('drop', e => {
+    e.preventDefault()
+    zone.classList.remove('over')
+    const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'))
+    if (files.length) take(files)
+  })
+
+  idle()
+  return el('span', { style: 'display:contents' }, zone, picker)
 }
 
 /** A colour, as a picker and as a hex you can paste. */
@@ -440,7 +526,7 @@ function renderItems() {
   })
 
   return panel('items', 'ไอเทมในร้าน', data.items.length + ' ชิ้น — เพิ่ม ลบ สลับลำดับ และแก้ได้ทุกช่อง',
-    el('div', { className: 'addbar' }, add),
+    el('div', { className: 'addbar' }, add, bulkDrop(data.items, i => i.name, 'item')),
     ...data.items.map((item, index) => {
       const detail = data.itemDetails[item.id] || (data.itemDetails[item.id] = {
         maker: '', owners: 0, includes: [], showsUp: [], version: '1.0', updatedAt: '',
@@ -551,7 +637,7 @@ function renderLibrary() {
         })
         touch(); draw()
       })
-      return el('div', { className: 'addbar' }, add)
+      return el('div', { className: 'addbar' }, add, bulkDrop(data.assets, a => a.title, 'asset'))
     })(),
     ...data.assets.map((asset, index) => {
       const thumb = el('img', { className: 'thumb', src: asset.image || '', alt: '' })
