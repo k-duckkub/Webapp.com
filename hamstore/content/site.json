@@ -2,9 +2,10 @@
   "$schema": "./site.schema.json",
   "nav": {
     "wordmark": "HamsterHub",
-    "storeLabel": "ของที่ซื้อได้",
-    "libraryLabel": "คลัง Unity Asset",
-    "balanceSuffix": "HamCoin"
+    "storeLabel": "ของแต่งแฮมสเตอร์",
+    "libraryLabel": "Unity Asset",
+    "balanceSuffix": "HamCoin",
+    "cartLabel": "ตะกร้า"
   },
   "store": {
     "hero": {
@@ -46,27 +47,27 @@
     },
     "grid": {
       "heading": "ไอเทมทั้งหมด",
-      "sub": "ของแต่งโปรไฟล์และหน้าเว็บ ไม่ใช่ Unity asset"
+      "sub": "ของแต่งโปรไฟล์และหน้าเว็บ — Unity asset อยู่อีกหน้า"
     }
   },
   "library": {
     "hero": {
       "headlineLine1": "Unity Asset",
-      "headlineLine2": "ที่คุณซื้อไว้",
-      "lede": "แลกแล้วอยู่กับคุณถาวร ดาวน์โหลดซ้ำได้ไม่จำกัด",
+      "headlineLine2": "แลกด้วยเหรียญที่เรียนได้",
+      "lede": "แพ็กเกจพร้อมใช้สำหรับโปรเจกต์จริง แลกครั้งเดียวเป็นของคุณถาวร",
       "image": "",
       "stats": {
-        "assets": "asset ที่ซื้อแล้ว",
-        "size": "ขนาดรวม",
-        "updates": "มีอัปเดตใหม่",
-        "spent": "เหรียญที่แลกไปแล้ว"
+        "assets": "แพ็กเกจในร้าน",
+        "owned": "ชิ้นที่คุณมีแล้ว",
+        "cheapest": "เหรียญ สำหรับชิ้นที่ถูกที่สุด",
+        "publishers": "ผู้พัฒนา"
       }
     },
     "searchPlaceholder": "ค้นหาชื่อ asset หรือผู้พัฒนา…",
     "emptyTitle": "ไม่เจอ asset ที่ตรงกับตัวกรอง",
-    "ownedNote": "ทุกชิ้นในหน้านี้แลกด้วย HamCoin ไปแล้ว — ดาวน์โหลดกี่ครั้งก็ได้ ไม่มีวันหมดอายุ",
+    "ownedNote": "แลกครั้งเดียวเป็นของคุณถาวร ดาวน์โหลดซ้ำได้ไม่จำกัด",
     "notDownloadedBadge": "ยังไม่ได้โหลดลงเครื่อง",
-    "ownedBadge": "ซื้อแล้ว"
+    "ownedBadge": "มีแล้ว"
   },
   "footer": {
     "columns": [
@@ -694,9 +695,11 @@
       "hasUpdate": true,
       "downloaded": true,
       "rating": 4.8,
-      "paidCoins": 100,
       "color": "#7C3AED",
-      "image": ""
+      "image": "",
+      "coins": 100,
+      "owned": true,
+      "sale": 0
     },
     {
       "id": 2,
@@ -714,9 +717,11 @@
       "hasUpdate": false,
       "downloaded": true,
       "rating": 4.6,
-      "paidCoins": 130,
       "color": "#0891B2",
-      "image": ""
+      "image": "",
+      "coins": 130,
+      "owned": true,
+      "sale": 0
     },
     {
       "id": 3,
@@ -728,15 +733,16 @@
       ],
       "version": "3.0.2",
       "size": 18.4,
-      "purchasedAt": "2026-02-19",
       "updatedAt": "2026-05-21",
       "license": "Multi Entity",
-      "hasUpdate": true,
+      "hasUpdate": false,
       "downloaded": false,
       "rating": 4.5,
-      "paidCoins": 140,
       "color": "#059669",
-      "image": ""
+      "image": "",
+      "coins": 140,
+      "owned": false,
+      "sale": 0
     },
     {
       "id": 4,
@@ -749,15 +755,16 @@
       ],
       "version": "1.2.0",
       "size": 156.9,
-      "purchasedAt": "2026-03-07",
       "updatedAt": "2026-03-07",
       "license": "Single Entity",
       "hasUpdate": false,
-      "downloaded": true,
+      "downloaded": false,
       "rating": 4.9,
-      "paidCoins": 160,
       "color": "#DC2626",
-      "image": ""
+      "image": "",
+      "coins": 160,
+      "owned": false,
+      "sale": 0
     },
     {
       "id": 5,
@@ -776,9 +783,11 @@
       "hasUpdate": true,
       "downloaded": true,
       "rating": 4.7,
-      "paidCoins": 230,
       "color": "#D97706",
-      "image": ""
+      "image": "",
+      "coins": 230,
+      "owned": true,
+      "sale": 0
     },
     {
       "id": 6,
@@ -790,15 +799,16 @@
       ],
       "version": "2.0.0",
       "size": 488.1,
-      "purchasedAt": "2026-04-02",
       "updatedAt": "2026-04-02",
       "license": "Single Entity",
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.4,
-      "paidCoins": 250,
       "color": "#D97706",
-      "image": ""
+      "image": "",
+      "coins": 250,
+      "owned": false,
+      "sale": 20
     },
     {
       "id": 7,
@@ -812,15 +822,16 @@
       ],
       "version": "4.5.0",
       "size": 302.3,
-      "purchasedAt": "2026-04-18",
       "updatedAt": "2026-06-30",
       "license": "Multi Entity",
-      "hasUpdate": true,
-      "downloaded": true,
+      "hasUpdate": false,
+      "downloaded": false,
       "rating": 4.8,
-      "paidCoins": 180,
       "color": "#2563EB",
-      "image": ""
+      "image": "",
+      "coins": 180,
+      "owned": false,
+      "sale": 0
     },
     {
       "id": 8,
@@ -832,15 +843,16 @@
       ],
       "version": "1.0.4",
       "size": 22.8,
-      "purchasedAt": "2026-04-25",
       "updatedAt": "2026-04-25",
       "license": "Single Entity",
       "hasUpdate": false,
-      "downloaded": true,
+      "downloaded": false,
       "rating": 4.6,
-      "paidCoins": 75,
       "color": "#DC2626",
-      "image": ""
+      "image": "",
+      "coins": 75,
+      "owned": false,
+      "sale": 0
     },
     {
       "id": 9,
@@ -858,9 +870,11 @@
       "hasUpdate": false,
       "downloaded": true,
       "rating": 4.9,
-      "paidCoins": 120,
       "color": "#DB2777",
-      "image": ""
+      "image": "",
+      "coins": 120,
+      "owned": true,
+      "sale": 0
     },
     {
       "id": 10,
@@ -873,15 +887,16 @@
       ],
       "version": "2.8.7",
       "size": 41.6,
-      "purchasedAt": "2026-05-19",
       "updatedAt": "2026-07-28",
       "license": "Single Entity",
-      "hasUpdate": true,
+      "hasUpdate": false,
       "downloaded": false,
       "rating": 4.8,
-      "paidCoins": 200,
       "color": "#059669",
-      "image": ""
+      "image": "",
+      "coins": 200,
+      "owned": false,
+      "sale": 15
     },
     {
       "id": 11,
@@ -900,9 +915,11 @@
       "hasUpdate": false,
       "downloaded": true,
       "rating": 4.7,
-      "paidCoins": 110,
       "color": "#0891B2",
-      "image": ""
+      "image": "",
+      "coins": 110,
+      "owned": true,
+      "sale": 0
     },
     {
       "id": 12,
@@ -914,15 +931,16 @@
       ],
       "version": "1.6.2",
       "size": 63.9,
-      "purchasedAt": "2026-06-08",
       "updatedAt": "2026-06-08",
       "license": "Single Entity",
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.7,
-      "paidCoins": 90,
       "color": "#7C3AED",
-      "image": ""
+      "image": "",
+      "coins": 90,
+      "owned": false,
+      "sale": 0
     },
     {
       "id": 13,
@@ -934,15 +952,16 @@
       ],
       "version": "2.2.0",
       "size": 894.7,
-      "purchasedAt": "2026-06-21",
       "updatedAt": "2026-07-15",
       "license": "Single Entity",
-      "hasUpdate": true,
-      "downloaded": true,
+      "hasUpdate": false,
+      "downloaded": false,
       "rating": 4.5,
-      "paidCoins": 320,
       "color": "#2563EB",
-      "image": ""
+      "image": "",
+      "coins": 320,
+      "owned": false,
+      "sale": 20
     },
     {
       "id": 14,
@@ -954,15 +973,16 @@
       ],
       "version": "2.0.1",
       "size": 74.2,
-      "purchasedAt": "2026-07-01",
       "updatedAt": "2026-07-01",
       "license": "Single Entity",
       "hasUpdate": false,
-      "downloaded": true,
+      "downloaded": false,
       "rating": 4.8,
-      "paidCoins": 95,
       "color": "#0891B2",
-      "image": ""
+      "image": "",
+      "coins": 95,
+      "owned": false,
+      "sale": 0
     },
     {
       "id": 15,
@@ -975,15 +995,16 @@
       ],
       "version": "3.3.0",
       "size": 271.5,
-      "purchasedAt": "2026-07-09",
       "updatedAt": "2026-07-09",
       "license": "Multi Entity",
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.9,
-      "paidCoins": 195,
       "color": "#2563EB",
-      "image": ""
+      "image": "",
+      "coins": 195,
+      "owned": false,
+      "sale": 0
     },
     {
       "id": 16,
@@ -995,15 +1016,16 @@
       ],
       "version": "1.4.0",
       "size": 130.8,
-      "purchasedAt": "2026-07-17",
       "updatedAt": "2026-07-30",
       "license": "Single Entity",
-      "hasUpdate": true,
-      "downloaded": true,
+      "hasUpdate": false,
+      "downloaded": false,
       "rating": 4.5,
-      "paidCoins": 145,
       "color": "#D97706",
-      "image": ""
+      "image": "",
+      "coins": 145,
+      "owned": false,
+      "sale": 0
     },
     {
       "id": 17,
@@ -1022,9 +1044,11 @@
       "hasUpdate": false,
       "downloaded": true,
       "rating": 4.4,
-      "paidCoins": 85,
       "color": "#7C3AED",
-      "image": ""
+      "image": "",
+      "coins": 85,
+      "owned": true,
+      "sale": 0
     },
     {
       "id": 18,
@@ -1037,15 +1061,27 @@
       ],
       "version": "1.1.5",
       "size": 187.2,
-      "purchasedAt": "2026-07-29",
       "updatedAt": "2026-07-29",
       "license": "Single Entity",
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.7,
-      "paidCoins": 210,
       "color": "#DC2626",
-      "image": ""
+      "image": "",
+      "coins": 210,
+      "owned": false,
+      "sale": 0
     }
-  ]
+  ],
+  "cart": {
+    "title": "ตะกร้า",
+    "empty": "ยังไม่มีอะไรในตะกร้า",
+    "emptyHint": "กด “ใส่ตะกร้า” จากหน้าไหนก็ได้ ของจากทั้งสองหน้ามารวมกันที่นี่",
+    "total": "รวมทั้งหมด",
+    "balanceAfter": "เหลือหลังแลก",
+    "checkout": "แลกทั้งตะกร้า",
+    "short": "เหรียญไม่พอ",
+    "done": "แลกเรียบร้อย",
+    "note": "เหรียญได้จากการเรียนเท่านั้น ไม่มีการตัดเงินจริง"
+  }
 }

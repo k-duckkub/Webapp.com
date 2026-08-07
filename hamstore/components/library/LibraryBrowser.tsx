@@ -9,17 +9,18 @@ import { FilterPanel, type FilterGroup } from './FilterPanel'
 import { Icon } from '@/components/Icon'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { GRID_REVEAL, REVEAL, REVEAL_START, T } from '@/lib/motion'
-import { LIBRARY_CATEGORIES, type OwnedAsset } from '@/lib/library'
+import { LIBRARY_CATEGORIES, STORE_ASSETS, type StoreAsset } from '@/lib/library'
 import { COPY } from '@/lib/content'
+import { useWallet, assetKey, priceOf } from '@/components/WalletProvider'
 
-type Sort = 'recent' | 'oldest' | 'name' | 'size' | 'updated'
+type Sort = 'updated' | 'cheap' | 'expensive' | 'name' | 'size'
 
 const SORTS: { id: Sort; label: string }[] = [
-  { id: 'recent',  label: 'ซื้อล่าสุด' },
-  { id: 'oldest',  label: 'ซื้อนานสุด' },
-  { id: 'updated', label: 'อัปเดตล่าสุด' },
-  { id: 'name',    label: 'ชื่อ A–Z' },
-  { id: 'size',    label: 'ขนาดไฟล์' },
+  { id: 'updated',   label: 'อัปเดตล่าสุด' },
+  { id: 'cheap',     label: 'ราคาน้อยไปมาก' },
+  { id: 'expensive', label: 'ราคามากไปน้อย' },
+  { id: 'name',      label: 'ชื่อ A–Z' },
+  { id: 'size',      label: 'ขนาดไฟล์' },
 ]
 
 const PIPELINES = ['Built-in', 'URP', 'HDRP']
@@ -28,16 +29,17 @@ const PER_PAGE = 8
 
 export function LibraryBrowser() {
   const root = useRef<HTMLElement>(null)
-  const { assets: OWNED_ASSETS } = useLibrary()
-  const [receipt, setReceipt] = useState<OwnedAsset | null>(null)
+  const { fileState } = useLibrary()
+  const { owns } = useWallet()
+  const [receipt, setReceipt] = useState<StoreAsset | null>(null)
 
   const [category, setCategory] = useState('ALL')
-  const [sort, setSort] = useState<Sort>('recent')
+  const [sort, setSort] = useState<Sort>('updated')
   const [query, setQuery] = useState('')
   const [pipelines, setPipelines] = useState<string[]>([])
   const [licenses, setLicenses] = useState<string[]>([])
-  const [onlyUpdates, setOnlyUpdates] = useState(false)
-  const [onlyNotDownloaded, setOnlyNotDownloaded] = useState(false)
+  const [onlyOwned, setOnlyOwned] = useState(false)
+  const [onlyUnowned, setOnlyUnowned] = useState(false)
   const [page, setPage] = useState(1)
 
   /* Any filter change invalidates the current page. */
@@ -56,55 +58,55 @@ export function LibraryBrowser() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
 
-    const result = OWNED_ASSETS.filter(a => {
+    const result = STORE_ASSETS.filter(a => {
       if (category !== 'ALL' && a.category !== category) return false
       if (q && !a.title.toLowerCase().includes(q) && !a.publisher.toLowerCase().includes(q)) return false
       if (pipelines.length && !pipelines.some(p => a.pipelines.includes(p))) return false
       if (licenses.length && !licenses.includes(a.license)) return false
-      if (onlyUpdates && !a.hasUpdate) return false
-      if (onlyNotDownloaded && a.downloaded) return false
+      if (onlyOwned && !owns(assetKey(a.id))) return false
+      if (onlyUnowned && owns(assetKey(a.id))) return false
       return true
     })
 
     return result.sort((a, b) => {
       switch (sort) {
-        case 'oldest':  return a.purchasedAt.localeCompare(b.purchasedAt)
-        case 'updated': return b.updatedAt.localeCompare(a.updatedAt)
-        case 'name':    return a.title.localeCompare(b.title)
-        case 'size':    return b.size - a.size
-        default:        return b.purchasedAt.localeCompare(a.purchasedAt)
+        case 'cheap':     return priceOf(a) - priceOf(b)
+        case 'expensive': return priceOf(b) - priceOf(a)
+        case 'name':      return a.title.localeCompare(b.title)
+        case 'size':      return b.size - a.size
+        default:          return b.updatedAt.localeCompare(a.updatedAt)
       }
     })
-  }, [OWNED_ASSETS, category, query, pipelines, licenses, onlyUpdates, onlyNotDownloaded, sort])
+  }, [category, query, pipelines, licenses, onlyOwned, onlyUnowned, sort, owns])
 
   /* Counts are taken against category + search only, so a pipeline count still
      means something while other pipelines are ticked. */
   const scoped = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return OWNED_ASSETS.filter(a => {
+    return STORE_ASSETS.filter(a => {
       if (category !== 'ALL' && a.category !== category) return false
       if (q && !a.title.toLowerCase().includes(q) && !a.publisher.toLowerCase().includes(q)) return false
       return true
     })
-  }, [OWNED_ASSETS, category, query])
+  }, [category, query])
 
   const filterGroups: FilterGroup[] = [
     {
       title: 'สถานะ',
       options: [
         {
-          id: 'updates',
-          label: 'มีอัปเดตใหม่',
-          count: scoped.filter(a => a.hasUpdate).length,
-          checked: onlyUpdates,
-          onToggle: () => { setOnlyUpdates(v => !v); setPage(1) },
+          id: 'owned',
+          label: 'มีแล้ว',
+          count: scoped.filter(a => owns(assetKey(a.id))).length,
+          checked: onlyOwned,
+          onToggle: () => { setOnlyOwned(v => !v); setOnlyUnowned(false); setPage(1) },
         },
         {
-          id: 'not-downloaded',
-          label: 'ยังไม่ได้ดาวน์โหลด',
-          count: scoped.filter(a => !a.downloaded).length,
-          checked: onlyNotDownloaded,
-          onToggle: () => { setOnlyNotDownloaded(v => !v); setPage(1) },
+          id: 'unowned',
+          label: 'ยังไม่มี',
+          count: scoped.filter(a => !owns(assetKey(a.id))).length,
+          checked: onlyUnowned,
+          onToggle: () => { setOnlyUnowned(v => !v); setOnlyOwned(false); setPage(1) },
         },
       ],
     },
@@ -136,7 +138,7 @@ export function LibraryBrowser() {
   const paginated = filtered.slice((safePage - 1) * PER_PAGE, safePage * PER_PAGE)
 
   const activeFilterCount =
-    pipelines.length + licenses.length + (onlyUpdates ? 1 : 0) + (onlyNotDownloaded ? 1 : 0)
+    pipelines.length + licenses.length + (onlyOwned ? 1 : 0) + (onlyUnowned ? 1 : 0)
 
   const gridKey = [
     category,
@@ -144,8 +146,8 @@ export function LibraryBrowser() {
     safePage,
     pipelines.join(','),
     licenses.join(','),
-    onlyUpdates,
-    onlyNotDownloaded,
+    onlyOwned,
+    onlyUnowned,
   ].join('|')
 
   useGsapContext(root, ({ mm }) => {
@@ -160,8 +162,8 @@ export function LibraryBrowser() {
   function clearFilters() {
     setPipelines([])
     setLicenses([])
-    setOnlyUpdates(false)
-    setOnlyNotDownloaded(false)
+    setOnlyOwned(false)
+    setOnlyUnowned(false)
     setPage(1)
   }
 
@@ -174,8 +176,8 @@ export function LibraryBrowser() {
             const active = category === c.id
             const count =
               c.id === 'ALL'
-                ? OWNED_ASSETS.length
-                : OWNED_ASSETS.filter(a => a.category === c.id).length
+                ? STORE_ASSETS.length
+                : STORE_ASSETS.filter(a => a.category === c.id).length
 
             return (
               <button
@@ -250,7 +252,7 @@ export function LibraryBrowser() {
           <div className="mb-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
             <p className="text-[13px] text-slate">
               พบ <strong className="font-medium text-graphite">{filtered.length}</strong> จากทั้งหมด{' '}
-              {OWNED_ASSETS.length} ชิ้น
+              {STORE_ASSETS.length} ชิ้น
             </p>
             <p className="flex items-center gap-1.5 text-[13px] text-slate">
               <Icon name="check" className="h-3.5 w-3.5 shrink-0 text-brand" strokeWidth={2.4} />

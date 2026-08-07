@@ -7,7 +7,7 @@ import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T, SPRING_SOFT } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, RECOMMENDED, type PlatformItem } from '@/lib/items'
 import { COPY } from '@/lib/content'
-import { useWallet, priceOf } from '@/components/WalletProvider'
+import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 
@@ -18,7 +18,7 @@ const PICKS = RECOMMENDED.map(pick => ({
 
 export function Recommended() {
   const root = useRef<HTMLElement>(null)
-  const { owns, canAfford, redeem, justRedeemed } = useWallet()
+  const { owns, inCart, toggleCart } = useWallet()
   const [selected, setSelected] = useState<PlatformItem | null>(null)
 
   useGsapContext(root, ({ mm }) => {
@@ -47,9 +47,9 @@ export function Recommended() {
           {PICKS.map(({ item, reason, note }) => {
             const kind = KIND_META[item.kind]
             const [from, to] = item.art
-            const owned = owns(item.id)
-            const affordable = canAfford(item)
-            const celebrating = justRedeemed === item.id
+            const key = itemKey(item.id)
+            const owned = owns(key)
+            const queued = inCart(key)
 
             return (
               <motion.article
@@ -59,11 +59,7 @@ export function Recommended() {
                 className="relative flex flex-col overflow-hidden rounded-panel bg-mist p-6 sm:flex-row sm:items-center sm:gap-6"
               >
                 {/* Cover */}
-                <motion.div
-                  className="relative mb-5 aspect-[4/3] w-full shrink-0 overflow-hidden rounded-card bg-paper sm:mb-0 sm:aspect-square sm:w-40"
-                  animate={celebrating ? { scale: [1, 1.05, 1] } : { scale: 1 }}
-                  transition={celebrating ? { duration: 0.7, ease: [0.28, 0.11, 0.32, 1] } : SPRING_SOFT}
-                >
+                <motion.div className="relative mb-5 aspect-[4/3] w-full shrink-0 overflow-hidden rounded-card bg-paper sm:mb-0 sm:aspect-square sm:w-40">
                   <Artwork
                     seed={item.id}
                     /* Name lives in the h3 beside the cover. */
@@ -98,35 +94,30 @@ export function Recommended() {
                     </span>
 
                     <motion.button
-                      onClick={() => redeem(item)}
-                      disabled={owned || !affordable}
-                      whileHover={owned || !affordable ? undefined : { scale: 1.05 }}
-                      whileTap={owned || !affordable ? undefined : { scale: 0.92 }}
+                      onClick={() => toggleCart(itemLine(item))}
+                      disabled={owned}
+                      whileHover={owned ? undefined : { scale: 1.05 }}
+                      whileTap={owned ? undefined : { scale: 0.92 }}
                       transition={SPRING_SOFT}
+                      aria-pressed={owned ? undefined : queued}
                       className={`relative z-20 rounded-full px-5 py-2 text-[13px] font-medium transition-colors ${
                         owned
                           ? 'cursor-default bg-paper text-slate-soft'
-                          : affordable
-                            ? 'bg-brand text-white hover:bg-brand-hover'
-                            : 'cursor-not-allowed bg-paper text-slate-soft'
+                          : queued
+                            ? 'bg-graphite text-white hover:bg-graphite/85'
+                            : 'bg-brand text-white hover:bg-brand-hover'
                       }`}
                     >
                       <AnimatePresence mode="popLayout" initial={false}>
                         <motion.span
-                          key={owned ? (celebrating ? 'done' : 'owned') : affordable ? 'buy' : 'short'}
+                          key={owned ? 'owned' : queued ? 'queued' : 'add'}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
                           transition={T.hover}
                           className="block"
                         >
-                          {owned
-                            ? celebrating
-                              ? 'ได้แล้ว'
-                              : 'ใช้งาน'
-                            : affordable
-                              ? 'แลกเลย'
-                              : 'เหรียญไม่พอ'}
+                          {owned ? 'มีแล้ว' : queued ? 'อยู่ในตะกร้า' : 'ใส่ตะกร้า'}
                         </motion.span>
                       </AnimatePresence>
                     </motion.button>

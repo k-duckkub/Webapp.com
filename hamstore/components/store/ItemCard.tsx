@@ -5,7 +5,7 @@ import { T, pressableCard, SPRING_SOFT, GRID_ITEM } from '@/lib/motion'
 import { ITEM_DETAILS, KIND_META, RARITY_META, type PlatformItem } from '@/lib/items'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
-import { useWallet, priceOf } from '@/components/WalletProvider'
+import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
 
 export function ItemCard({
   item,
@@ -16,16 +16,16 @@ export function ItemCard({
   featured?: boolean
   onOpen?: (item: PlatformItem) => void
 }) {
-  const { owns, canAfford, redeem, justRedeemed, isEquipped, equip } = useWallet()
+  const { owns, inCart, toggleCart, isEquipped, equip } = useWallet()
   const kind = KIND_META[item.kind]
   const rarity = RARITY_META[item.rarity]
   const detail = ITEM_DETAILS[item.id]
   const [from, to] = item.art
 
-  const owned = owns(item.id)
+  const key = itemKey(item.id)
+  const owned = owns(key)
+  const queued = inCart(key)
   const price = priceOf(item)
-  const affordable = canAfford(item)
-  const celebrating = justRedeemed === item.id
   const worn = isEquipped(item)
 
   return (
@@ -39,11 +39,7 @@ export function ItemCard({
       <div
         className={`relative overflow-hidden bg-mist ${featured ? 'aspect-[4/3]' : 'aspect-square'}`}
       >
-        <motion.div
-          className="h-full w-full"
-          animate={celebrating ? { scale: [1, 1.06, 1] } : { scale: 1 }}
-          transition={celebrating ? { duration: 0.7, ease: [0.28, 0.11, 0.32, 1] } : SPRING_SOFT}
-        >
+        <motion.div className="h-full w-full">
           <Artwork
             seed={item.id}
             /* The name is set in the h3 directly below. Printing it over the
@@ -110,35 +106,34 @@ export function ItemCard({
           </span>
 
           <motion.button
-            onClick={() => (owned ? equip(item) : redeem(item))}
-            disabled={!owned && !affordable}
-            whileHover={!owned && !affordable ? undefined : { scale: 1.05 }}
-            whileTap={!owned && !affordable ? undefined : { scale: 0.92 }}
+            onClick={() => (owned ? equip(item) : toggleCart(itemLine(item)))}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.92 }}
             transition={SPRING_SOFT}
             aria-label={
               owned
                 ? worn
                   ? `เลิกใช้ ${item.name}`
                   : `ใช้งาน ${item.name}`
-                : affordable
-                  ? `แลก ${item.name} ราคา ${price} HamCoin`
-                  : `${item.name} — เหรียญไม่พอ`
+                : queued
+                  ? `เอา ${item.name} ออกจากตะกร้า`
+                  : `ใส่ ${item.name} ลงตะกร้า`
             }
-            aria-pressed={owned ? worn : undefined}
+            aria-pressed={owned ? worn : queued}
             className={`relative z-20 overflow-hidden rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
               owned
                 ? worn
                   ? 'bg-graphite text-white hover:bg-graphite/85'
                   : 'bg-mist text-graphite hover:bg-hairline'
-                : affordable
-                  ? 'bg-brand text-white hover:bg-brand-hover'
-                  : 'cursor-not-allowed bg-mist text-slate-soft'
+                : queued
+                  ? 'bg-graphite text-white hover:bg-graphite/85'
+                  : 'bg-brand text-white hover:bg-brand-hover'
             }`}
           >
             {/* Swap the label rather than the button, so the press has a payoff. */}
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
-                key={owned ? (celebrating ? 'done' : worn ? 'worn' : 'owned') : affordable ? 'buy' : 'short'}
+                key={owned ? (worn ? 'worn' : 'owned') : queued ? 'queued' : 'add'}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -146,12 +141,7 @@ export function ItemCard({
                 className="block"
               >
                 {owned ? (
-                  celebrating ? (
-                    <span className="flex items-center gap-1">
-                      <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.4} />
-                      ได้แล้ว
-                    </span>
-                  ) : worn ? (
+                  worn ? (
                     <span className="flex items-center gap-1">
                       <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.4} />
                       กำลังใช้
@@ -159,10 +149,13 @@ export function ItemCard({
                   ) : (
                     'ใช้งาน'
                   )
-                ) : affordable ? (
-                  'แลกเลย'
+                ) : queued ? (
+                  <span className="flex items-center gap-1">
+                    <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.4} />
+                    อยู่ในตะกร้า
+                  </span>
                 ) : (
-                  'เหรียญไม่พอ'
+                  'ใส่ตะกร้า'
                 )}
               </motion.span>
             </AnimatePresence>

@@ -3,23 +3,21 @@
 import { useRef } from 'react'
 import { gsap, useGsapContext, MOTION_OK, MOTION_REDUCED } from '@/lib/gsap'
 import { GSAP_EASE, DURATION } from '@/lib/motion'
-import { OWNED_ASSETS, formatSize } from '@/lib/library'
+import { STORE_ASSETS, formatSize } from '@/lib/library'
 import { COPY } from '@/lib/content'
 
-const totalSize = OWNED_ASSETS.reduce((sum, a) => sum + a.size, 0)
-const updateCount = OWNED_ASSETS.filter(a => a.hasUpdate).length
-/* What was actually spent. "ผู้พัฒนา" was a fact about the catalogue; this is
-   a fact about the buyer, and it is the one that says these are already
-   theirs — a download button under a number nobody paid reads like a shop. */
-const coinsSpent = OWNED_ASSETS.reduce((sum, a) => sum + a.paidCoins, 0)
+
+const publisherCount = new Set(STORE_ASSETS.map(a => a.publisher)).size
+const cheapest = Math.min(...STORE_ASSETS.map(a => (a.sale > 0 ? Math.round(a.coins * (1 - a.sale / 100)) : a.coins)))
 
 const hero = COPY.library.hero
 
-const STATS = [
-  { id: 'assets',     value: OWNED_ASSETS.length, label: hero.stats.assets },
-  { id: 'size',       value: totalSize,           label: hero.stats.size, isSize: true },
-  { id: 'updates',    value: updateCount,         label: hero.stats.updates },
-  { id: 'spent',      value: coinsSpent,          label: hero.stats.spent },
+/* Counted from the catalogue, so the numbers cannot drift from the shelf.
+   "ชิ้นที่คุณมีแล้ว" is the one that moves as you shop, so it reads live. */
+const STATS: { id: string; value: number; label: string; isSize?: boolean }[] = [
+  { id: 'assets',     value: STORE_ASSETS.length, label: hero.stats.assets },
+  { id: 'cheapest',   value: cheapest,            label: hero.stats.cheapest },
+  { id: 'publishers', value: publisherCount,      label: hero.stats.publishers },
 ]
 
 export function LibraryHero() {

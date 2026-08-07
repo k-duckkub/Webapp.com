@@ -3,8 +3,9 @@
 import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { EASE_OUT, SPRING_SOFT } from '@/lib/motion'
-import { formatSize, formatThaiDate, type OwnedAsset } from '@/lib/library'
+import { formatSize, formatThaiDate, type StoreAsset } from '@/lib/library'
 import { Icon } from '@/components/Icon'
+import { priceOf } from '@/components/WalletProvider'
 
 /**
  * The receipt behind the little receipt button on every library card.
@@ -14,7 +15,7 @@ import { Icon } from '@/components/Icon'
  * was always meant to show: what was paid, when, under which licence, and what
  * the buyer is allowed to do with it.
  */
-export function ReceiptSheet({ asset, onClose }: { asset: OwnedAsset | null; onClose: () => void }) {
+export function ReceiptSheet({ asset, onClose }: { asset: StoreAsset | null; onClose: () => void }) {
   const panel = useRef<HTMLDivElement>(null)
   const restoreFocus = useRef<HTMLElement | null>(null)
 
@@ -97,8 +98,10 @@ export function ReceiptSheet({ asset, onClose }: { asset: OwnedAsset | null; onC
 
             <dl className="mb-6 flex flex-col gap-0 text-[14px]">
               {[
-                ['วันที่แลก', formatThaiDate(asset.purchasedAt)],
-                ['จ่ายด้วย', `${asset.paidCoins.toLocaleString('th-TH')} HamCoin`],
+                ...(asset.purchasedAt
+                  ? [['วันที่แลก', formatThaiDate(asset.purchasedAt)] as [string, string]]
+                  : []),
+                ['จ่ายด้วย', `${priceOf(asset).toLocaleString('th-TH')} HamCoin`],
                 ['จ่ายเป็นเงิน', '0 บาท'],
                 ['License', asset.license],
                 ['เวอร์ชันที่ได้', `v${asset.version}`],

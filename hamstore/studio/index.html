@@ -159,6 +159,17 @@ function field(label, value, onInput, { multiline = false, type = 'text' } = {})
 /** Text field bound to obj[key]. */
 const bind = (obj, key, label, opts) => field(label, obj[key], v => { obj[key] = v }, opts)
 
+/** A true/false switch. Reads back what it means, not just "on". */
+function checkField(obj, key, label) {
+  const input = el('input', { type: 'checkbox', checked: !!obj[key] })
+  input.style.width = 'auto'
+  input.addEventListener('change', () => { obj[key] = input.checked; touch() })
+  return el('div', { className: 'field' },
+    el('label', { textContent: label }),
+    el('div', { style: 'display:flex;align-items:center;gap:8px;padding:9px 0' },
+      input, el('span', { style: 'font-size:13px;color:var(--slate)', textContent: label })))
+}
+
 /** A list of plain strings, edited one per line — simpler than n inputs. */
 function listField(obj, key, label) {
   return field(label + ' (บรรทัดละรายการ)', (obj[key] || []).join('\n'), v => {
@@ -386,14 +397,16 @@ function renderLibrary() {
       ),
       bind(h, 'lede', 'คำโปรย'),
       el('div', { className: 'row' },
-        bind(h.stats, 'assets', 'ป้ายสถิติ: จำนวน asset'),
-        bind(h.stats, 'size', 'ป้ายสถิติ: ขนาดรวม'),
-        bind(h.stats, 'updates', 'ป้ายสถิติ: มีอัปเดต'),
+        bind(h.stats, 'assets', 'ป้ายสถิติ: จำนวนแพ็กเกจ'),
+        bind(h.stats, 'cheapest', 'ป้ายสถิติ: ชิ้นที่ถูกที่สุด'),
         bind(h.stats, 'publishers', 'ป้ายสถิติ: ผู้พัฒนา'),
       ),
       el('div', { className: 'row' },
         bind(data.library, 'searchPlaceholder', 'ข้อความในช่องค้นหา'),
         bind(data.library, 'emptyTitle', 'ข้อความตอนไม่เจอผลลัพธ์'),
+        bind(data.library, 'ownedNote', 'บรรทัดอธิบายเหนือตาราง'),
+        bind(data.library, 'ownedBadge', 'ป้ายบนปก: มีแล้ว'),
+        bind(data.library, 'notDownloadedBadge', 'ป้ายบนปก: ยังไม่โหลด'),
       ),
     ),
     ...data.assets.map(asset => {
@@ -408,14 +421,38 @@ function renderLibrary() {
           bind(asset, 'version', 'เวอร์ชัน'),
           bind(asset, 'size', 'ขนาด (MB)', { type: 'number' }),
         ),
+        el('div', { className: 'row' },
+          bind(asset, 'coins', 'ราคา (HamCoin)', { type: 'number' }),
+          bind(asset, 'sale', 'ส่วนลด %', { type: 'number' }),
+          checkField(asset, 'owned', 'ตั้งให้เป็น “ซื้อไว้แล้ว”'),
+          bind(asset, 'updatedAt', 'อัปเดตล่าสุด (YYYY-MM-DD)'),
+        ),
         listField(asset, 'pipelines', 'Render Pipeline'),
         el('div', { className: 'row' },
-          bind(asset, 'purchasedAt', 'ซื้อเมื่อ (YYYY-MM-DD)'),
-          bind(asset, 'updatedAt', 'อัปเดตล่าสุด (YYYY-MM-DD)'),
+          bind(asset, 'purchasedAt', 'แลกเมื่อ (YYYY-MM-DD, ใส่เมื่อซื้อแล้ว)'),
+          checkField(asset, 'downloaded', 'โหลดลงเครื่องแล้ว'),
+          checkField(asset, 'hasUpdate', 'มีอัปเดตค้างอยู่'),
         ),
         imageField(asset, 'image', 'รูปปก'),
       )
     }),
+  )
+}
+
+function renderCart() {
+  const c = data.cart
+  return panel('cart', 'ตะกร้า', 'ข้อความในแผงตะกร้า ใช้ร่วมกันทั้งสองหน้า',
+    el('div', { className: 'row' },
+      bind(c, 'title', 'หัวข้อ'),
+      bind(c, 'checkout', 'ปุ่มแลก'),
+      bind(c, 'total', 'บรรทัดยอดรวม'),
+      bind(c, 'balanceAfter', 'บรรทัดเหลือหลังแลก'),
+      bind(c, 'short', 'ข้อความเมื่อเหรียญไม่พอ'),
+      bind(c, 'done', 'ข้อความหลังแลกสำเร็จ'),
+    ),
+    bind(c, 'empty', 'ข้อความตอนตะกร้าว่าง'),
+    bind(c, 'emptyHint', 'คำอธิบายตอนตะกร้าว่าง', { multiline: true }),
+    bind(c, 'note', 'บรรทัดใต้ปุ่มแลก'),
   )
 }
 
@@ -424,7 +461,8 @@ const SECTIONS = [
   { id: 'store',   label: 'หน้าร้าน',      render: renderStore },
   { id: 'items',   label: 'ไอเทมในร้าน',   render: renderItems },
   { id: 'picks',   label: 'ของที่แนะนำ',   render: renderPicks },
-  { id: 'library', label: 'คลัง Asset',    render: renderLibrary },
+  { id: 'library', label: 'Unity Asset',  render: renderLibrary },
+  { id: 'cart',    label: 'ตะกร้า',        render: renderCart },
 ]
 
 let current = 'general'

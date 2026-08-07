@@ -17,6 +17,7 @@ export type IconName =
   | 'chevronRight'
   | 'arrowDown'
   | 'close'
+  | 'cart'
   | 'download'
   | 'refresh'
   /* item kinds */
@@ -59,6 +60,11 @@ const PATHS: Record<IconName, { d: string; fill?: boolean }[]> = {
   chevronRight: [{ d: 'm9.5 5.5 7 6.5-7 6.5' }],
   arrowDown: [{ d: 'M12 4.5v15M6 13.5l6 6 6-6' }],
   close: [{ d: 'm6 6 12 12M18 6 6 18' }],
+  cart: [
+    { d: 'M3 4.5h2.4l2.2 10.4h9.6l2.3-7.6H6.2' },
+    { d: 'M9.5 19a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z' },
+    { d: 'M16.8 19a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z' },
+  ],
   download: [
     { d: 'M12 3.5v11M7.5 10.5 12 15l4.5-4.5' },
     { d: 'M4.5 17v2.5h15V17' },

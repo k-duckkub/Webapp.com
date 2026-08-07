@@ -23,6 +23,7 @@ export const COPY = {
   nav: site.nav,
   store: site.store,
   library: site.library,
+  cart: site.cart,
   footer: site.footer,
 }
 

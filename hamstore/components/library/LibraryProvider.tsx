@@ -1,30 +1,31 @@
 'use client'
 
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
-import { OWNED_ASSETS, type OwnedAsset } from '@/lib/library'
+import { STORE_ASSETS, type StoreAsset } from '@/lib/library'
 
 /**
- * What the library's buttons actually do.
+ * Download state for packages you own.
  *
- * Before this, the download and update buttons on every card had no click
- * handler at all — they looked pressable and did nothing, which is worse than
- * not having them. Now they run a real transfer with real state: progress per
- * asset, a downloaded flag that survives filtering and paging, and an update
- * that clears the badge when it lands.
+ * Ownership itself is not here — that moved to the wallet when both pages
+ * became storefronts sharing one cart. What this keeps is what happens after
+ * you own something: whether the file is on this machine, whether an update
+ * is outstanding, and how far along a transfer is.
  *
- * The bytes are simulated — there is no CDN behind this and there is no
- * honest way to pretend otherwise. What is real is everything around them:
- * you can only download one copy at a time per asset, cancelling leaves the
- * old version in place, and the card's state is the single source the badge,
- * the filter counts and the button label all read from.
+ * The bytes are simulated; there is no CDN behind this and no honest way to
+ * pretend otherwise. Everything around them is real — one transfer at a time
+ * per package, cancelling leaves the old version in place, and this is the
+ * single source the badge, the filter counts and the button label all read.
  */
 
 type Progress = { pct: number; label: string }
 
+/** Per-asset file state, keyed by asset id. */
+type FileState = { downloaded: boolean; hasUpdate: boolean }
+
 type Library = {
-  assets: OwnedAsset[]
+  fileState: (asset: StoreAsset) => FileState
   progress: Record<number, Progress | undefined>
-  download: (asset: OwnedAsset) => void
+  download: (asset: StoreAsset) => void
   cancel: (id: number) => void
 }
 
@@ -36,9 +37,15 @@ function durationFor(sizeMb: number) {
 }
 
 export function LibraryProvider({ children }: { children: React.ReactNode }) {
-  const [assets, setAssets] = useState<OwnedAsset[]>(OWNED_ASSETS)
+  const [overrides, setOverrides] = useState<Record<number, FileState>>({})
   const [progress, setProgress] = useState<Record<number, Progress | undefined>>({})
   const [timers] = useState(() => new Map<number, number>())
+
+  const fileState = useCallback(
+    (asset: StoreAsset): FileState =>
+      overrides[asset.id] ?? { downloaded: asset.downloaded, hasUpdate: asset.hasUpdate },
+    [overrides],
+  )
 
   const cancel = useCallback(
     (id: number) => {
@@ -51,10 +58,10 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
   )
 
   const download = useCallback(
-    (asset: OwnedAsset) => {
+    (asset: StoreAsset) => {
       if (timers.has(asset.id)) return cancel(asset.id)
 
-      const updating = asset.hasUpdate
+      const current = overrides[asset.id] ?? { downloaded: asset.downloaded, hasUpdate: asset.hasUpdate }
       const total = durationFor(asset.size)
       const started = Date.now()
 
@@ -73,22 +80,19 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
           timers.delete(asset.id)
           setProgress(p => ({ ...p, [asset.id]: undefined }))
           /* Landing the file is what clears the badge — not pressing the button. */
-          setAssets(list =>
-            list.map(a =>
-              a.id === asset.id
-                ? { ...a, downloaded: true, hasUpdate: updating ? false : a.hasUpdate }
-                : a,
-            ),
-          )
+          setOverrides(prev => ({ ...prev, [asset.id]: { downloaded: true, hasUpdate: false } }))
         }
       }, 90)
 
       timers.set(asset.id, timer)
     },
-    [timers, cancel],
+    [timers, cancel, overrides],
   )
 
-  const value = useMemo(() => ({ assets, progress, download, cancel }), [assets, progress, download, cancel])
+  const value = useMemo(
+    () => ({ fileState, progress, download, cancel }),
+    [fileState, progress, download, cancel],
+  )
   return <LibraryContext.Provider value={value}>{children}</LibraryContext.Provider>
 }
 
@@ -97,3 +101,5 @@ export function useLibrary() {
   if (!ctx) throw new Error('useLibrary must be used inside <LibraryProvider>')
   return ctx
 }
+
+export { STORE_ASSETS }

@@ -2,20 +2,36 @@
 
 import { motion } from 'framer-motion'
 import { T, SPRING_SOFT, GRID_ITEM, EASE_OUT } from '@/lib/motion'
-import { formatSize, formatThaiDate, CATEGORY_MOTIF, type OwnedAsset } from '@/lib/library'
+import { formatSize, formatThaiDate, CATEGORY_MOTIF, type StoreAsset } from '@/lib/library'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 import { useLibrary } from './LibraryProvider'
 import { COPY } from '@/lib/content'
+import { useWallet, priceOf, assetKey, assetLine } from '@/components/WalletProvider'
 
 /**
- * The card never animates between grid slots — that is what made the ones on
- * their way out float over the ones staying put. It only fades up in the
- * place it will end in, on the grid's stagger. See GRID_ITEM in lib/motion.
+ * A package card, in one of two states.
+ *
+ * Not owned, it is a shop listing: price, discount, and a button that puts it
+ * in the cart. Owned, the price is gone and the card is about the file —
+ * download it, see the receipt, take an update. The same card doing both is
+ * what makes the page make sense: it used to show a download button on
+ * something nobody had bought, which is where "จะโหลดได้ไงยังไม่ได้ซื้อเลย"
+ * came from.
+ *
+ * It never animates between grid slots — that is what made the ones on their
+ * way out float over the ones staying put. See GRID_ITEM in lib/motion.
  */
-export function AssetCard({ asset, onReceipt }: { asset: OwnedAsset; onReceipt: (a: OwnedAsset) => void }) {
-  const { download, progress } = useLibrary()
+export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: (a: StoreAsset) => void }) {
+  const { download, progress, fileState } = useLibrary()
+  const { owns, inCart, toggleCart } = useWallet()
+
+  const key = assetKey(asset.id)
+  const owned = owns(key)
+  const queued = inCart(key)
   const busy = progress[asset.id]
+  const file = fileState(asset)
+  const price = priceOf(asset)
 
   return (
     <motion.article
@@ -35,22 +51,28 @@ export function AssetCard({ asset, onReceipt }: { asset: OwnedAsset; onReceipt: 
           src={asset.image}
         />
 
-        {/* "ยังไม่ดาวน์โหลด" was read as "ยังไม่ได้ซื้อ" — one badge answering
-            the wrong question. Ownership is now stated first and on every
-            card; the download state follows it as a separate fact about the
-            file. Both sit along the bottom, directly above the button they
-            explain and clear of the category chip in the opposite corner. */}
-        <div className="absolute inset-x-3 bottom-3 flex flex-wrap gap-1.5">
-          <span className="flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-medium text-graphite backdrop-blur-sm">
-            <Icon name="check" className="h-3 w-3 text-brand" strokeWidth={2.6} />
-            {COPY.library.ownedBadge}
+        {asset.sale > 0 && !owned && (
+          <span className="absolute right-3 top-3 rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
+            −{asset.sale}%
           </span>
-          {asset.hasUpdate && (
+        )}
+
+        {/* Status runs along the bottom, above the button it explains and clear
+            of the category chip in the opposite corner. Only an owned package
+            has anything to say about a file. */}
+        <div className="absolute inset-x-3 bottom-3 flex flex-wrap gap-1.5">
+          {owned && (
+            <span className="flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-medium text-graphite backdrop-blur-sm">
+              <Icon name="check" className="h-3 w-3 text-brand" strokeWidth={2.6} />
+              {COPY.library.ownedBadge}
+            </span>
+          )}
+          {owned && file.hasUpdate && (
             <span className="rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
               อัปเดตใหม่
             </span>
           )}
-          {!asset.downloaded && (
+          {owned && !file.downloaded && (
             <span className="rounded-full bg-graphite px-2.5 py-0.5 text-[11px] font-medium text-white">
               {COPY.library.notDownloadedBadge}
             </span>
@@ -69,23 +91,20 @@ export function AssetCard({ asset, onReceipt }: { asset: OwnedAsset; onReceipt: 
             was only available to someone who already knew to look for it. */}
         <ul className="mb-3.5 flex flex-wrap gap-1.5">
           {asset.pipelines.map(pipe => (
-            <li
-              key={pipe}
-              className="rounded-md bg-mist px-2 py-0.5 text-[11px] font-medium text-slate"
-            >
+            <li key={pipe} className="rounded-md bg-mist px-2 py-0.5 text-[11px] font-medium text-slate">
               {pipe}
             </li>
           ))}
         </ul>
 
-        {/* A library, so the detail is version and licence — never a price. */}
         <dl className="mb-4 space-y-1.5 text-[13px] text-slate">
           {[
             ['เวอร์ชัน', `v${asset.version}`],
             ['ขนาด', formatSize(asset.size)],
-            ['แลกเมื่อ', formatThaiDate(asset.purchasedAt)],
-            ['จ่ายไป', `${asset.paidCoins.toLocaleString('th-TH')} เหรียญ`],
             ['License', asset.license],
+            ...(owned && asset.purchasedAt
+              ? [['แลกเมื่อ', formatThaiDate(asset.purchasedAt)] as [string, string]]
+              : [['อัปเดตล่าสุด', formatThaiDate(asset.updatedAt)] as [string, string]]),
           ].map(([label, value]) => (
             <div key={label} className="flex justify-between gap-3">
               <dt>{label}</dt>
@@ -95,54 +114,91 @@ export function AssetCard({ asset, onReceipt }: { asset: OwnedAsset; onReceipt: 
         </dl>
 
         <div className="mt-auto flex items-center gap-2 pb-1">
-          <motion.button
-            onClick={() => download(asset)}
-            whileHover={{ scale: busy ? 1 : 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={T.hover}
-            aria-label={
-              busy
-                ? `ยกเลิกการดาวน์โหลด ${asset.title}`
-                : `${asset.hasUpdate ? 'อัปเดต' : 'ดาวน์โหลด'} ${asset.title}`
-            }
-            className={`relative flex-1 overflow-hidden rounded-full py-2 text-[13px] font-medium transition-colors ${
-              asset.hasUpdate
-                ? 'bg-brand text-white hover:bg-brand-hover'
-                : 'bg-graphite text-white hover:bg-graphite/85'
-            }`}
-          >
-            {/* The fill is the progress bar — a separate bar under the button
-                would be one more thing to look at for the same fact. */}
-            {busy && (
-              <motion.span
-                className="absolute inset-y-0 left-0 bg-white/25"
-                animate={{ width: `${busy.pct}%` }}
-                transition={{ duration: 0.12, ease: EASE_OUT }}
-              />
-            )}
-            <span className="relative flex items-center justify-center gap-1.5">
-              {busy ? (
-                <span className="tabular-nums">{busy.label}</span>
-              ) : (
-                <>
-                  <Icon name={asset.hasUpdate ? 'refresh' : 'download'} className="h-3.5 w-3.5" />
-                  {asset.hasUpdate ? 'อัปเดต' : asset.downloaded ? 'ดาวน์โหลดซ้ำ' : 'ดาวน์โหลด'}
-                </>
-              )}
-            </span>
-          </motion.button>
+          {owned ? (
+            <>
+              <motion.button
+                onClick={() => download(asset)}
+                whileHover={{ scale: busy ? 1 : 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={T.hover}
+                aria-label={
+                  busy
+                    ? `ยกเลิกการดาวน์โหลด ${asset.title}`
+                    : `${file.hasUpdate ? 'อัปเดต' : 'ดาวน์โหลด'} ${asset.title}`
+                }
+                className={`relative flex-1 overflow-hidden rounded-full py-2 text-[13px] font-medium transition-colors ${
+                  file.hasUpdate
+                    ? 'bg-brand text-white hover:bg-brand-hover'
+                    : 'bg-graphite text-white hover:bg-graphite/85'
+                }`}
+              >
+                {/* The fill is the progress bar — a separate bar under the
+                    button would be one more thing to read for the same fact. */}
+                {busy && (
+                  <motion.span
+                    className="absolute inset-y-0 left-0 bg-white/25"
+                    animate={{ width: `${busy.pct}%` }}
+                    transition={{ duration: 0.12, ease: EASE_OUT }}
+                  />
+                )}
+                <span className="relative flex items-center justify-center gap-1.5">
+                  {busy ? (
+                    <span className="tabular-nums">{busy.label}</span>
+                  ) : (
+                    <>
+                      <Icon name={file.hasUpdate ? 'refresh' : 'download'} className="h-3.5 w-3.5" />
+                      {file.hasUpdate ? 'อัปเดต' : file.downloaded ? 'ดาวน์โหลดซ้ำ' : 'ดาวน์โหลด'}
+                    </>
+                  )}
+                </span>
+              </motion.button>
 
-          <motion.button
-            onClick={() => onReceipt(asset)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={T.hover}
-            title="ใบเสร็จ"
-            aria-label={`ใบเสร็จของ ${asset.title} — จ่ายไป ${asset.paidCoins} HamCoin`}
-            className="rounded-full bg-mist px-3 py-2 text-slate transition-colors hover:text-graphite"
-          >
-            <Icon name="receipt" className="h-4 w-4" />
-          </motion.button>
+              <motion.button
+                onClick={() => onReceipt(asset)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={T.hover}
+                title="ใบเสร็จ"
+                aria-label={`ใบเสร็จของ ${asset.title} — จ่ายไป ${price} HamCoin`}
+                className="rounded-full bg-mist px-3 py-2 text-slate transition-colors hover:text-graphite"
+              >
+                <Icon name="receipt" className="h-4 w-4" />
+              </motion.button>
+            </>
+          ) : (
+            <>
+              <span className="flex items-center gap-1.5 text-[15px] font-semibold text-graphite">
+                <Icon name="coin" className="h-4 w-4 text-slate-soft" />
+                <span className="tabular-nums">{price}</span>
+                {asset.sale > 0 && (
+                  <span className="text-[13px] font-normal text-slate-soft line-through">{asset.coins}</span>
+                )}
+              </span>
+
+              <motion.button
+                onClick={() => toggleCart(assetLine(asset))}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.94 }}
+                transition={SPRING_SOFT}
+                aria-pressed={queued}
+                aria-label={queued ? `เอา ${asset.title} ออกจากตะกร้า` : `ใส่ ${asset.title} ลงตะกร้า`}
+                className={`ml-auto rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+                  queued
+                    ? 'bg-graphite text-white hover:bg-graphite/85'
+                    : 'bg-brand text-white hover:bg-brand-hover'
+                }`}
+              >
+                {queued ? (
+                  <span className="flex items-center gap-1">
+                    <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.4} />
+                    อยู่ในตะกร้า
+                  </span>
+                ) : (
+                  'ใส่ตะกร้า'
+                )}
+              </motion.button>
+            </>
+          )}
         </div>
       </div>
     </motion.article>

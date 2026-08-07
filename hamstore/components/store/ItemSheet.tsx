@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { EASE_OUT, SPRING_SOFT } from '@/lib/motion'
 import { ITEM_DETAILS, KIND_META, RARITY_META, type PlatformItem } from '@/lib/items'
 import { formatThaiDate } from '@/lib/library'
-import { useWallet, priceOf } from '@/components/WalletProvider'
+import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 
@@ -16,11 +16,11 @@ import { Icon } from '@/components/Icon'
  * to commit. Someone choosing a thing to use wants the specifics: who made
  * it, how many people already run it, exactly what lands in their account,
  * which surfaces it appears on, and whether it is still maintained. All of
- * that is here, and the redeem action sits at the bottom so the decision and
+ * that is here, and the add-to-cart sits at the bottom so the decision and
  * the commitment are in the same place.
  */
 export function ItemSheet({ item, onClose }: { item: PlatformItem | null; onClose: () => void }) {
-  const { owns, canAfford, redeem, balance } = useWallet()
+  const { owns, inCart, toggleCart, balance } = useWallet()
   const panel = useRef<HTMLDivElement>(null)
   const restoreFocus = useRef<HTMLElement | null>(null)
 
@@ -89,7 +89,7 @@ export function ItemSheet({ item, onClose }: { item: PlatformItem | null; onClos
             transition={SPRING_SOFT}
             className="relative max-h-[92svh] w-full overflow-y-auto rounded-t-panel bg-paper outline-none sm:max-w-4xl sm:rounded-panel"
           >
-            <Body item={item} onClose={onClose} owns={owns} canAfford={canAfford} redeem={redeem} balance={balance} />
+            <Body item={item} onClose={onClose} owns={owns} inCart={inCart} toggleCart={toggleCart} balance={balance} />
           </motion.div>
         </motion.div>
       )}
@@ -101,15 +101,15 @@ function Body({
   item,
   onClose,
   owns,
-  canAfford,
-  redeem,
+  inCart,
+  toggleCart,
   balance,
 }: {
   item: PlatformItem
   onClose: () => void
-  owns: (id: number) => boolean
-  canAfford: (i: PlatformItem) => boolean
-  redeem: (i: PlatformItem) => boolean
+  owns: (key: string) => boolean
+  inCart: (key: string) => boolean
+  toggleCart: (line: ReturnType<typeof itemLine>) => void
   balance: number
 }) {
   const kind = KIND_META[item.kind]
@@ -117,8 +117,9 @@ function Body({
   const detail = ITEM_DETAILS[item.id]
   const [from, to] = item.art
   const price = priceOf(item)
-  const owned = owns(item.id)
-  const affordable = canAfford(item)
+  const key = itemKey(item.id)
+  const owned = owns(key)
+  const queued = inCart(key)
   const short = Math.max(0, price - balance)
 
   return (
@@ -235,22 +236,21 @@ function Body({
               </div>
 
               <motion.button
-                onClick={() => {
-                  if (redeem(item)) onClose()
-                }}
-                disabled={owned || !affordable}
-                whileHover={owned || !affordable ? undefined : { scale: 1.03 }}
-                whileTap={owned || !affordable ? undefined : { scale: 0.96 }}
+                onClick={() => toggleCart(itemLine(item))}
+                disabled={owned}
+                whileHover={owned ? undefined : { scale: 1.03 }}
+                whileTap={owned ? undefined : { scale: 0.96 }}
                 transition={SPRING_SOFT}
+                aria-pressed={owned ? undefined : queued}
                 className={`rounded-full px-8 py-3.5 text-[15px] font-medium transition-colors ${
                   owned
                     ? 'cursor-default bg-mist text-slate'
-                    : affordable
-                      ? 'bg-brand text-white hover:bg-brand-hover'
-                      : 'cursor-not-allowed bg-mist text-slate-soft'
+                    : queued
+                      ? 'bg-graphite text-white hover:bg-graphite/85'
+                      : 'bg-brand text-white hover:bg-brand-hover'
                 }`}
               >
-                {owned ? 'มีแล้ว' : affordable ? 'แลกเลย' : 'เหรียญไม่พอ'}
+                {owned ? 'มีแล้ว' : queued ? 'อยู่ในตะกร้า' : 'ใส่ตะกร้า'}
               </motion.button>
             </div>
 
@@ -258,9 +258,9 @@ function Body({
             <p className="text-[13px] leading-relaxed text-slate">
               {owned
                 ? 'อยู่ในบัญชีคุณแล้ว เปิดใช้เมื่อไหร่ก็ได้ ไม่มีวันหมดอายุ'
-                : affordable
-                  ? 'แลกแล้วเป็นของคุณถาวร เปลี่ยนไปใช้ชิ้นอื่นแล้วกลับมาใช้อันนี้ได้ตลอด'
-                  : `ขาดอีก ${short.toLocaleString('th-TH')} เหรียญ — เรียนจบอีกบทเดียวก็มักจะพอ`}
+                : short > 0
+                  ? `ใส่ตะกร้าไว้ก่อนได้ — ตอนนี้ยังขาดอีก ${short.toLocaleString('th-TH')} เหรียญ เรียนจบอีกบทเดียวก็มักจะพอ`
+                  : 'แลกแล้วเป็นของคุณถาวร เปลี่ยนไปใช้ชิ้นอื่นแล้วกลับมาใช้อันนี้ได้ตลอด'}
             </p>
           </div>
         </div>

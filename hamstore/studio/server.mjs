@@ -97,6 +97,9 @@ function validate(next) {
     need(typeof asset.id === 'number', `asset ${asset?.title ?? '?'}: id ต้องเป็นตัวเลข`)
     need(typeof asset.title === 'string' && asset.title.trim(), `asset ${asset.id}: ชื่อว่างไม่ได้`)
     need(Number.isFinite(asset.size) && asset.size >= 0, `asset ${asset.id}: ขนาดไฟล์ต้องเป็นตัวเลข`)
+    need(Number.isFinite(asset.coins) && asset.coins >= 0, `asset ${asset.id}: ราคาต้องเป็นตัวเลขไม่ติดลบ`)
+    need(Number.isFinite(asset.sale) && asset.sale >= 0 && asset.sale < 100, `asset ${asset.id}: ส่วนลดต้องอยู่ 0–99`)
+    need(!asset.owned || asset.purchasedAt, `asset ${asset.id}: ตั้งเป็นซื้อแล้วต้องมีวันที่แลก`)
   }
 
   const ids = (next.items ?? []).map(i => i.id)
