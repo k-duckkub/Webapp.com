@@ -88,8 +88,17 @@ type Wallet = {
   clearCart: () => void
   /** Redeems the whole cart. False when it is empty or the balance is short. */
   checkout: () => boolean
-  /** Set for a moment after a successful checkout, so the UI can react. */
-  justCheckedOut: number | null
+  /** What the last checkout contained, so the cart can confirm it rather than
+   *  just emptying itself. Cleared when the panel is dismissed. */
+  lastCheckout: { count: number; total: number } | null
+  clearReceipt: () => void
+  /** Restores the cart exactly as it was before the last clear. */
+  undoClear: (() => void) | null
+  /** True once sessionStorage has been read, so the UI can avoid animating
+   *  the jump from the default balance to the restored one. */
+  hydrated: boolean
+  /** Plain-language description of the last change, for a live region. */
+  announcement: string
 
   /** Worn platform items, one per category. Assets are not worn. */
   isEquipped: (item: PlatformItem) => boolean
@@ -108,7 +117,9 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       ]),
   )
   const [cart, setCart] = useState<CartLine[]>([])
-  const [justCheckedOut, setJustCheckedOut] = useState<number | null>(null)
+  const [lastCheckout, setLastCheckout] = useState<{ count: number; total: number } | null>(null)
+  const [cleared, setCleared] = useState<CartLine[] | null>(null)
+  const [announcement, setAnnouncement] = useState('')
   const [equipped, setEquipped] = useState<Partial<Record<ItemKind, number>>>({})
   /* State, not a ref: the write effect has to run again *after* the loaded
      values are committed. With a ref it ran in the same pass, still holding
@@ -145,21 +156,57 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const owns = useCallback((key: string) => owned.has(key), [owned])
   const inCart = useCallback((key: string) => cart.some(l => l.key === key), [cart])
 
+  /* Every change says what it was out loud. A cart button in the top corner
+     is off-screen for anyone adding from halfway down the page, and invisible
+     to a screen reader either way. */
   const toggleCart = useCallback(
     (line: CartLine) => {
       if (owned.has(line.key)) return
-      setCart(prev =>
-        prev.some(l => l.key === line.key) ? prev.filter(l => l.key !== line.key) : [...prev, line],
-      )
+      setCart(prev => {
+        const had = prev.some(l => l.key === line.key)
+        const next = had ? prev.filter(l => l.key !== line.key) : [...prev, line]
+        setAnnouncement(
+          `${had ? 'เอา' : 'ใส่'} ${line.name} ${had ? 'ออกจาก' : 'ลง'}ตะกร้าแล้ว — ตะกร้ามี ${next.length} ชิ้น`,
+        )
+        return next
+      })
     },
     [owned],
   )
 
   const removeFromCart = useCallback((key: string) => {
-    setCart(prev => prev.filter(l => l.key !== key))
+    setCart(prev => {
+      const line = prev.find(l => l.key === key)
+      const next = prev.filter(l => l.key !== key)
+      if (line) setAnnouncement(`เอา ${line.name} ออกจากตะกร้าแล้ว — ตะกร้ามี ${next.length} ชิ้น`)
+      return next
+    })
   }, [])
 
-  const clearCart = useCallback(() => setCart([]), [])
+  /* Emptying a basket someone spent time filling is destructive, and a
+     confirm dialog for it would be worse than the mistake. The old contents
+     are kept so one press puts them back. */
+  const clearCart = useCallback(() => {
+    setCart(prev => {
+      if (prev.length) {
+        setCleared(prev)
+        setAnnouncement(`ล้างตะกร้าแล้ว ${prev.length} ชิ้น — กดเลิกทำเพื่อเอากลับ`)
+      }
+      return []
+    })
+  }, [])
+
+  const undoClear = useMemo(
+    () =>
+      cleared
+        ? () => {
+            setCart(cleared)
+            setCleared(null)
+            setAnnouncement(`เอาของ ${cleared.length} ชิ้นกลับเข้าตะกร้าแล้ว`)
+          }
+        : null,
+    [cleared],
+  )
 
   const cartTotal = useMemo(() => cart.reduce((sum, l) => sum + l.coins, 0), [cart])
 
@@ -172,21 +219,28 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     })
     setBalance(prev => prev - cartTotal)
     setCart([])
-    setJustCheckedOut(Date.now())
-    /* Clear the flag so the confirmation plays once, not on every re-render. */
-    window.setTimeout(() => setJustCheckedOut(null), 2600)
+    setCleared(null)
+    /* The panel shows a receipt rather than snapping to its empty state —
+       a basket that vanishes is not a confirmation that anything happened. */
+    setLastCheckout({ count: cart.length, total: cartTotal })
+    setAnnouncement(
+      `แลกสำเร็จ ${cart.length} ชิ้น ใช้ไป ${cartTotal.toLocaleString('th-TH')} เหรียญ เหลือ ${(balance - cartTotal).toLocaleString('th-TH')} เหรียญ`,
+    )
     return true
   }, [cart, cartTotal, balance])
+
+  const clearReceipt = useCallback(() => setLastCheckout(null), [])
 
   const isEquipped = useCallback((item: PlatformItem) => equipped[item.kind] === item.id, [equipped])
 
   /* Wearing a second skin has to take the first one off — otherwise "ใช้งาน"
      is a button you can press forever with nothing to show for it. */
   const equip = useCallback((item: PlatformItem) => {
-    setEquipped(prev => ({
-      ...prev,
-      [item.kind]: prev[item.kind] === item.id ? undefined : item.id,
-    }))
+    setEquipped(prev => {
+      const wearing = prev[item.kind] === item.id
+      setAnnouncement(wearing ? `เลิกใช้ ${item.name} แล้ว` : `ใช้ ${item.name} แล้ว`)
+      return { ...prev, [item.kind]: wearing ? undefined : item.id }
+    })
   }, [])
 
   const value = useMemo(
@@ -200,7 +254,11 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       removeFromCart,
       clearCart,
       checkout,
-      justCheckedOut,
+      lastCheckout,
+      clearReceipt,
+      undoClear,
+      hydrated,
+      announcement,
       isEquipped,
       equip,
     }),
@@ -214,7 +272,11 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       removeFromCart,
       clearCart,
       checkout,
-      justCheckedOut,
+      lastCheckout,
+      clearReceipt,
+      undoClear,
+      hydrated,
+      announcement,
       isEquipped,
       equip,
     ],

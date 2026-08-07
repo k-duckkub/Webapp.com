@@ -113,7 +113,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
           ))}
         </dl>
 
-        <div className="mt-auto flex items-center gap-2 pb-1">
+        <div className="mt-auto flex items-center gap-2 pb-2.5">
           {owned ? (
             <>
               <motion.button
@@ -126,7 +126,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
                     ? `ยกเลิกการดาวน์โหลด ${asset.title}`
                     : `${file.hasUpdate ? 'อัปเดต' : 'ดาวน์โหลด'} ${asset.title}`
                 }
-                className={`relative flex-1 overflow-hidden rounded-full py-2 text-[13px] font-medium transition-colors ${
+                className={`tap relative flex-1 rounded-full py-2 text-[13px] font-medium transition-colors ${
                   file.hasUpdate
                     ? 'bg-brand text-white hover:bg-brand-hover'
                     : 'bg-graphite text-white hover:bg-graphite/85'
@@ -135,11 +135,13 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
                 {/* The fill is the progress bar — a separate bar under the
                     button would be one more thing to read for the same fact. */}
                 {busy && (
-                  <motion.span
-                    className="absolute inset-y-0 left-0 bg-white/25"
-                    animate={{ width: `${busy.pct}%` }}
-                    transition={{ duration: 0.12, ease: EASE_OUT }}
-                  />
+                  <span className="absolute inset-0 overflow-hidden rounded-full">
+                    <motion.span
+                      className="absolute inset-y-0 left-0 bg-white/25"
+                      animate={{ width: `${busy.pct}%` }}
+                      transition={{ duration: 0.12, ease: EASE_OUT }}
+                    />
+                  </span>
                 )}
                 <span className="relative flex items-center justify-center gap-1.5">
                   {busy ? (
@@ -160,7 +162,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
                 transition={T.hover}
                 title="ใบเสร็จ"
                 aria-label={`ใบเสร็จของ ${asset.title} — จ่ายไป ${price} HamCoin`}
-                className="rounded-full bg-mist px-3 py-2 text-slate transition-colors hover:text-graphite"
+                className="tap rounded-full bg-mist px-3 py-2 text-slate transition-colors hover:text-graphite"
               >
                 <Icon name="receipt" className="h-4 w-4" />
               </motion.button>
@@ -182,7 +184,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
                 transition={SPRING_SOFT}
                 aria-pressed={queued}
                 aria-label={queued ? `เอา ${asset.title} ออกจากตะกร้า` : `ใส่ ${asset.title} ลงตะกร้า`}
-                className={`ml-auto rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+                className={`tap ml-auto rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
                   queued
                     ? 'bg-graphite text-white hover:bg-graphite/85'
                     : 'bg-brand text-white hover:bg-brand-hover'

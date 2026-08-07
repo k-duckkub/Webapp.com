@@ -39,7 +39,7 @@ export function FilterPanel({
           onClick={onClear}
           tabIndex={activeCount > 0 ? 0 : -1}
           aria-hidden={activeCount === 0}
-          className="text-[13px] font-medium text-brand transition-colors hover:text-brand-hover"
+          className="tap text-[13px] font-medium text-brand transition-colors hover:text-brand-hover"
         >
           ล้าง {activeCount > 0 && `(${activeCount})`}
         </motion.button>

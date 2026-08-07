@@ -11,19 +11,26 @@ import { Icon } from './Icon'
  * so pressing "แลกเลย" has a consequence you can watch.
  */
 export function CoinBalance() {
-  const { balance } = useWallet()
+  const { balance, hydrated } = useWallet()
   const [nudge, setNudge] = useState(0)
   const previous = useRef(balance)
+  const settled = useRef(false)
 
   const raw = useMotionValue(balance)
   const eased = useSpring(raw, { stiffness: 90, damping: 20, mass: 0.8 })
   const shown = useTransform(eased, v => Math.round(v).toLocaleString('th-TH'))
 
   useEffect(() => {
+    /* The first change after hydration is the restored session arriving, not
+       something the visitor did. Jumping the spring straight to it keeps the
+       chip from counting down through a number nobody spent. */
+    const restoring = !settled.current && hydrated
     raw.set(balance)
-    if (balance !== previous.current) setNudge(n => n + 1)
+    if (restoring) eased.jump(balance)
+    else if (balance !== previous.current) setNudge(n => n + 1)
+    if (hydrated) settled.current = true
     previous.current = balance
-  }, [balance, raw])
+  }, [balance, hydrated, raw, eased])
 
   return (
     <motion.span

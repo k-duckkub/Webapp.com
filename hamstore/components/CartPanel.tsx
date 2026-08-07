@@ -17,7 +17,17 @@ import { Icon } from '@/components/Icon'
  * it is. Nobody should have to press a button to find out they cannot.
  */
 export function CartPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { cart, cartTotal, balance, removeFromCart, clearCart, checkout, justCheckedOut } = useWallet()
+  const {
+    cart,
+    cartTotal,
+    balance,
+    removeFromCart,
+    clearCart,
+    checkout,
+    lastCheckout,
+    clearReceipt,
+    undoClear,
+  } = useWallet()
   const panel = useRef<HTMLDivElement>(null)
   const restoreFocus = useRef<HTMLElement | null>(null)
 
@@ -27,7 +37,10 @@ export function CartPanel({ open, onClose }: { open: boolean; onClose: () => voi
   const affordable = cart.length > 0 && short === 0
 
   useEffect(() => {
-    if (!open) return
+    if (!open) {
+      clearReceipt()
+      return
+    }
     restoreFocus.current = document.activeElement as HTMLElement
     panel.current?.focus()
 
@@ -56,7 +69,7 @@ export function CartPanel({ open, onClose }: { open: boolean; onClose: () => voi
       document.body.style.overflow = previousOverflow
       restoreFocus.current?.focus()
     }
-  }, [open, onClose])
+  }, [open, onClose, clearReceipt])
 
   return (
     <AnimatePresence>
@@ -103,11 +116,41 @@ export function CartPanel({ open, onClose }: { open: boolean; onClose: () => voi
             </header>
 
             <div className="flex-1 overflow-y-auto px-6">
-              {cart.length === 0 ? (
+              {/* A basket that empties itself is not a confirmation. This says
+                  what was redeemed and what is left, and gets out of the way
+                  when you close the panel. */}
+              {lastCheckout ? (
+                <div className="flex h-full flex-col items-center justify-center pb-16 text-center">
+                  <motion.span
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={SPRING_SOFT}
+                    className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-brand/10 text-brand"
+                  >
+                    <Icon name="check" className="h-6 w-6" strokeWidth={2.4} />
+                  </motion.span>
+                  <p className="mb-1.5 text-[17px] font-semibold tracking-tight text-graphite">
+                    {copy.done}
+                  </p>
+                  <p className="max-w-[19rem] text-[14px] leading-relaxed text-slate">
+                    ได้มา {lastCheckout.count} ชิ้น ใช้ไป{' '}
+                    <span className="tabular-nums">{lastCheckout.total.toLocaleString('th-TH')}</span> เหรียญ
+                    — เหลือ <span className="tabular-nums">{balance.toLocaleString('th-TH')}</span> เหรียญ
+                  </p>
+                  <button onClick={onClose} className="btn-ghost mt-6">
+                    เลือกของต่อ
+                  </button>
+                </div>
+              ) : cart.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center pb-16 text-center">
                   <Icon name="cart" className="mb-4 h-8 w-8 text-slate-soft" strokeWidth={1.4} />
                   <p className="mb-1.5 text-[15px] font-medium text-graphite">{copy.empty}</p>
                   <p className="max-w-[15rem] text-[13px] leading-relaxed text-slate">{copy.emptyHint}</p>
+                  {undoClear && (
+                    <button onClick={undoClear} className="btn-ghost mt-5">
+                      เลิกทำการล้างตะกร้า
+                    </button>
+                  )}
                 </div>
               ) : (
                 <ul className="py-2">
@@ -144,7 +187,7 @@ export function CartPanel({ open, onClose }: { open: boolean; onClose: () => voi
                             whileTap={{ scale: 0.9 }}
                             transition={SPRING_SOFT}
                             aria-label={`เอา ${line.name} ออกจากตะกร้า`}
-                            className="shrink-0 rounded-full p-1.5 text-slate-soft transition-colors hover:bg-mist hover:text-graphite"
+                            className="tap shrink-0 rounded-full p-1.5 text-slate-soft transition-colors hover:bg-mist hover:text-graphite"
                           >
                             <Icon name="close" className="h-3.5 w-3.5" strokeWidth={2} />
                           </motion.button>
@@ -154,7 +197,10 @@ export function CartPanel({ open, onClose }: { open: boolean; onClose: () => voi
                   </AnimatePresence>
 
                   <li className="pt-4">
-                    <button onClick={clearCart} className="text-[13px] text-slate transition-colors hover:text-graphite">
+                    <button
+                      onClick={clearCart}
+                      className="tap text-[13px] text-slate transition-colors hover:text-graphite"
+                    >
                       ล้างตะกร้า
                     </button>
                   </li>
@@ -162,6 +208,7 @@ export function CartPanel({ open, onClose }: { open: boolean; onClose: () => voi
               )}
             </div>
 
+            {!lastCheckout && (
             <footer className="border-t border-hairline px-6 pb-6 pt-5">
               <dl className="mb-5 flex flex-col gap-2 text-[14px]">
                 <div className="flex justify-between">
@@ -185,17 +232,18 @@ export function CartPanel({ open, onClose }: { open: boolean; onClose: () => voi
                 whileHover={affordable ? { scale: 1.02 } : undefined}
                 whileTap={affordable ? { scale: 0.97 } : undefined}
                 transition={SPRING_SOFT}
-                className={`w-full rounded-full py-3.5 text-[15px] font-medium transition-colors ${
+                className={`tap w-full rounded-full py-3.5 text-[15px] font-medium transition-colors ${
                   affordable
                     ? 'bg-brand text-white hover:bg-brand-hover'
                     : 'cursor-not-allowed bg-mist text-slate-soft'
                 }`}
               >
-                {justCheckedOut ? copy.done : short ? `${copy.short} — ขาดอีก ${short.toLocaleString('th-TH')}` : copy.checkout}
+                {short ? `${copy.short} — ขาดอีก ${short.toLocaleString('th-TH')}` : copy.checkout}
               </motion.button>
 
               <p className="mt-3 text-center text-[12px] text-slate-soft">{copy.note}</p>
             </footer>
+            )}
           </motion.aside>
         </motion.div>
       )}

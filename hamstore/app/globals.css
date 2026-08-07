@@ -83,6 +83,31 @@
 }
 
 @layer utilities {
+  /**
+   * Extends a control's hit area to Apple's 44x44 floor without touching its
+   * visual size. Nearly every button here drew at 32-36px, which is fine
+   * under a cursor and a miss under a thumb; growing the padding instead
+   * would have loosened layouts that are otherwise correctly tight.
+   *
+   * The overlay is part of the button, so it does not intercept its own
+   * clicks. Where two targets sit side by side the areas overlap and the
+   * one on top wins — which is why the primary action on a card carries
+   * this and the quiet icon beside it carries it too: both grow, neither
+   * steals the other's centre.
+   */
+  .tap {
+    position: relative;
+  }
+  .tap::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+
   .no-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;

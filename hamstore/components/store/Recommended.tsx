@@ -100,7 +100,7 @@ export function Recommended() {
                       whileTap={owned ? undefined : { scale: 0.92 }}
                       transition={SPRING_SOFT}
                       aria-pressed={owned ? undefined : queued}
-                      className={`relative z-20 rounded-full px-5 py-2 text-[13px] font-medium transition-colors ${
+                      className={`tap relative z-20 rounded-full px-5 py-2 text-[13px] font-medium transition-colors ${
                         owned
                           ? 'cursor-default bg-paper text-slate-soft'
                           : queued

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { MotionProvider } from '@/components/MotionProvider'
 import { Noto_Sans_Thai } from 'next/font/google'
 import './globals.css'
 import { SiteNav } from '@/components/SiteNav'
@@ -22,12 +23,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="th" className={notoThai.variable}>
       <body className="font-sans">
-        <WalletProvider>
-          <SmoothScroll />
-          <SiteNav />
-          {children}
-          <SiteFooter />
-        </WalletProvider>
+        <MotionProvider>
+          <WalletProvider>
+            <SmoothScroll />
+            <SiteNav />
+            {children}
+            <SiteFooter />
+          </WalletProvider>
+        </MotionProvider>
       </body>
     </html>
   )

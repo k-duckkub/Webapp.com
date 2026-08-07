@@ -8,6 +8,7 @@ import { T } from "@/lib/motion";
 import { CoinBalance } from "./CoinBalance";
 import { CartButton } from "./CartButton";
 import { CartPanel } from "./CartPanel";
+import { Announcer } from "./Announcer";
 import { Icon } from "./Icon";
 import { COPY } from "@/lib/content";
 
@@ -101,6 +102,7 @@ export function SiteNav() {
       </header>
 
       <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
+      <Announcer />
     </>
   );
 }

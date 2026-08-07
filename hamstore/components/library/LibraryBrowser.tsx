@@ -184,7 +184,7 @@ export function LibraryBrowser() {
                 key={c.id}
                 onClick={() => update(setCategory)(c.id)}
                 aria-pressed={active}
-                className={`relative shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
+                className={`tap relative shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
                   active ? 'text-paper' : 'text-slate hover:text-graphite'
                 }`}
               >
@@ -299,7 +299,7 @@ export function LibraryBrowser() {
                   key={n}
                   onClick={() => setPage(n)}
                   aria-current={n === safePage ? 'page' : undefined}
-                  className={`h-9 w-9 rounded-full text-[13px] font-medium transition-colors ${
+                  className={`tap h-9 w-9 rounded-full text-[13px] font-medium transition-colors ${
                     n === safePage
                       ? 'bg-graphite text-paper'
                       : 'bg-paper text-slate hover:text-graphite'
@@ -340,7 +340,7 @@ function PageBtn({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex items-center gap-1.5 rounded-full bg-paper px-4 py-2 text-[13px] text-slate transition-colors enabled:hover:text-graphite disabled:cursor-not-allowed disabled:text-slate-soft/50"
+      className="tap inline-flex items-center gap-1.5 rounded-full bg-paper px-4 py-2 text-[13px] text-slate transition-colors enabled:hover:text-graphite disabled:cursor-not-allowed disabled:text-slate-soft/50"
     >
       {children}
     </button>

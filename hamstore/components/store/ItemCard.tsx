@@ -93,7 +93,7 @@ export function ItemCard({
           </p>
         )}
 
-        <div className="mt-auto flex items-center justify-between gap-3 pb-1">
+        <div className="mt-auto flex items-center justify-between gap-3 pb-2.5">
           <span className="flex items-center gap-1.5 text-[15px] font-semibold text-graphite">
             {item.coins === 0 ? (
               'ฟรี'
@@ -120,7 +120,7 @@ export function ItemCard({
                   : `ใส่ ${item.name} ลงตะกร้า`
             }
             aria-pressed={owned ? worn : queued}
-            className={`relative z-20 overflow-hidden rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+            className={`tap relative z-20 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
               owned
                 ? worn
                   ? 'bg-graphite text-white hover:bg-graphite/85'
@@ -130,7 +130,10 @@ export function ItemCard({
                   : 'bg-brand text-white hover:bg-brand-hover'
             }`}
           >
-            {/* Swap the label rather than the button, so the press has a payoff. */}
+            {/* Swap the label rather than the button, so the press has a payoff.
+                The clip lives on this span, not on the button: overflow:hidden
+                on the button would cut its own 44px tap area back down. */}
+            <span className="block overflow-hidden">
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
                 key={owned ? (worn ? 'worn' : 'owned') : queued ? 'queued' : 'add'}
@@ -159,6 +162,7 @@ export function ItemCard({
                 )}
               </motion.span>
             </AnimatePresence>
+            </span>
           </motion.button>
         </div>
       </div>

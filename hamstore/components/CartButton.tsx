@@ -25,7 +25,7 @@ export function CartButton({ onOpen }: { onOpen: () => void }) {
       whileTap={{ scale: 0.92 }}
       transition={SPRING_SOFT}
       aria-label={count ? `${COPY.nav.cartLabel} — ${count} ชิ้น` : `${COPY.nav.cartLabel} — ว่าง`}
-      className="relative ml-0.5 shrink-0 rounded-full bg-mist p-2 text-graphite transition-colors hover:bg-hairline sm:ml-1"
+      className="tap relative ml-0.5 shrink-0 rounded-full bg-mist p-2 text-graphite transition-colors hover:bg-hairline sm:ml-1"
     >
       <Icon name="cart" className="h-4 w-4" strokeWidth={1.7} />
 

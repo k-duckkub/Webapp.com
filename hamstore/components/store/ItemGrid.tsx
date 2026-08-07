@@ -60,7 +60,7 @@ export function ItemGrid() {
                 key={f.id}
                 onClick={() => setFilter(f.id)}
                 aria-pressed={active}
-                className={`relative shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
+                className={`tap relative shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
                   active ? 'text-paper' : 'text-slate hover:text-graphite'
                 }`}
               >
