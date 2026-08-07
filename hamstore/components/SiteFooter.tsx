@@ -1,23 +1,7 @@
 import Link from 'next/link'
+import { COPY } from '@/lib/content'
 
-const COLUMNS = [
-  {
-    title: 'HamStore',
-    links: ['ของที่ซื้อได้', 'คลัง Unity Asset', 'ของมาใหม่', 'ของลดราคา'],
-  },
-  {
-    title: 'เรียนกับเรา',
-    links: ['หลักสูตรทั้งหมด', 'เส้นทางนักพัฒนาเกม', 'โปรเจกต์ตัวอย่าง', 'ใบรับรอง'],
-  },
-  {
-    title: 'HamCoin',
-    links: ['วิธีสะสมเหรียญ', 'ภารกิจประจำวัน', 'อันดับผู้เรียน', 'ประวัติการแลก'],
-  },
-  {
-    title: 'ช่วยเหลือ',
-    links: ['คำถามที่พบบ่อย', 'ติดต่อทีมงาน', 'แจ้งปัญหา', 'สถานะระบบ'],
-  },
-]
+const COLUMNS = COPY.footer.columns
 
 export function SiteFooter() {
   return (
@@ -39,13 +23,13 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2569 HamsterHub — ตัวอย่างงานออกแบบ ไม่ใช่ร้านค้าจริง</p>
+          <p>{COPY.footer.copyright}</p>
           <nav className="flex gap-5">
             <Link href="/" className="transition-colors hover:text-graphite">
-              ของที่ซื้อได้
+              {COPY.nav.storeLabel}
             </Link>
             <Link href="/library" className="transition-colors hover:text-graphite">
-              คลัง Unity Asset
+              {COPY.nav.libraryLabel}
             </Link>
           </nav>
         </div>

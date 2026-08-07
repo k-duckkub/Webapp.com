@@ -7,6 +7,7 @@ import { ItemSheet } from './ItemSheet'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { GRID_REVEAL, REVEAL, REVEAL_START, T } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, type ItemKind, type PlatformItem } from '@/lib/items'
+import { COPY } from '@/lib/content'
 
 type Filter = 'ALL' | ItemKind
 
@@ -40,10 +41,10 @@ export function ItemGrid() {
       <div className="bleed">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b border-hairline pb-6">
           <h2 className="display-lg text-graphite" data-grid-el>
-            ไอเทมทั้งหมด
+            {COPY.store.grid.heading}
           </h2>
           <p className="max-w-sm text-[15px] leading-relaxed text-slate" data-grid-el>
-            ของแต่งโปรไฟล์และหน้าเว็บ ไม่ใช่ Unity asset
+            {COPY.store.grid.sub}
           </p>
         </div>
 

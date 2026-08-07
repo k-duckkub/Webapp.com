@@ -4,16 +4,19 @@ import { useRef } from 'react'
 import { gsap, useGsapContext, MOTION_OK, MOTION_REDUCED } from '@/lib/gsap'
 import { GSAP_EASE, DURATION } from '@/lib/motion'
 import { OWNED_ASSETS, formatSize } from '@/lib/library'
+import { COPY } from '@/lib/content'
 
 const totalSize = OWNED_ASSETS.reduce((sum, a) => sum + a.size, 0)
 const updateCount = OWNED_ASSETS.filter(a => a.hasUpdate).length
 const publisherCount = new Set(OWNED_ASSETS.map(a => a.publisher)).size
 
+const hero = COPY.library.hero
+
 const STATS = [
-  { id: 'assets',     value: OWNED_ASSETS.length, label: 'asset ที่ซื้อแล้ว' },
-  { id: 'size',       value: totalSize,           label: 'ขนาดรวม', isSize: true },
-  { id: 'updates',    value: updateCount,         label: 'มีอัปเดตใหม่' },
-  { id: 'publishers', value: publisherCount,      label: 'ผู้พัฒนา' },
+  { id: 'assets',     value: OWNED_ASSETS.length, label: hero.stats.assets },
+  { id: 'size',       value: totalSize,           label: hero.stats.size, isSize: true },
+  { id: 'updates',    value: updateCount,         label: hero.stats.updates },
+  { id: 'publishers', value: publisherCount,      label: hero.stats.publishers },
 ]
 
 export function LibraryHero() {
@@ -61,12 +64,12 @@ export function LibraryHero() {
       <div className="bleed">
         <div className="mb-12 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
           <h1 className="display-xl max-w-lg text-graphite" data-lib-el>
-            Unity Asset
+            {hero.headlineLine1}
             <br />
-            ที่คุณซื้อไว้
+            {hero.headlineLine2}
           </h1>
           <p className="max-w-xs text-[15px] leading-relaxed text-slate" data-lib-el>
-            แลกแล้วอยู่กับคุณถาวร ดาวน์โหลดซ้ำได้ไม่จำกัด
+            {hero.lede}
           </p>
         </div>
 

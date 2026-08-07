@@ -6,6 +6,7 @@ import { ItemSheet } from './ItemSheet'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T, SPRING_SOFT } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, RECOMMENDED, type PlatformItem } from '@/lib/items'
+import { COPY } from '@/lib/content'
 import { useWallet, priceOf } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
@@ -35,10 +36,10 @@ export function Recommended() {
       <div className="bleed">
         <div className="mb-12 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b border-hairline pb-6">
           <h2 className="display-lg text-graphite" data-rec-el>
-            ของที่เราแนะนำ
+            {COPY.store.recommended.heading}
           </h2>
           <p className="max-w-sm text-[15px] leading-relaxed text-slate" data-rec-el>
-            สี่ชิ้นนี้มาจากยอดแลกจริงของเดือนนี้
+            {COPY.store.recommended.sub}
           </p>
         </div>
 

@@ -1,17 +1,21 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { T, SPRING_SOFT, GRID_ITEM } from '@/lib/motion'
+import { T, SPRING_SOFT, GRID_ITEM, EASE_OUT } from '@/lib/motion'
 import { formatSize, formatThaiDate, CATEGORY_MOTIF, type OwnedAsset } from '@/lib/library'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
+import { useLibrary } from './LibraryProvider'
 
 /**
  * The card never animates between grid slots — that is what made the ones on
  * their way out float over the ones staying put. It only fades up in the
  * place it will end in, on the grid's stagger. See GRID_ITEM in lib/motion.
  */
-export function AssetCard({ asset }: { asset: OwnedAsset }) {
+export function AssetCard({ asset, onReceipt }: { asset: OwnedAsset; onReceipt: (a: OwnedAsset) => void }) {
+  const { download, progress } = useLibrary()
+  const busy = progress[asset.id]
+
   return (
     <motion.article
       variants={GRID_ITEM}
@@ -83,22 +87,44 @@ export function AssetCard({ asset }: { asset: OwnedAsset }) {
 
         <div className="mt-auto flex items-center gap-2 pb-1">
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            onClick={() => download(asset)}
+            whileHover={{ scale: busy ? 1 : 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={T.hover}
-            className={`flex-1 rounded-full py-2 text-[13px] font-medium transition-colors ${
+            aria-label={
+              busy
+                ? `ยกเลิกการดาวน์โหลด ${asset.title}`
+                : `${asset.hasUpdate ? 'อัปเดต' : 'ดาวน์โหลด'} ${asset.title}`
+            }
+            className={`relative flex-1 overflow-hidden rounded-full py-2 text-[13px] font-medium transition-colors ${
               asset.hasUpdate
                 ? 'bg-brand text-white hover:bg-brand-hover'
                 : 'bg-graphite text-white hover:bg-graphite/85'
             }`}
           >
-            <span className="flex items-center justify-center gap-1.5">
-              <Icon name={asset.hasUpdate ? 'refresh' : 'download'} className="h-3.5 w-3.5" />
-              {asset.hasUpdate ? 'อัปเดต' : asset.downloaded ? 'ดาวน์โหลดซ้ำ' : 'ดาวน์โหลด'}
+            {/* The fill is the progress bar — a separate bar under the button
+                would be one more thing to look at for the same fact. */}
+            {busy && (
+              <motion.span
+                className="absolute inset-y-0 left-0 bg-white/25"
+                animate={{ width: `${busy.pct}%` }}
+                transition={{ duration: 0.12, ease: EASE_OUT }}
+              />
+            )}
+            <span className="relative flex items-center justify-center gap-1.5">
+              {busy ? (
+                <span className="tabular-nums">{busy.label}</span>
+              ) : (
+                <>
+                  <Icon name={asset.hasUpdate ? 'refresh' : 'download'} className="h-3.5 w-3.5" />
+                  {asset.hasUpdate ? 'อัปเดต' : asset.downloaded ? 'ดาวน์โหลดซ้ำ' : 'ดาวน์โหลด'}
+                </>
+              )}
             </span>
           </motion.button>
 
           <motion.button
+            onClick={() => onReceipt(asset)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={T.hover}

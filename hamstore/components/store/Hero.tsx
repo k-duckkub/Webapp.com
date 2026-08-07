@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { Icon, type IconName } from '@/components/Icon'
 import { GSAP_EASE, DURATION, pressable } from '@/lib/motion'
+import { COPY, imageSrc } from '@/lib/content'
 
 /** Tiles drifting across the hero art. Positions are viewport-relative. */
 const MARKS: { icon: IconName; size: number; top: string; left: string; tint: string; delay: number }[] = [
@@ -13,6 +14,9 @@ const MARKS: { icon: IconName; size: number; top: string; left: string; tint: st
   { icon: 'frame',   size: 110, top: '30%', left: '86%', tint: '#059669', delay: 1.4 },
   { icon: 'pet',     size: 96,  top: '72%', left: '61%', tint: '#DC2626', delay: 2.1 },
 ]
+
+const hero = COPY.store.hero
+const heroImage = imageSrc(hero.image)
 
 export function Hero() {
   const root = useRef<HTMLElement>(null)
@@ -40,17 +44,24 @@ export function Hero() {
       ref={root}
       className="relative flex h-[100svh] min-h-[620px] w-full flex-col justify-end overflow-hidden bg-mist"
     >
-      {/* Art fills the viewport rather than sitting in a panel. */}
+      {/* Art fills the viewport rather than sitting in a panel. Set an image in
+          the studio and it takes over from the generated field; the drifting
+          tiles step aside so they don't sit on top of a photograph. */}
       <div data-hero-bg className="absolute inset-0">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse at 22% 30%, #ffffff 0%, transparent 55%), radial-gradient(ellipse at 72% 45%, rgba(249,115,22,0.16) 0%, transparent 58%), radial-gradient(ellipse at 88% 78%, rgba(124,58,237,0.12) 0%, transparent 55%)',
-          }}
-        />
+        {heroImage ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={heroImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse at 22% 30%, #ffffff 0%, transparent 55%), radial-gradient(ellipse at 72% 45%, rgba(249,115,22,0.16) 0%, transparent 58%), radial-gradient(ellipse at 88% 78%, rgba(124,58,237,0.12) 0%, transparent 55%)',
+            }}
+          />
+        )}
 
-        <div className="pointer-events-none absolute inset-0 hidden md:block">
+        <div className={`pointer-events-none absolute inset-0 ${heroImage ? 'hidden' : 'hidden md:block'}`}>
           {MARKS.map(m => (
             <motion.div
               key={m.icon}
@@ -82,26 +93,26 @@ export function Hero() {
       {/* Copy sits over the art at the bottom left. */}
       <div data-hero-cta-wrap className="bleed relative pb-24 pt-40">
         <p className="eyebrow mb-4" data-hero-line>
-          HamStore
+          {hero.eyebrow}
         </p>
         <h1 className="display-xl mb-6 max-w-3xl text-graphite">
           <span className="block" data-hero-line>
-            แต่งแฮมสเตอร์
+            {hero.headlineLine1}
           </span>
           <span className="block" data-hero-line>
-            ให้เป็นตัวคุณ
+            {hero.headlineLine2}
           </span>
         </h1>
         <p className="lede mb-9 max-w-md" data-hero-sub>
-          สกิน เพื่อนซี้ ธีม อิโมจิ กรอบ — แลกด้วยเหรียญที่ได้จากการเรียน
+          {hero.lede}
         </p>
 
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4" data-hero-cta>
           <motion.a href="#items" className="btn-pill" {...pressable}>
-            ดูของทั้งหมด
+            {hero.primaryCta}
           </motion.a>
           <a href="#how" className="btn-ghost">
-            HamCoin ใช้ยังไง <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
+            {hero.secondaryCta} <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
           </a>
         </div>
       </div>

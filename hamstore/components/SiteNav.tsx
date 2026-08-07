@@ -7,10 +7,11 @@ import { motion } from 'framer-motion'
 import { T } from '@/lib/motion'
 import { CoinBalance } from './CoinBalance'
 import { Icon } from './Icon'
+import { COPY } from '@/lib/content'
 
 const LINKS = [
-  { href: '/',        label: 'ของที่ซื้อได้' },
-  { href: '/library', label: 'คลัง Unity Asset' },
+  { href: '/',        label: COPY.nav.storeLabel },
+  { href: '/library', label: COPY.nav.libraryLabel },
 ]
 
 /**
@@ -49,8 +50,8 @@ export function SiteNav() {
         >
           <Icon name="hamster" className="h-[18px] w-[18px] text-brand" strokeWidth={1.9} />
           {/* The wordmark costs more width than the links can spare on a phone. */}
-          <span className="hidden sm:inline">HamsterHub</span>
-          <span className="sr-only sm:hidden">HamsterHub</span>
+          <span className="hidden sm:inline">{COPY.nav.wordmark}</span>
+          <span className="sr-only sm:hidden">{COPY.nav.wordmark}</span>
         </Link>
 
         <div className="flex min-w-0 items-center gap-0.5 sm:gap-6">

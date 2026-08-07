@@ -1,0 +1,5 @@
+
+# Studio writes these; they're local working state, not source.
+/content/backups/
+/public/uploads/*
+!/public/uploads/.gitkeep

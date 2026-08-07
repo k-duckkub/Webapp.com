@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { LibraryHero } from '@/components/library/LibraryHero'
 import { LibraryBrowser } from '@/components/library/LibraryBrowser'
+import { LibraryProvider } from '@/components/library/LibraryProvider'
 
 export const metadata: Metadata = {
   title: 'คลัง Unity Asset — HamStore',
@@ -10,8 +11,10 @@ export const metadata: Metadata = {
 export default function LibraryPage() {
   return (
     <main className="min-h-screen bg-paper">
-      <LibraryHero />
-      <LibraryBrowser />
+      <LibraryProvider>
+        <LibraryHero />
+        <LibraryBrowser />
+      </LibraryProvider>
     </main>
   )
 }

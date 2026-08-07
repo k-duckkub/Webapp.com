@@ -3,11 +3,14 @@
 import { useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AssetCard } from './AssetCard'
+import { ReceiptSheet } from './ReceiptSheet'
+import { useLibrary } from './LibraryProvider'
 import { FilterPanel, type FilterGroup } from './FilterPanel'
 import { Icon } from '@/components/Icon'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { GRID_REVEAL, REVEAL, REVEAL_START, T } from '@/lib/motion'
-import { LIBRARY_CATEGORIES, OWNED_ASSETS } from '@/lib/library'
+import { LIBRARY_CATEGORIES, type OwnedAsset } from '@/lib/library'
+import { COPY } from '@/lib/content'
 
 type Sort = 'recent' | 'oldest' | 'name' | 'size' | 'updated'
 
@@ -25,6 +28,8 @@ const PER_PAGE = 8
 
 export function LibraryBrowser() {
   const root = useRef<HTMLElement>(null)
+  const { assets: OWNED_ASSETS } = useLibrary()
+  const [receipt, setReceipt] = useState<OwnedAsset | null>(null)
 
   const [category, setCategory] = useState('ALL')
   const [sort, setSort] = useState<Sort>('recent')
@@ -70,7 +75,7 @@ export function LibraryBrowser() {
         default:        return b.purchasedAt.localeCompare(a.purchasedAt)
       }
     })
-  }, [category, query, pipelines, licenses, onlyUpdates, onlyNotDownloaded, sort])
+  }, [OWNED_ASSETS, category, query, pipelines, licenses, onlyUpdates, onlyNotDownloaded, sort])
 
   /* Counts are taken against category + search only, so a pipeline count still
      means something while other pipelines are ticked. */
@@ -81,7 +86,7 @@ export function LibraryBrowser() {
       if (q && !a.title.toLowerCase().includes(q) && !a.publisher.toLowerCase().includes(q)) return false
       return true
     })
-  }, [category, query])
+  }, [OWNED_ASSETS, category, query])
 
   const filterGroups: FilterGroup[] = [
     {
@@ -217,7 +222,7 @@ export function LibraryBrowser() {
               <input
                 value={query}
                 onChange={e => update(setQuery)(e.target.value)}
-                placeholder="ค้นหาชื่อ asset หรือผู้พัฒนา…"
+                placeholder={COPY.library.searchPlaceholder}
                 className="w-full rounded-full bg-paper py-2.5 pl-10 pr-4 text-[15px] text-graphite outline-none transition-shadow placeholder:text-slate-soft focus:ring-2 focus:ring-brand/40"
               />
             </label>
@@ -246,7 +251,7 @@ export function LibraryBrowser() {
           {paginated.length === 0 ? (
             <div className="rounded-card bg-paper py-20 text-center">
               <Icon name="search" className="mx-auto mb-3 h-7 w-7 text-slate-soft" />
-              <p className="text-[15px] font-medium text-graphite">ไม่เจอ asset ที่ตรงกับตัวกรอง</p>
+              <p className="text-[15px] font-medium text-graphite">{COPY.library.emptyTitle}</p>
               <button onClick={clearFilters} className="btn-ghost mt-4">
                 ล้างตัวกรองทั้งหมด
               </button>
@@ -266,7 +271,7 @@ export function LibraryBrowser() {
               className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4"
             >
               {paginated.map(asset => (
-                <AssetCard key={asset.id} asset={asset} />
+                <AssetCard key={asset.id} asset={asset} onReceipt={setReceipt} />
               ))}
             </motion.div>
           )}
@@ -302,6 +307,8 @@ export function LibraryBrowser() {
           )}
         </div>
       </div>
+
+      <ReceiptSheet asset={receipt} onClose={() => setReceipt(null)} />
     </section>
   )
 }

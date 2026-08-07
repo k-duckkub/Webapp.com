@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HamStore Studio</title>
+<style>
+  /* Same palette as the site, so what you edit here looks like where it lands. */
+  :root {
+    --paper: #fff; --mist: #f5f5f7; --graphite: #1d1d1f; --slate: #6e6e73;
+    --soft: #a1a1a6; --hair: #e3e1dd; --brand: #f97316; --brand-hover: #ea6a08;
+    --ok: #059669; --bad: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--mist); color: var(--graphite);
+    font: 15px/1.55 -apple-system, "Segoe UI", "Noto Sans Thai", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--brand); }
+
+  header {
+    position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 16px;
+    padding: 12px 20px; background: rgba(255,255,255,.86); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--hair);
+  }
+  header h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  header .spacer { flex: 1; }
+  #status { font-size: 13px; color: var(--slate); }
+  #status.dirty { color: var(--brand); }
+  #status.bad { color: var(--bad); }
+  #status.ok { color: var(--ok); }
+
+  button {
+    font: inherit; font-size: 13px; font-weight: 500; border: 0; border-radius: 999px;
+    padding: 8px 18px; cursor: pointer; transition: background-color .2s, color .2s, transform .12s;
+  }
+  button:active { transform: scale(.97); }
+  button.primary { background: var(--brand); color: #fff; }
+  button.primary:hover { background: var(--brand-hover); }
+  button.primary:disabled { background: var(--hair); color: var(--soft); cursor: not-allowed; }
+  button.quiet { background: var(--mist); color: var(--slate); }
+  button.quiet:hover { color: var(--graphite); }
+
+  main { display: grid; grid-template-columns: 210px 1fr; gap: 28px; padding: 28px 20px 120px; max-width: 1180px; margin: 0 auto; }
+  @media (max-width: 760px) { main { grid-template-columns: 1fr; } nav { position: static !important; } }
+
+  nav { position: sticky; top: 68px; align-self: start; display: flex; flex-direction: column; gap: 2px; }
+  nav button {
+    text-align: left; border-radius: 10px; background: none; color: var(--slate); padding: 8px 12px;
+  }
+  nav button.on { background: var(--graphite); color: #fff; }
+  nav button:not(.on):hover { color: var(--graphite); background: #fff; }
+
+  section.panel { background: #fff; border-radius: 18px; padding: 22px 24px; margin-bottom: 18px; }
+  section.panel > h2 { margin: 0 0 4px; font-size: 19px; letter-spacing: -.02em; }
+  section.panel > p.hint { margin: 0 0 18px; font-size: 13px; color: var(--slate); }
+
+  .field { margin-bottom: 16px; }
+  .field label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; color: var(--slate); }
+  .field input, .field textarea, .field select {
+    width: 100%; font: inherit; font-size: 14px; color: var(--graphite);
+    background: var(--mist); border: 1px solid transparent; border-radius: 10px; padding: 9px 12px;
+    outline: none; transition: border-color .2s, background-color .2s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--brand); background: #fff; }
+  .field textarea { min-height: 74px; resize: vertical; line-height: 1.6; }
+  .row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+  .card { border: 1px solid var(--hair); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
+  .card > summary {
+    cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 15px; letter-spacing: -.01em;
+  }
+  .card > summary::-webkit-details-marker { display: none; }
+  .card > summary .tag {
+    font-size: 11px; font-weight: 500; color: var(--slate); background: var(--mist);
+    border-radius: 999px; padding: 2px 9px;
+  }
+  .card > summary .thumb { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; background: var(--mist); }
+  .card[open] > summary { margin-bottom: 16px; }
+
+  .img { display: flex; gap: 14px; align-items: flex-start; }
+  .img .preview {
+    width: 92px; height: 92px; flex: none; border-radius: 10px; background: var(--mist);
+    display: grid; place-items: center; font-size: 11px; color: var(--soft); overflow: hidden;
+  }
+  .img .preview img { width: 100%; height: 100%; object-fit: cover; }
+  .img .controls { flex: 1; min-width: 0; }
+  .img .drop {
+    border: 1px dashed var(--hair); border-radius: 10px; padding: 12px; text-align: center;
+    font-size: 12px; color: var(--slate); cursor: pointer; transition: border-color .2s, background-color .2s;
+  }
+  .img .drop.over { border-color: var(--brand); background: #fff7ed; }
+  .img input[type=file] { display: none; }
+
+  .problems { background: #fef2f2; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+  .problems li { color: var(--bad); font-size: 13px; }
+  pre.log { background: var(--graphite); color: #e8e6e3; border-radius: 12px; padding: 14px; font-size: 12px; overflow: auto; max-height: 260px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HamStore Studio</h1>
+  <span id="status">กำลังโหลด…</span>
+  <span class="spacer"></span>
+  <button class="quiet" id="reload">โหลดใหม่</button>
+  <button class="quiet" id="build">สร้างเว็บใหม่</button>
+  <button class="primary" id="save" disabled>บันทึก</button>
+</header>
+
+<main>
+  <nav id="nav"></nav>
+  <div id="panels"></div>
+</main>
+
+<script>
+/* ------------------------------------------------------------------ state */
+let data = null
+let dirty = false
+const token = new URLSearchParams(location.search).get('token') || ''
+const headers = token ? { Authorization: 'Bearer ' + token } : {}
+
+const status = document.getElementById('status')
+const saveBtn = document.getElementById('save')
+
+function setStatus(text, kind = '') {
+  status.textContent = text
+  status.className = kind
+}
+function touch() {
+  dirty = true
+  saveBtn.disabled = false
+  setStatus('มีการแก้ไขที่ยังไม่บันทึก', 'dirty')
+}
+
+/* Warn before losing edits — the whole point is that copy takes time. */
+addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = '' } })
+
+/* ------------------------------------------------------------------ fields */
+const el = (tag, props = {}, ...kids) => {
+  const node = Object.assign(document.createElement(tag), props)
+  for (const kid of kids.flat()) if (kid != null) node.append(kid)
+  return node
+}
+
+function field(label, value, onInput, { multiline = false, type = 'text' } = {}) {
+  const input = el(multiline ? 'textarea' : 'input')
+  if (!multiline) input.type = type
+  input.value = value ?? ''
+  input.addEventListener('input', () => {
+    onInput(type === 'number' ? Number(input.value) : input.value)
+    touch()
+  })
+  return el('div', { className: 'field' }, el('label', { textContent: label }), input)
+}
+
+/** Text field bound to obj[key]. */
+const bind = (obj, key, label, opts) => field(label, obj[key], v => { obj[key] = v }, opts)
+
+/** A list of plain strings, edited one per line — simpler than n inputs. */
+function listField(obj, key, label) {
+  return field(label + ' (บรรทัดละรายการ)', (obj[key] || []).join('\n'), v => {
+    obj[key] = v.split('\n').map(s => s.trim()).filter(Boolean)
+  }, { multiline: true })
+}
+
+/**
+ * An image slot: drop a file, pick one, paste a path, or clear it.
+ * Empty means "no image" and the site falls back to its generated cover, so
+ * clearing is a real choice rather than a broken state.
+ */
+function imageField(obj, key, label) {
+  const preview = el('div', { className: 'preview' })
+  const pathInput = el('input', { type: 'text', value: obj[key] || '', placeholder: '/uploads/… หรือเว้นว่างเพื่อใช้ภาพที่ระบบวาดให้' })
+  const drop = el('div', { className: 'drop', textContent: 'ลากรูปมาวาง หรือคลิกเพื่อเลือกไฟล์' })
+  const picker = el('input', { type: 'file', accept: 'image/*' })
+  const clear = el('button', { className: 'quiet', type: 'button', textContent: 'เอารูปออก' })
+
+  function paint() {
+    preview.innerHTML = ''
+    if (obj[key]) preview.append(el('img', { src: obj[key], alt: '' }))
+    else preview.append(el('span', { textContent: 'ไม่มีรูป' }))
+  }
+  function set(value) {
+    obj[key] = value
+    pathInput.value = value
+    paint()
+    touch()
+  }
+
+  pathInput.addEventListener('input', () => set(pathInput.value))
+  clear.addEventListener('click', () => set(''))
+  picker.addEventListener('change', () => picker.files[0] && upload(picker.files[0]))
+  drop.addEventListener('click', () => picker.click())
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over') })
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'))
+  drop.addEventListener('drop', e => {
+    e.preventDefault()
+    drop.classList.remove('over')
+    const file = e.dataTransfer.files[0]
+    if (file) upload(file)
+  })
+
+  async function upload(file) {
+    drop.textContent = 'กำลังอัปโหลด…'
+    try {
+      const res = await fetch('/api/upload?name=' + encodeURIComponent(file.name), {
+        method: 'POST',
+        headers: { ...headers, 'content-type': file.type },
+        body: file,
+      })
+      const body = await res.json()
+      if (!res.ok) throw new Error(body.error || 'อัปโหลดไม่สำเร็จ')
+      set(body.path)
+      drop.textContent = 'ลากรูปมาวาง หรือคลิกเพื่อเลือกไฟล์'
+    } catch (err) {
+      drop.textContent = String(err.message)
+    }
+  }
+
+  paint()
+  return el('div', { className: 'field' },
+    el('label', { textContent: label }),
+    el('div', { className: 'img' },
+      preview,
+      el('div', { className: 'controls' }, drop, picker, pathInput,
+        el('div', { style: 'margin-top:8px' }, clear)),
+    ),
+  )
+}
+
+function panel(id, title, hint, ...kids) {
+  return el('section', { className: 'panel', id: 'panel-' + id },
+    el('h2', { textContent: title }),
+    hint ? el('p', { className: 'hint', textContent: hint }) : null,
+    kids)
+}
+
+/* ------------------------------------------------------------------ panels */
+function renderGeneral() {
+  const n = data.nav, f = data.footer
+  return panel('general', 'ทั่วไป', 'ชื่อเว็บ แถบเมนู และท้ายเว็บ — โผล่ทุกหน้า',
+    el('div', { className: 'row' },
+      bind(n, 'wordmark', 'ชื่อแบรนด์'),
+      bind(n, 'storeLabel', 'ชื่อเมนูหน้าร้าน'),
+      bind(n, 'libraryLabel', 'ชื่อเมนูหน้าคลัง'),
+    ),
+    bind(f, 'copyright', 'บรรทัดลิขสิทธิ์ท้ายเว็บ'),
+    ...f.columns.map((col, i) =>
+      el('details', { className: 'card' },
+        el('summary', {}, el('span', { textContent: 'คอลัมน์ท้ายเว็บ ' + (i + 1) }),
+          el('span', { className: 'tag', textContent: col.title })),
+        bind(col, 'title', 'หัวคอลัมน์'),
+        listField(col, 'links', 'ลิงก์'),
+      )),
+  )
+}
+
+function renderStore() {
+  const s = data.store
+  return panel('store', 'หน้าร้าน', 'ข้อความและรูปของหน้าแรก',
+    el('details', { className: 'card', open: true },
+      el('summary', {}, 'ส่วนหัว (Hero)'),
+      el('div', { className: 'row' },
+        bind(s.hero, 'eyebrow', 'บรรทัดเล็กด้านบน'),
+        bind(s.hero, 'headlineLine1', 'พาดหัวบรรทัดที่ 1'),
+        bind(s.hero, 'headlineLine2', 'พาดหัวบรรทัดที่ 2'),
+      ),
+      bind(s.hero, 'lede', 'คำโปรย', { multiline: true }),
+      el('div', { className: 'row' },
+        bind(s.hero, 'primaryCta', 'ปุ่มหลัก'),
+        bind(s.hero, 'secondaryCta', 'ลิงก์รอง'),
+      ),
+      imageField(s.hero, 'image', 'ภาพพื้นหลัง Hero'),
+    ),
+    el('details', { className: 'card' },
+      el('summary', {}, 'หัวข้อของแต่ละส่วน'),
+      el('div', { className: 'row' },
+        bind(s.recommended, 'heading', 'หัวข้อ “ของที่เราแนะนำ”'),
+        bind(s.recommended, 'sub', 'คำอธิบายใต้หัวข้อ'),
+        bind(s.grid, 'heading', 'หัวข้อตารางไอเทม'),
+        bind(s.grid, 'sub', 'คำอธิบายตารางไอเทม'),
+        bind(s.shelf, 'heading', 'หัวข้อชั้นสามหมวด'),
+        bind(s.shelf, 'unit', 'หน่วยนับ (เช่น ชิ้น)'),
+      ),
+    ),
+    ...s.bands.map((band, i) =>
+      el('details', { className: 'card' },
+        el('summary', {}, el('span', { textContent: 'แถบใหญ่ ' + (i + 1) }),
+          el('span', { className: 'tag', textContent: band.kind })),
+        bind(band, 'headline', 'พาดหัว'),
+        bind(band, 'body', 'เนื้อความ', { multiline: true }),
+        imageField(band, 'image', 'ภาพของแถบนี้'),
+      )),
+    el('details', { className: 'card' },
+      el('summary', {}, 'บรรทัดใต้ตัวเลขสถิติ'),
+      el('div', { className: 'row' },
+        bind(s.facts, 'inStore', 'จำนวนชิ้นในร้าน'),
+        bind(s.facts, 'free', 'จำนวนชิ้นฟรี'),
+        bind(s.facts, 'cheapest', 'ชิ้นที่ถูกที่สุด'),
+        bind(s.facts, 'baht', 'บรรทัดเรื่องเงินจริง'),
+      ),
+    ),
+  )
+}
+
+function renderItems() {
+  const kinds = { skin: 'สกิน', pet: 'เพื่อนซี้', theme: 'ธีม', emoji: 'สติกเกอร์', frame: 'กรอบ' }
+  const rarities = { common: 'ธรรมดา', rare: 'หายาก', epic: 'เอพิค', legendary: 'ตำนาน' }
+
+  return panel('items', 'ไอเทมในร้าน', data.items.length + ' ชิ้น — ชื่อ คำอธิบาย ราคา และรูปปก',
+    ...data.items.map(item => {
+      const detail = data.itemDetails[item.id] || (data.itemDetails[item.id] = {
+        maker: '', owners: 0, includes: [], showsUp: [], version: '1.0', updatedAt: '',
+      })
+      const thumb = el('img', { className: 'thumb', src: item.image || '', alt: '' })
+      if (!item.image) thumb.style.visibility = 'hidden'
+
+      const kindSelect = el('select')
+      for (const [value, label] of Object.entries(kinds)) {
+        kindSelect.append(el('option', { value, textContent: label, selected: item.kind === value }))
+      }
+      kindSelect.addEventListener('change', () => { item.kind = kindSelect.value; touch() })
+
+      const raritySelect = el('select')
+      for (const [value, label] of Object.entries(rarities)) {
+        raritySelect.append(el('option', { value, textContent: label, selected: item.rarity === value }))
+      }
+      raritySelect.addEventListener('change', () => { item.rarity = raritySelect.value; touch() })
+
+      return el('details', { className: 'card' },
+        el('summary', {}, thumb, el('span', { textContent: item.name }),
+          el('span', { className: 'tag', textContent: (kinds[item.kind] || item.kind) + ' · ' + item.coins })),
+        bind(item, 'name', 'ชื่อ'),
+        bind(item, 'blurb', 'คำอธิบายสั้น (ขึ้นบนการ์ด)', { multiline: true }),
+        el('div', { className: 'row' },
+          bind(item, 'coins', 'ราคา (HamCoin)', { type: 'number' }),
+          bind(item, 'sale', 'ส่วนลด %', { type: 'number' }),
+          el('div', { className: 'field' }, el('label', { textContent: 'หมวด' }), kindSelect),
+          el('div', { className: 'field' }, el('label', { textContent: 'ระดับ' }), raritySelect),
+        ),
+        imageField(item, 'image', 'รูปปก'),
+        el('div', { className: 'row' },
+          bind(detail, 'maker', 'ผู้ทำ'),
+          bind(detail, 'owners', 'จำนวนคนที่มีแล้ว', { type: 'number' }),
+          bind(detail, 'version', 'เวอร์ชัน'),
+          bind(detail, 'updatedAt', 'อัปเดตล่าสุด (YYYY-MM-DD)'),
+        ),
+        listField(detail, 'includes', 'ได้อะไรบ้าง'),
+        listField(detail, 'showsUp', 'โผล่ที่ไหน'),
+      )
+    }),
+  )
+}
+
+function renderPicks() {
+  const byId = Object.fromEntries(data.items.map(i => [i.id, i]))
+  return panel('picks', 'ของที่เราแนะนำ', 'สี่ชิ้นบนสุดของหน้าร้าน พร้อมเหตุผลที่เลือก',
+    ...data.recommended.map((pick, i) => {
+      const select = el('select')
+      for (const item of data.items) {
+        select.append(el('option', { value: String(item.id), textContent: item.name, selected: item.id === pick.id }))
+      }
+      select.addEventListener('change', () => { pick.id = Number(select.value); touch() })
+      return el('details', { className: 'card' },
+        el('summary', {}, el('span', { textContent: 'ชิ้นแนะนำ ' + (i + 1) }),
+          el('span', { className: 'tag', textContent: byId[pick.id]?.name || '—' })),
+        el('div', { className: 'field' }, el('label', { textContent: 'ไอเทม' }), select),
+        bind(pick, 'reason', 'ป้ายเหตุผล (สั้น)'),
+        bind(pick, 'note', 'คำอธิบายว่าทำไมถึงแนะนำ', { multiline: true }),
+      )
+    }),
+  )
+}
+
+function renderLibrary() {
+  const h = data.library.hero
+  return panel('library', 'หน้าคลัง Unity Asset', 'ข้อความหัวหน้า และรายการ asset ที่ซื้อไว้',
+    el('details', { className: 'card', open: true },
+      el('summary', {}, 'ส่วนหัว'),
+      el('div', { className: 'row' },
+        bind(h, 'headlineLine1', 'พาดหัวบรรทัดที่ 1'),
+        bind(h, 'headlineLine2', 'พาดหัวบรรทัดที่ 2'),
+      ),
+      bind(h, 'lede', 'คำโปรย'),
+      el('div', { className: 'row' },
+        bind(h.stats, 'assets', 'ป้ายสถิติ: จำนวน asset'),
+        bind(h.stats, 'size', 'ป้ายสถิติ: ขนาดรวม'),
+        bind(h.stats, 'updates', 'ป้ายสถิติ: มีอัปเดต'),
+        bind(h.stats, 'publishers', 'ป้ายสถิติ: ผู้พัฒนา'),
+      ),
+      el('div', { className: 'row' },
+        bind(data.library, 'searchPlaceholder', 'ข้อความในช่องค้นหา'),
+        bind(data.library, 'emptyTitle', 'ข้อความตอนไม่เจอผลลัพธ์'),
+      ),
+    ),
+    ...data.assets.map(asset => {
+      const thumb = el('img', { className: 'thumb', src: asset.image || '', alt: '' })
+      if (!asset.image) thumb.style.visibility = 'hidden'
+      return el('details', { className: 'card' },
+        el('summary', {}, thumb, el('span', { textContent: asset.title }),
+          el('span', { className: 'tag', textContent: asset.category })),
+        el('div', { className: 'row' },
+          bind(asset, 'title', 'ชื่อ asset'),
+          bind(asset, 'publisher', 'ผู้พัฒนา'),
+          bind(asset, 'version', 'เวอร์ชัน'),
+          bind(asset, 'size', 'ขนาด (MB)', { type: 'number' }),
+        ),
+        listField(asset, 'pipelines', 'Render Pipeline'),
+        el('div', { className: 'row' },
+          bind(asset, 'purchasedAt', 'ซื้อเมื่อ (YYYY-MM-DD)'),
+          bind(asset, 'updatedAt', 'อัปเดตล่าสุด (YYYY-MM-DD)'),
+        ),
+        imageField(asset, 'image', 'รูปปก'),
+      )
+    }),
+  )
+}
+
+const SECTIONS = [
+  { id: 'general', label: 'ทั่วไป',        render: renderGeneral },
+  { id: 'store',   label: 'หน้าร้าน',      render: renderStore },
+  { id: 'items',   label: 'ไอเทมในร้าน',   render: renderItems },
+  { id: 'picks',   label: 'ของที่แนะนำ',   render: renderPicks },
+  { id: 'library', label: 'คลัง Asset',    render: renderLibrary },
+]
+
+let current = 'general'
+function draw() {
+  const nav = document.getElementById('nav')
+  const panels = document.getElementById('panels')
+  nav.innerHTML = ''
+  panels.innerHTML = ''
+  for (const section of SECTIONS) {
+    const button = el('button', { textContent: section.label, className: section.id === current ? 'on' : '' })
+    button.addEventListener('click', () => { current = section.id; draw(); scrollTo({ top: 0, behavior: 'smooth' }) })
+    nav.append(button)
+  }
+  panels.append(SECTIONS.find(s => s.id === current).render())
+}
+
+/* ------------------------------------------------------------------ server */
+async function load() {
+  const res = await fetch('/api/content', { headers })
+  if (!res.ok) return setStatus('โหลดไม่สำเร็จ — token ถูกไหม?', 'bad')
+  data = await res.json()
+  dirty = false
+  saveBtn.disabled = true
+  setStatus('พร้อมแก้ไข')
+  draw()
+}
+
+async function save() {
+  saveBtn.disabled = true
+  setStatus('กำลังบันทึก…')
+  const res = await fetch('/api/content', {
+    method: 'PUT',
+    headers: { ...headers, 'content-type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+  const body = await res.json()
+  if (!res.ok) {
+    saveBtn.disabled = false
+    setStatus(body.error || 'บันทึกไม่สำเร็จ', 'bad')
+    const box = el('ul', { className: 'problems' }, ...(body.problems || []).map(p => el('li', { textContent: p })))
+    document.getElementById('panels').prepend(box)
+    return
+  }
+  dirty = false
+  setStatus('บันทึกแล้ว — กด “สร้างเว็บใหม่” เพื่อให้ขึ้นจริง', 'ok')
+}
+
+document.getElementById('save').addEventListener('click', save)
+document.getElementById('reload').addEventListener('click', () => {
+  if (!dirty || confirm('ทิ้งการแก้ไขที่ยังไม่บันทึก?')) load()
+})
+document.getElementById('build').addEventListener('click', async e => {
+  e.target.disabled = true
+  setStatus('กำลังสร้างเว็บ… (ประมาณ 10–30 วินาที)')
+  const res = await fetch('/api/build', { method: 'POST', headers })
+  const body = await res.json()
+  e.target.disabled = false
+  setStatus(body.ok ? 'สร้างเว็บเสร็จแล้ว' : 'สร้างไม่ผ่าน — ดู log ด้านล่าง', body.ok ? 'ok' : 'bad')
+  if (!body.ok) document.getElementById('panels').prepend(el('pre', { className: 'log', textContent: body.log }))
+})
+
+load()
+</script>
+</body>
+</html>

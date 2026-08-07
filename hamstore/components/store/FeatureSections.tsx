@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, SPRING_SOFT } from '@/lib/motion'
 import { KIND_META, PLATFORM_ITEMS, type ItemKind } from '@/lib/items'
+import { COPY, imageSrc } from '@/lib/content'
 import { priceOf } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
@@ -19,34 +20,23 @@ import { Icon } from '@/components/Icon'
  * band of their own are still one click away in the grid below.
  */
 
-const BAND_KINDS: ItemKind[] = ['skin', 'theme']
-
-const BAND_COPY: Record<string, { headline: string; body: string }> = {
-  skin: {
-    headline: 'ใส่แล้วคนทั้งเว็บเห็น',
-    body: 'สกินเปลี่ยนแฮมสเตอร์ประจำตัวคุณทุกที่ที่มันโผล่ — โปรไฟล์ คอมเมนต์ กระดานอันดับ',
-  },
-  theme: {
-    headline: 'เปลี่ยนทั้งเว็บ ไม่ใช่แค่พื้นหลัง',
-    body: 'ธีมคุมสีตั้งแต่พื้น ปุ่ม ยันเส้นขอบ เลือกให้เข้ากับเวลาที่คุณนั่งโค้ดจริงๆ',
-  },
-}
-
-const BANDS = BAND_KINDS.map((kind, i) => ({
-  kind,
-  meta: KIND_META[kind],
-  ...BAND_COPY[kind],
-  items: PLATFORM_ITEMS.filter(item => item.kind === kind),
+/* Which categories get a band, and what each one says, is content — the
+   alternating left/right rhythm below is not. */
+const BANDS = COPY.store.bands.map((band, i) => ({
+  ...band,
+  kind: band.kind as ItemKind,
+  meta: KIND_META[band.kind as ItemKind],
+  items: PLATFORM_ITEMS.filter(item => item.kind === band.kind),
   artRight: i % 2 === 1,
   onMist: i % 2 === 0,
 }))
 
 /* Facts, not adjectives. Each one is computed from the catalogue. */
 const FACTS = [
-  { value: String(PLATFORM_ITEMS.length), label: 'ชิ้นในร้านตอนนี้' },
-  { value: String(PLATFORM_ITEMS.filter(i => i.coins === 0).length), label: 'ชิ้นที่ปลดล็อกได้ฟรี' },
-  { value: `${Math.min(...PLATFORM_ITEMS.filter(i => i.coins > 0).map(priceOf))}`, label: 'เหรียญ สำหรับชิ้นที่ถูกที่สุด' },
-  { value: '0', label: 'บาท — เหรียญได้จากการเรียนเท่านั้น' },
+  { value: String(PLATFORM_ITEMS.length), label: COPY.store.facts.inStore },
+  { value: String(PLATFORM_ITEMS.filter(i => i.coins === 0).length), label: COPY.store.facts.free },
+  { value: `${Math.min(...PLATFORM_ITEMS.filter(i => i.coins > 0).map(priceOf))}`, label: COPY.store.facts.cheapest },
+  { value: '0', label: COPY.store.facts.baht },
 ]
 
 export function FeatureSections() {
@@ -100,17 +90,26 @@ export function FeatureSections() {
               <div
                 data-feature-art-inner
                 className="absolute inset-x-0 -top-[10%] flex h-[120%] items-center justify-center"
-                style={{
-                  background: `radial-gradient(ellipse at 50% 45%, ${from}26 0%, ${to}0f 42%, transparent 72%)`,
-                }}
+                style={
+                  imageSrc(band.image)
+                    ? undefined
+                    : { background: `radial-gradient(ellipse at 50% 45%, ${from}26 0%, ${to}0f 42%, transparent 72%)` }
+                }
               >
-                <motion.span whileHover={{ scale: 1.05 }} transition={SPRING_SOFT}>
-                  <Icon
-                    name={band.meta.icon}
-                    className="h-[clamp(5rem,12vw,9rem)] w-[clamp(5rem,12vw,9rem)] text-graphite/[0.18]"
-                    strokeWidth={1}
-                  />
-                </motion.span>
+                {/* A band shows its own picture when one is set, and the tinted
+                    field with the category mark when one isn't. */}
+                {imageSrc(band.image) ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={imageSrc(band.image)} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <motion.span whileHover={{ scale: 1.05 }} transition={SPRING_SOFT}>
+                    <Icon
+                      name={band.meta.icon}
+                      className="h-[clamp(5rem,12vw,9rem)] w-[clamp(5rem,12vw,9rem)] text-graphite/[0.18]"
+                      strokeWidth={1}
+                    />
+                  </motion.span>
+                )}
               </div>
             </div>
 
@@ -174,7 +173,7 @@ export function FeatureSections() {
       <section data-feature className="bg-mist py-20 sm:py-24">
         <div className="bleed">
           <h2 className="display-md mb-8 text-graphite" data-feature-el>
-            และอีกสามหมวด
+            {COPY.store.shelf.heading}
           </h2>
           <div className="grid gap-5 sm:grid-cols-3" data-feature-el>
             {(['pet', 'emoji', 'frame'] as ItemKind[]).map(kind => {
@@ -202,7 +201,7 @@ export function FeatureSections() {
                     size="lg"
                   />
                   <span className="absolute right-4 top-4 rounded-full bg-black/35 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
-                    {items.length} ชิ้น
+                    {items.length} {COPY.store.shelf.unit}
                   </span>
                 </motion.a>
               )
