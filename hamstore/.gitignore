@@ -3,3 +3,6 @@
 /content/backups/
 /public/uploads/*
 !/public/uploads/.gitkeep
+
+# TS incremental cache
+tsconfig.tsbuildinfo
