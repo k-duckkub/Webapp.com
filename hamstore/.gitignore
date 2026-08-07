@@ -3,6 +3,10 @@
 /content/backups/
 /public/uploads/*
 !/public/uploads/.gitkeep
+# The drawn covers are the products' actual pictures, so they ship with the
+# repo — unlike anything the studio uploads on top of them.
+!/public/uploads/item-*.jpg
+!/public/uploads/asset-*.jpg
 
 # TS incremental cache
 tsconfig.tsbuildinfo

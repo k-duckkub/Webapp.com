@@ -124,7 +124,7 @@
         "#7C3AED",
         "#2563EB"
       ],
-      "image": ""
+      "image": "/uploads/item-1.jpg"
     },
     {
       "id": 2,
@@ -139,7 +139,7 @@
         "#DC2626",
         "#F97316"
       ],
-      "image": ""
+      "image": "/uploads/item-2.jpg"
     },
     {
       "id": 3,
@@ -154,7 +154,7 @@
         "#1a1814",
         "#7C3AED"
       ],
-      "image": ""
+      "image": "/uploads/item-3.jpg"
     },
     {
       "id": 4,
@@ -169,7 +169,7 @@
         "#1E1E2E",
         "#FBBF24"
       ],
-      "image": ""
+      "image": "/uploads/item-4.jpg"
     },
     {
       "id": 5,
@@ -184,7 +184,7 @@
         "#F59E0B",
         "#DC2626"
       ],
-      "image": ""
+      "image": "/uploads/item-5.jpg"
     },
     {
       "id": 6,
@@ -199,7 +199,7 @@
         "#059669",
         "#0891B2"
       ],
-      "image": ""
+      "image": "/uploads/item-6.jpg"
     },
     {
       "id": 7,
@@ -214,7 +214,7 @@
         "#DB2777",
         "#7C3AED"
       ],
-      "image": ""
+      "image": "/uploads/item-7.jpg"
     },
     {
       "id": 8,
@@ -229,7 +229,7 @@
         "#0f0e0d",
         "#F97316"
       ],
-      "image": ""
+      "image": "/uploads/item-8.jpg"
     },
     {
       "id": 9,
@@ -244,7 +244,7 @@
         "#7C3AED",
         "#0891B2"
       ],
-      "image": ""
+      "image": "/uploads/item-9.jpg"
     },
     {
       "id": 10,
@@ -259,7 +259,7 @@
         "#059669",
         "#FACC15"
       ],
-      "image": ""
+      "image": "/uploads/item-10.jpg"
     },
     {
       "id": 11,
@@ -274,7 +274,7 @@
         "#2563EB",
         "#DB2777"
       ],
-      "image": ""
+      "image": "/uploads/item-11.jpg"
     },
     {
       "id": 12,
@@ -289,7 +289,7 @@
         "#F97316",
         "#FACC15"
       ],
-      "image": ""
+      "image": "/uploads/item-12.jpg"
     },
     {
       "id": 13,
@@ -304,7 +304,7 @@
         "#0891B2",
         "#059669"
       ],
-      "image": ""
+      "image": "/uploads/item-13.jpg"
     },
     {
       "id": 14,
@@ -319,7 +319,7 @@
         "#DB2777",
         "#F59E0B"
       ],
-      "image": ""
+      "image": "/uploads/item-14.jpg"
     },
     {
       "id": 15,
@@ -334,7 +334,7 @@
         "#F59E0B",
         "#FACC15"
       ],
-      "image": ""
+      "image": "/uploads/item-15.jpg"
     },
     {
       "id": 16,
@@ -349,7 +349,7 @@
         "#DC2626",
         "#F97316"
       ],
-      "image": ""
+      "image": "/uploads/item-16.jpg"
     },
     {
       "id": 17,
@@ -364,7 +364,7 @@
         "#059669",
         "#84CC16"
       ],
-      "image": ""
+      "image": "/uploads/item-17.jpg"
     },
     {
       "id": 18,
@@ -379,7 +379,7 @@
         "#2563EB",
         "#7C3AED"
       ],
-      "image": ""
+      "image": "/uploads/item-18.jpg"
     }
   ],
   "itemDetails": {
@@ -696,7 +696,7 @@
       "downloaded": true,
       "rating": 4.8,
       "color": "#7C3AED",
-      "image": "",
+      "image": "/uploads/asset-1.jpg",
       "coins": 100,
       "owned": true,
       "sale": 0
@@ -718,7 +718,7 @@
       "downloaded": true,
       "rating": 4.6,
       "color": "#0891B2",
-      "image": "",
+      "image": "/uploads/asset-2.jpg",
       "coins": 130,
       "owned": true,
       "sale": 0
@@ -739,7 +739,7 @@
       "downloaded": false,
       "rating": 4.5,
       "color": "#059669",
-      "image": "",
+      "image": "/uploads/asset-3.jpg",
       "coins": 140,
       "owned": false,
       "sale": 0
@@ -761,7 +761,7 @@
       "downloaded": false,
       "rating": 4.9,
       "color": "#DC2626",
-      "image": "",
+      "image": "/uploads/asset-4.jpg",
       "coins": 160,
       "owned": false,
       "sale": 0
@@ -784,7 +784,7 @@
       "downloaded": true,
       "rating": 4.7,
       "color": "#D97706",
-      "image": "",
+      "image": "/uploads/asset-5.jpg",
       "coins": 230,
       "owned": true,
       "sale": 0
@@ -805,7 +805,7 @@
       "downloaded": false,
       "rating": 4.4,
       "color": "#D97706",
-      "image": "",
+      "image": "/uploads/asset-6.jpg",
       "coins": 250,
       "owned": false,
       "sale": 20
@@ -828,7 +828,7 @@
       "downloaded": false,
       "rating": 4.8,
       "color": "#2563EB",
-      "image": "",
+      "image": "/uploads/asset-7.jpg",
       "coins": 180,
       "owned": false,
       "sale": 0
@@ -849,7 +849,7 @@
       "downloaded": false,
       "rating": 4.6,
       "color": "#DC2626",
-      "image": "",
+      "image": "/uploads/asset-8.jpg",
       "coins": 75,
       "owned": false,
       "sale": 0
@@ -871,7 +871,7 @@
       "downloaded": true,
       "rating": 4.9,
       "color": "#DB2777",
-      "image": "",
+      "image": "/uploads/asset-9.jpg",
       "coins": 120,
       "owned": true,
       "sale": 0
@@ -893,7 +893,7 @@
       "downloaded": false,
       "rating": 4.8,
       "color": "#059669",
-      "image": "",
+      "image": "/uploads/asset-10.jpg",
       "coins": 200,
       "owned": false,
       "sale": 15
@@ -916,7 +916,7 @@
       "downloaded": true,
       "rating": 4.7,
       "color": "#0891B2",
-      "image": "",
+      "image": "/uploads/asset-11.jpg",
       "coins": 110,
       "owned": true,
       "sale": 0
@@ -937,7 +937,7 @@
       "downloaded": false,
       "rating": 4.7,
       "color": "#7C3AED",
-      "image": "",
+      "image": "/uploads/asset-12.jpg",
       "coins": 90,
       "owned": false,
       "sale": 0
@@ -958,7 +958,7 @@
       "downloaded": false,
       "rating": 4.5,
       "color": "#2563EB",
-      "image": "",
+      "image": "/uploads/asset-13.jpg",
       "coins": 320,
       "owned": false,
       "sale": 20
@@ -979,7 +979,7 @@
       "downloaded": false,
       "rating": 4.8,
       "color": "#0891B2",
-      "image": "",
+      "image": "/uploads/asset-14.jpg",
       "coins": 95,
       "owned": false,
       "sale": 0
@@ -1001,7 +1001,7 @@
       "downloaded": false,
       "rating": 4.9,
       "color": "#2563EB",
-      "image": "",
+      "image": "/uploads/asset-15.jpg",
       "coins": 195,
       "owned": false,
       "sale": 0
@@ -1022,7 +1022,7 @@
       "downloaded": false,
       "rating": 4.5,
       "color": "#D97706",
-      "image": "",
+      "image": "/uploads/asset-16.jpg",
       "coins": 145,
       "owned": false,
       "sale": 0
@@ -1045,7 +1045,7 @@
       "downloaded": true,
       "rating": 4.4,
       "color": "#7C3AED",
-      "image": "",
+      "image": "/uploads/asset-17.jpg",
       "coins": 85,
       "owned": true,
       "sale": 0
@@ -1067,7 +1067,7 @@
       "downloaded": false,
       "rating": 4.7,
       "color": "#DC2626",
-      "image": "",
+      "image": "/uploads/asset-18.jpg",
       "coins": 210,
       "owned": false,
       "sale": 0
