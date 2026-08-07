@@ -369,8 +369,11 @@ function listField(obj, key, label) {
  */
 function imageField(obj, key, label) {
   const preview = el('div', { className: 'preview' })
-  const pathInput = el('input', { type: 'text', value: obj[key] || '', placeholder: '/uploads/… หรือเว้นว่างเพื่อใช้ภาพที่ระบบวาดให้' })
-  const drop = el('div', { className: 'drop', textContent: 'ลากรูปมาวาง หรือคลิกเพื่อเลือกไฟล์' })
+  const pathInput = el('input', {
+    type: 'text', value: obj[key] || '',
+    placeholder: 'วางลิงก์รูป https://… ได้เลย หรือเว้นว่างเพื่อใช้ภาพที่ระบบวาดให้',
+  })
+  const drop = el('div', { className: 'drop', textContent: 'ลากรูปมาวาง คลิกเพื่อเลือกไฟล์ หรือวางลิงก์ในช่องล่าง' })
   const picker = el('input', { type: 'file', accept: 'image/*' })
   const clear = el('button', { className: 'quiet', type: 'button', textContent: 'เอารูปออก' })
 
@@ -410,7 +413,7 @@ function imageField(obj, key, label) {
       const body = await res.json()
       if (!res.ok) throw new Error(body.error || 'อัปโหลดไม่สำเร็จ')
       set(body.path)
-      drop.textContent = 'ลากรูปมาวาง หรือคลิกเพื่อเลือกไฟล์'
+      drop.textContent = 'ลากรูปมาวาง คลิกเพื่อเลือกไฟล์ หรือวางลิงก์ในช่องล่าง'
     } catch (err) {
       drop.textContent = String(err.message)
     }

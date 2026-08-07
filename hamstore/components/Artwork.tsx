@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Cover art.
  *
@@ -277,16 +279,23 @@ export function Artwork({ seed, title, motif, from, to, label, src, size = 'sm' 
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      {src ? (
+      {/* The drawn cover is always underneath. A photograph lays over it, and
+          if that photograph fails — a pasted URL that moved, a host that is
+          down — it takes itself out of the way and the drawn one shows
+          through. An empty grey box is the worst of the three outcomes. */}
+      {src && (
         <img
           src={src}
           alt=""
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
+          onError={e => {
+            e.currentTarget.style.display = 'none'
+          }}
+          className="absolute inset-0 z-10 h-full w-full object-cover"
         />
-      ) : (
-        <svg
+      )}
+      <svg
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="xMidYMid slice"
           aria-hidden
@@ -300,8 +309,7 @@ export function Artwork({ seed, title, motif, from, to, label, src, size = 'sm' 
           </defs>
           <rect width={W} height={H} fill={`url(#${gid}-bg)`} />
           {draw(motif, rand, '#ffffff', seed)}
-        </svg>
-      )}
+      </svg>
 
       {/* A scrim exists to keep type legible over art. With a title it darkens
           the lower half; with only the category chip it darkens the top a
@@ -311,21 +319,21 @@ export function Artwork({ seed, title, motif, from, to, label, src, size = 'sm' 
         <div
           className={
             title
-              ? 'absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.68)_0%,rgba(0,0,0,0.2)_46%,transparent_74%)]'
-              : 'absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.22)_0%,transparent_38%)]'
+              ? 'absolute inset-0 z-20 bg-[linear-gradient(to_top,rgba(0,0,0,0.68)_0%,rgba(0,0,0,0.2)_46%,transparent_74%)]'
+              : 'absolute inset-0 z-20 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.22)_0%,transparent_38%)]'
           }
         />
       )}
 
       {label && (
-        <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-black/35 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-label text-white backdrop-blur-sm">
+        <span className="absolute left-3 top-3 z-20 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-black/35 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-label text-white backdrop-blur-sm">
           {label}
         </span>
       )}
 
       {title && (
         <p
-          className={`absolute inset-x-3 bottom-3 line-clamp-2 font-bold leading-tight tracking-display text-white ${
+          className={`absolute inset-x-3 bottom-3 z-20 line-clamp-2 font-bold leading-tight tracking-display text-white ${
             size === 'lg' ? 'text-[clamp(1.1rem,2.2vw,1.75rem)]' : 'text-[clamp(0.95rem,1.5vw,1.25rem)]'
           }`}
         >
