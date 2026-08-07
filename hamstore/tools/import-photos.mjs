@@ -9,6 +9,12 @@
  *   node tools/import-photos.mjs ~/photos
  *   node tools/import-photos.mjs ~/photos --assets     # page two instead
  *   node tools/import-photos.mjs ~/photos --dry        # report, change nothing
+ *   node tools/import-photos.mjs links.txt             # a list of image URLs
+ *
+ * A links file is one URL per line, optionally with the item id in front —
+ * `3 https://…`. Bare lines take rows in order. Nothing is downloaded: the
+ * URL is stored and the visitor's browser fetches it, which is why this works
+ * even where the photo hosts are unreachable from here.
  *
  * Matching, in order of preference:
  *
@@ -61,6 +67,47 @@ function matchRow(file, rows, labelOf) {
   return null
 }
 
+/** A links file: one URL per line, `id url` to name a row outright. */
+async function importLinks(file, rows, labelOf, dry) {
+  const lines = (await fs.readFile(file, 'utf8'))
+    .split('\n')
+    .map(l => l.trim())
+    .filter(Boolean)
+
+  const taken = new Set()
+  let cursor = 0
+  const plan = []
+
+  for (const line of lines) {
+    const explicit = line.match(/^(\d+)\s*[=\s]\s*(\S+)$/)
+    const url = explicit ? explicit[2] : line
+    const ok = /^https?:\/\/\S+$/i.test(url)
+
+    let row = null
+    if (explicit) row = rows.find(r => r.id === Number(explicit[1])) ?? null
+    else {
+      while (cursor < rows.length && taken.has(rows[cursor].id)) cursor++
+      row = rows[cursor] ?? null
+    }
+    if (row) taken.add(row.id)
+    plan.push({ url, row, ok })
+  }
+
+  console.log(`\n  ${lines.length} บรรทัดใน ${file}\n`)
+  for (const { url, row, ok } of plan) {
+    const target = !ok ? 'ไม่ใช่ลิงก์' : row ? labelOf(row) : 'ไม่มีไอเทมให้ใส่'
+    console.log(`  ${ok && row ? '✓' : '·'} ${target.padEnd(24)} ${url.slice(0, 64)}`)
+  }
+
+  const usable = plan.filter(p => p.ok && p.row)
+  if (dry) {
+    console.log(`\n  ดูอย่างเดียว ยังไม่ได้แก้อะไร\n`)
+    return null
+  }
+  for (const { url, row } of usable) row.image = url
+  return usable.length
+}
+
 async function main() {
   const args = process.argv.slice(2)
   const dir = args.find(a => !a.startsWith('--'))
@@ -71,16 +118,35 @@ async function main() {
     console.error(`
   ใส่รูปจริงลงการ์ด
 
-    node tools/import-photos.mjs <โฟลเดอร์รูป>
-    node tools/import-photos.mjs <โฟลเดอร์รูป> --assets   # หน้า Unity Asset
-    node tools/import-photos.mjs <โฟลเดอร์รูป> --dry      # ดูผลก่อน ไม่แก้ไฟล์
+    node tools/import-photos.mjs <โฟลเดอร์รูป>            # ไฟล์ในเครื่อง
+    node tools/import-photos.mjs <ไฟล์ลิงก์.txt>          # ลิงก์รูป บรรทัดละอัน
+    node tools/import-photos.mjs <ที่อยู่> --assets       # หน้า Unity Asset
+    node tools/import-photos.mjs <ที่อยู่> --dry          # ดูผลก่อน ไม่แก้อะไร
 
-  ตั้งชื่อไฟล์ให้ตรงกับไอเทม เช่น  3.jpg  /  item-3.jpg  /  แฮมนินจา.jpg
+  ไฟล์:   ตั้งชื่อให้ตรงกับไอเทม — 3.jpg / item-3.jpg / แฮมนินจา.jpg
+  ลิงก์:  บรรทัดละหนึ่ง URL หรือ "3 https://…" เพื่อระบุไอเทม
 `)
     process.exit(1)
   }
 
   const source = path.resolve(dir)
+
+  /* A file rather than a folder means a list of links. */
+  const stat = await fs.stat(source).catch(() => null)
+  if (stat?.isFile()) {
+    const site = JSON.parse(await fs.readFile(CONTENT, 'utf8'))
+    const rows = toAssets ? site.assets : site.items
+    const n = await importLinks(source, rows, r => (toAssets ? r.title : r.name), dry)
+    if (n === null) return
+    await fs.writeFile(CONTENT, JSON.stringify(site, null, 2) + '\n')
+    console.log(`
+  ใส่ลิงก์แล้ว ${n} อัน
+  ต่อไป:  npm run build
+  ย้อนกลับ:  git checkout content/site.json
+`)
+    return
+  }
+
   const entries = await fs.readdir(source).catch(() => null)
   if (!entries) {
     console.error(`\n  ไม่พบโฟลเดอร์: ${source}\n`)

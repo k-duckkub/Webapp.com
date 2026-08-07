@@ -112,6 +112,19 @@
   .bulk.over { border-color: var(--brand); background: #fff7ed; color: var(--graphite); }
   .bulk b { color: var(--graphite); }
 
+  .paste { background: #fff; border: 1px solid var(--hair); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+  .paste textarea {
+    width: 100%; min-height: 150px; font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--mist); border: 1px solid transparent; border-radius: 10px; padding: 10px 12px;
+    outline: none; resize: vertical;
+  }
+  .paste textarea:focus { border-color: var(--brand); background: #fff; }
+  .paste .map { margin: 12px 0 0; font-size: 12px; max-height: 190px; overflow: auto; }
+  .paste .map div { display: flex; gap: 10px; padding: 3px 0; border-bottom: 1px solid var(--mist); }
+  .paste .map .to { color: var(--graphite); font-weight: 500; white-space: nowrap; }
+  .paste .map .url { color: var(--slate); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .paste .map .bad { color: var(--bad); }
+
   .preview { position: fixed; inset: 0; z-index: 40; background: rgba(29,29,31,.5); display: none; }
   .preview.on { display: block; }
   .preview .frame { position: absolute; inset: 24px; background: #fff; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
@@ -209,6 +222,89 @@ function checkField(obj, key, label) {
     el('label', { textContent: label }),
     el('div', { style: 'display:flex;align-items:center;gap:8px;padding:9px 0' },
       input, el('span', { style: 'font-size:13px;color:var(--slate)', textContent: label })))
+}
+
+/**
+ * Paste a list of image links and have them land on the right rows.
+ *
+ * Gathering eighteen links from a photo library and then pasting them into
+ * eighteen separate fields is the part that actually costs time. This takes
+ * the whole list at once. Two line formats, because both are natural to
+ * produce: a bare URL takes the next row in the order shown, and `3 <url>`
+ * or `3=<url>` names the row outright.
+ *
+ * The mapping is shown before anything is applied. A list of links is easy to
+ * get one line out of step, and finding that out after a rebuild is worse
+ * than reading four lines now.
+ */
+function pasteLinks(rows, labelOf) {
+  const box = el('textarea', {
+    placeholder:
+      'วางลิงก์รูป บรรทัดละหนึ่งอัน\n\n' +
+      'https://images.unsplash.com/photo-…\n' +
+      'https://images.pexels.com/photos/…\n\n' +
+      'หรือระบุเลขไอเทมข้างหน้า:\n' +
+      '3 https://…',
+  })
+  const map = el('div', { className: 'map' })
+  const apply = el('button', { className: 'primary', type: 'button', textContent: 'ใส่ลิงก์ทั้งหมด', disabled: true })
+  const cancel = el('button', { className: 'quiet', type: 'button', textContent: 'ยกเลิก' })
+
+  let plan = []
+
+  const parse = () => {
+    const lines = box.value.split('\n').map(l => l.trim()).filter(Boolean)
+    const taken = new Set()
+    let cursor = 0
+    plan = []
+
+    for (const line of lines) {
+      const explicit = line.match(/^(\d+)\s*[=\s]\s*(\S+)$/)
+      const url = explicit ? explicit[2] : line
+      const ok = /^https?:\/\/\S+$/i.test(url)
+
+      let row = null
+      if (explicit) {
+        row = rows.find(r => r.id === Number(explicit[1])) ?? null
+      } else {
+        while (cursor < rows.length && taken.has(rows[cursor].id)) cursor++
+        row = rows[cursor] ?? null
+      }
+      if (row) taken.add(row.id)
+      plan.push({ url, row, ok })
+    }
+
+    map.innerHTML = ''
+    for (const { url, row, ok } of plan) {
+      map.append(el('div', {},
+        el('span', { className: 'to' + (row && ok ? '' : ' bad'),
+                     textContent: !ok ? 'ไม่ใช่ลิงก์' : row ? labelOf(row) : 'ไม่มีไอเทมให้ใส่' }),
+        el('span', { className: 'url', textContent: url })))
+    }
+    const usable = plan.filter(p => p.ok && p.row).length
+    apply.disabled = usable === 0
+    apply.textContent = usable ? `ใส่ลิงก์ ${usable} อัน` : 'ใส่ลิงก์ทั้งหมด'
+  }
+
+  box.addEventListener('input', parse)
+  apply.addEventListener('click', () => {
+    let n = 0
+    for (const { url, row, ok } of plan) {
+      if (!ok || !row) continue
+      row.image = url
+      n++
+    }
+    touch()
+    draw()
+    setStatus(`ใส่ลิงก์แล้ว ${n} อัน — กดบันทึกแล้วสร้างเว็บใหม่`, 'ok')
+  })
+  cancel.addEventListener('click', () => { box.value = ''; parse() })
+
+  return el('div', { className: 'paste' },
+    el('label', { style: 'display:block;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--slate)',
+                  textContent: 'วางลิงก์รูปทีเดียวหลายอัน' }),
+    box, map,
+    el('div', { style: 'display:flex;gap:8px;margin-top:12px' }, apply, cancel))
 }
 
 /**
@@ -530,6 +626,7 @@ function renderItems() {
 
   return panel('items', 'ไอเทมในร้าน', data.items.length + ' ชิ้น — เพิ่ม ลบ สลับลำดับ และแก้ได้ทุกช่อง',
     el('div', { className: 'addbar' }, add, bulkDrop(data.items, i => i.name, 'item')),
+    pasteLinks(data.items, i => i.name),
     ...data.items.map((item, index) => {
       const detail = data.itemDetails[item.id] || (data.itemDetails[item.id] = {
         maker: '', owners: 0, includes: [], showsUp: [], version: '1.0', updatedAt: '',
@@ -640,7 +737,9 @@ function renderLibrary() {
         })
         touch(); draw()
       })
-      return el('div', { className: 'addbar' }, add, bulkDrop(data.assets, a => a.title, 'asset'))
+      return el('span', { style: 'display:contents' },
+        el('div', { className: 'addbar' }, add, bulkDrop(data.assets, a => a.title, 'asset')),
+        pasteLinks(data.assets, a => a.title))
     })(),
     ...data.assets.map((asset, index) => {
       const thumb = el('img', { className: 'thumb', src: asset.image || '', alt: '' })
