@@ -8,7 +8,10 @@ import { COPY } from '@/lib/content'
 
 const totalSize = OWNED_ASSETS.reduce((sum, a) => sum + a.size, 0)
 const updateCount = OWNED_ASSETS.filter(a => a.hasUpdate).length
-const publisherCount = new Set(OWNED_ASSETS.map(a => a.publisher)).size
+/* What was actually spent. "ผู้พัฒนา" was a fact about the catalogue; this is
+   a fact about the buyer, and it is the one that says these are already
+   theirs — a download button under a number nobody paid reads like a shop. */
+const coinsSpent = OWNED_ASSETS.reduce((sum, a) => sum + a.paidCoins, 0)
 
 const hero = COPY.library.hero
 
@@ -16,7 +19,7 @@ const STATS = [
   { id: 'assets',     value: OWNED_ASSETS.length, label: hero.stats.assets },
   { id: 'size',       value: totalSize,           label: hero.stats.size, isSize: true },
   { id: 'updates',    value: updateCount,         label: hero.stats.updates },
-  { id: 'publishers', value: publisherCount,      label: hero.stats.publishers },
+  { id: 'spent',      value: coinsSpent,          label: hero.stats.spent },
 ]
 
 export function LibraryHero() {

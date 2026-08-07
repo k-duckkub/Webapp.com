@@ -6,6 +6,7 @@ import { formatSize, formatThaiDate, CATEGORY_MOTIF, type OwnedAsset } from '@/l
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 import { useLibrary } from './LibraryProvider'
+import { COPY } from '@/lib/content'
 
 /**
  * The card never animates between grid slots — that is what made the ones on
@@ -34,9 +35,16 @@ export function AssetCard({ asset, onReceipt }: { asset: OwnedAsset; onReceipt: 
           src={asset.image}
         />
 
-        {/* Status sits along the bottom, out of the category chip's corner —
-            stacked in the same corner the two clipped each other. */}
+        {/* "ยังไม่ดาวน์โหลด" was read as "ยังไม่ได้ซื้อ" — one badge answering
+            the wrong question. Ownership is now stated first and on every
+            card; the download state follows it as a separate fact about the
+            file. Both sit along the bottom, directly above the button they
+            explain and clear of the category chip in the opposite corner. */}
         <div className="absolute inset-x-3 bottom-3 flex flex-wrap gap-1.5">
+          <span className="flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-medium text-graphite backdrop-blur-sm">
+            <Icon name="check" className="h-3 w-3 text-brand" strokeWidth={2.6} />
+            {COPY.library.ownedBadge}
+          </span>
           {asset.hasUpdate && (
             <span className="rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
               อัปเดตใหม่
@@ -44,7 +52,7 @@ export function AssetCard({ asset, onReceipt }: { asset: OwnedAsset; onReceipt: 
           )}
           {!asset.downloaded && (
             <span className="rounded-full bg-graphite px-2.5 py-0.5 text-[11px] font-medium text-white">
-              ยังไม่ดาวน์โหลด
+              {COPY.library.notDownloadedBadge}
             </span>
           )}
         </div>
@@ -75,7 +83,8 @@ export function AssetCard({ asset, onReceipt }: { asset: OwnedAsset; onReceipt: 
           {[
             ['เวอร์ชัน', `v${asset.version}`],
             ['ขนาด', formatSize(asset.size)],
-            ['ซื้อเมื่อ', formatThaiDate(asset.purchasedAt)],
+            ['แลกเมื่อ', formatThaiDate(asset.purchasedAt)],
+            ['จ่ายไป', `${asset.paidCoins.toLocaleString('th-TH')} เหรียญ`],
             ['License', asset.license],
           ].map(([label, value]) => (
             <div key={label} className="flex justify-between gap-3">

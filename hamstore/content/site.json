@@ -59,11 +59,14 @@
         "assets": "asset ที่ซื้อแล้ว",
         "size": "ขนาดรวม",
         "updates": "มีอัปเดตใหม่",
-        "publishers": "ผู้พัฒนา"
+        "spent": "เหรียญที่แลกไปแล้ว"
       }
     },
     "searchPlaceholder": "ค้นหาชื่อ asset หรือผู้พัฒนา…",
-    "emptyTitle": "ไม่เจอ asset ที่ตรงกับตัวกรอง"
+    "emptyTitle": "ไม่เจอ asset ที่ตรงกับตัวกรอง",
+    "ownedNote": "ทุกชิ้นในหน้านี้แลกด้วย HamCoin ไปแล้ว — ดาวน์โหลดกี่ครั้งก็ได้ ไม่มีวันหมดอายุ",
+    "notDownloadedBadge": "ยังไม่ได้โหลดลงเครื่อง",
+    "ownedBadge": "ซื้อแล้ว"
   },
   "footer": {
     "columns": [

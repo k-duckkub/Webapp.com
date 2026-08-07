@@ -243,10 +243,20 @@ export function LibraryBrowser() {
             </div>
           </div>
 
-          <p className="mb-8 text-[13px] text-slate">
-            พบ <strong className="font-medium text-graphite">{filtered.length}</strong> จากทั้งหมด{' '}
-            {OWNED_ASSETS.length} ชิ้น
-          </p>
+          {/* The hero says these are already bought, but by the time you have
+              scrolled to a download button that context is off-screen — which
+              is exactly where "ทำไมโหลดได้ ยังไม่ได้ซื้อเลย" comes from. The
+              answer sits next to the buttons it explains. */}
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+            <p className="text-[13px] text-slate">
+              พบ <strong className="font-medium text-graphite">{filtered.length}</strong> จากทั้งหมด{' '}
+              {OWNED_ASSETS.length} ชิ้น
+            </p>
+            <p className="flex items-center gap-1.5 text-[13px] text-slate">
+              <Icon name="check" className="h-3.5 w-3.5 shrink-0 text-brand" strokeWidth={2.4} />
+              {COPY.library.ownedNote}
+            </p>
+          </div>
 
           {paginated.length === 0 ? (
             <div className="rounded-card bg-paper py-20 text-center">
