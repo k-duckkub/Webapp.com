@@ -1,0 +1,1286 @@
+{
+  "$schema": "./site.schema.json",
+  "nav": {
+    "wordmark": "HamsterHub",
+    "storeLabel": "ของจริงส่งถึงบ้าน",
+    "libraryLabel": "Unity Asset",
+    "balanceSuffix": "HamCoin",
+    "cartLabel": "ตะกร้า"
+  },
+  "store": {
+    "hero": {
+      "eyebrow": "HamStore",
+      "headlineLine1": "ของจริง",
+      "headlineLine2": "ส่งถึงบ้าน",
+      "lede": "เสื้อ หมอน โคมไฟ แก้ว — แลกด้วยเหรียญที่ได้จากการเรียน ส่งฟรีเมื่อครบ 500 เหรียญ",
+      "primaryCta": "ดูของทั้งหมด",
+      "secondaryCta": "HamCoin ใช้ยังไง",
+      "image": ""
+    },
+    "recommended": {
+      "heading": "ของที่เราแนะนำ",
+      "sub": "สี่ชิ้นนี้มาจากยอดสั่งจริงของเดือนนี้"
+    },
+    "bands": [
+      {
+        "kind": "apparel",
+        "headline": "ผ้าที่ใส่ได้ทุกวัน ไม่ใช่แค่ครั้งเดียว",
+        "body": "คอตตอนหนา 220 แกรม สกรีนด้วยหมึกน้ำที่ไม่แตกหลังซัก เราซักตัวอย่างสิบรอบก่อนสั่งผลิต",
+        "image": ""
+      },
+      {
+        "kind": "home",
+        "headline": "ของที่อยู่บนโต๊ะคุณทั้งปี",
+        "body": "หมอน โคมไฟ ผ้าห่ม — เลือกมาจากของที่เราใช้เองก่อน แล้วค่อยเอามาขาย",
+        "image": ""
+      }
+    ],
+    "facts": {
+      "inStore": "ชิ้นในร้านตอนนี้",
+      "free": "ชิ้นที่มีของพร้อมส่ง",
+      "cheapest": "เหรียญ สำหรับชิ้นที่ถูกที่สุด",
+      "baht": "บาท — เหรียญได้จากการเรียนเท่านั้น"
+    },
+    "grid": {
+      "heading": "สินค้าทั้งหมด",
+      "sub": "ของใช้จริง ส่งถึงบ้าน — Unity asset อยู่อีกหน้า"
+    },
+    "how": {
+      "heading": "จากบทเรียน",
+      "headingAccent": "ถึงหน้าบ้าน",
+      "sub": "สามขั้น ไม่มีขั้นไหนใช้เงินจริง"
+    }
+  },
+  "library": {
+    "hero": {
+      "headlineLine1": "Unity Asset",
+      "headlineLine2": "แลกด้วยเหรียญ",
+      "lede": "เหรียญที่ได้จากการเรียน แลกเป็นแพ็กเกจพร้อมใช้ในโปรเจกต์จริง ครั้งเดียวเป็นของคุณถาวร",
+      "image": "",
+      "stats": {
+        "assets": "แพ็กเกจในร้าน",
+        "owned": "ชิ้นที่คุณมีแล้ว",
+        "cheapest": "เหรียญ สำหรับชิ้นที่ถูกที่สุด",
+        "publishers": "ผู้พัฒนา"
+      }
+    },
+    "searchPlaceholder": "ค้นหาชื่อ asset หรือผู้พัฒนา…",
+    "emptyTitle": "ไม่เจอ asset ที่ตรงกับตัวกรอง",
+    "ownedNote": "แลกครั้งเดียวเป็นของคุณถาวร ดาวน์โหลดซ้ำได้ไม่จำกัด",
+    "notDownloadedBadge": "ยังไม่ได้โหลดลงเครื่อง",
+    "ownedBadge": "มีแล้ว"
+  },
+  "footer": {
+    "columns": [
+      {
+        "title": "HamStore",
+        "links": [
+          "ของทั้งหมด",
+          "คลัง Unity Asset",
+          "ของมาใหม่",
+          "ติดตามพัสดุ"
+        ]
+      },
+      {
+        "title": "เรียนกับเรา",
+        "links": [
+          "หลักสูตรทั้งหมด",
+          "เส้นทางนักพัฒนาเกม",
+          "โปรเจกต์ตัวอย่าง",
+          "ใบรับรอง"
+        ]
+      },
+      {
+        "title": "HamCoin",
+        "links": [
+          "วิธีสะสมเหรียญ",
+          "ภารกิจประจำวัน",
+          "อันดับผู้เรียน",
+          "ประวัติการแลก"
+        ]
+      },
+      {
+        "title": "ช่วยเหลือ",
+        "links": [
+          "คำถามที่พบบ่อย",
+          "ติดต่อทีมงาน",
+          "แจ้งปัญหา",
+          "สถานะระบบ"
+        ]
+      }
+    ],
+    "copyright": "© 2569 HamsterHub — ตัวอย่างงานออกแบบ ไม่ใช่ร้านค้าจริง"
+  },
+  "items": [
+    {
+      "id": 1,
+      "kind": "apparel",
+      "name": "เสื้อยืดแฮมสเตอร์ สีดำ",
+      "blurb": "คอตตอน 100% หนา 220 แกรม สกรีนหน้าอกซ้าย",
+      "coins": 320,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-1.jpg",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": 42,
+      "shipsIn": 2
+    },
+    {
+      "id": 2,
+      "kind": "apparel",
+      "name": "เสื้อยืดแฮมสเตอร์ สีครีม",
+      "blurb": "ทรงโอเวอร์ไซซ์ ผ้าเดียวกับสีดำ ใส่สบายทั้งวัน",
+      "coins": 320,
+      "sale": 20,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-2.jpg",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": 18,
+      "shipsIn": 2
+    },
+    {
+      "id": 3,
+      "kind": "apparel",
+      "name": "ฮู้ดดี้ HamsterHub",
+      "blurb": "ผ้าสำลีสองหน้า มีกระเป๋าหน้า เชือกฮู้ดกลม",
+      "coins": 680,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-3.jpg",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": 9,
+      "shipsIn": 3
+    },
+    {
+      "id": 4,
+      "kind": "apparel",
+      "name": "หมวกแก๊ปปักโลโก้",
+      "blurb": "ทรงหกชิ้น ปรับสายหลังได้ ปักนูนด้านหน้า",
+      "coins": 240,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-4.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 55,
+      "shipsIn": 2
+    },
+    {
+      "id": 5,
+      "kind": "apparel",
+      "name": "ถุงเท้าลายแฮม",
+      "blurb": "ลายทอทั้งผืน ไม่ใช่สกรีน ยาวข้อกลาง",
+      "coins": 120,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-5.jpg",
+      "sizes": [
+        "M",
+        "L"
+      ],
+      "stock": 80,
+      "shipsIn": 2
+    },
+    {
+      "id": 6,
+      "kind": "home",
+      "name": "หมอนอิงแฮมสเตอร์",
+      "blurb": "ขนาด 45×45 ซม. ปลอกถอดซักได้ พร้อมใส้หมอน",
+      "coins": 380,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-6.jpg",
+      "sizes": [
+        "45×45 ซม."
+      ],
+      "stock": 24,
+      "shipsIn": 4
+    },
+    {
+      "id": 7,
+      "kind": "home",
+      "name": "โคมไฟตั้งโต๊ะ",
+      "blurb": "ไฟ LED ปรับสามระดับ สาย USB-C ยาว 1.5 ม.",
+      "coins": 890,
+      "sale": 15,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-7.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 6,
+      "shipsIn": 5
+    },
+    {
+      "id": 8,
+      "kind": "home",
+      "name": "ผ้าห่มขนนุ่ม",
+      "blurb": "ขนาด 150×200 ซม. ผ้าไมโครไฟเบอร์ ไม่เป็นขุย",
+      "coins": 640,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-8.jpg",
+      "sizes": [
+        "150×200 ซม."
+      ],
+      "stock": 12,
+      "shipsIn": 4
+    },
+    {
+      "id": 9,
+      "kind": "home",
+      "name": "พรมเช็ดเท้าแฮม",
+      "blurb": "ขนาด 40×60 ซม. หลังยางกันลื่น ซักได้",
+      "coins": 290,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-9.jpg",
+      "sizes": [
+        "40×60 ซม."
+      ],
+      "stock": 0,
+      "shipsIn": 4
+    },
+    {
+      "id": 10,
+      "kind": "desk",
+      "name": "แก้วเซรามิกแฮม",
+      "blurb": "ความจุ 350 มล. เข้าไมโครเวฟและเครื่องล้างจานได้",
+      "coins": 260,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-10.jpg",
+      "sizes": [
+        "350 มล."
+      ],
+      "stock": 37,
+      "shipsIn": 3
+    },
+    {
+      "id": 11,
+      "kind": "desk",
+      "name": "กระบอกน้ำเก็บอุณหภูมิ",
+      "blurb": "สเตนเลสสองชั้น 500 มล. เก็บร้อน 6 ชม. เย็น 12 ชม.",
+      "coins": 520,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-11.jpg",
+      "sizes": [
+        "500 มล."
+      ],
+      "stock": 21,
+      "shipsIn": 3
+    },
+    {
+      "id": 12,
+      "kind": "desk",
+      "name": "กระเป๋าผ้าแคนวาส",
+      "blurb": "ผ้าแคนวาส 12 ออนซ์ สายยาวสะพายไหล่ได้",
+      "coins": 180,
+      "sale": 30,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-12.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 64,
+      "shipsIn": 2
+    },
+    {
+      "id": 13,
+      "kind": "desk",
+      "name": "แผ่นรองเมาส์ยาว",
+      "blurb": "ขนาด 80×30 ซม. ขอบเย็บกันลุ่ย ฐานยางกันลื่น",
+      "coins": 220,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-13.jpg",
+      "sizes": [
+        "80×30 ซม."
+      ],
+      "stock": 33,
+      "shipsIn": 3
+    },
+    {
+      "id": 14,
+      "kind": "desk",
+      "name": "สมุดโน้ตปกแข็ง",
+      "blurb": "A5 กระดาษถนอมสายตา 160 หน้า มีเส้นบรรทัด",
+      "coins": 150,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-14.jpg",
+      "sizes": [
+        "A5"
+      ],
+      "stock": 48,
+      "shipsIn": 2
+    },
+    {
+      "id": 15,
+      "kind": "collect",
+      "name": "ตุ๊กตาแฮมสเตอร์",
+      "blurb": "สูง 18 ซม. ผ้ากำมะหยี่ ใยรีไซเคิลข้างใน",
+      "coins": 450,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-15.jpg",
+      "sizes": [
+        "18 ซม."
+      ],
+      "stock": 15,
+      "shipsIn": 4
+    },
+    {
+      "id": 16,
+      "kind": "collect",
+      "name": "สติกเกอร์ไดคัท 12 ชิ้น",
+      "blurb": "กันน้ำ ติดโน้ตบุ๊กได้ ไม่ทิ้งคราบเวลาลอก",
+      "coins": 90,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-16.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 120,
+      "shipsIn": 2
+    },
+    {
+      "id": 17,
+      "kind": "collect",
+      "name": "พวงกุญแจอะคริลิก",
+      "blurb": "อะคริลิกหนา 3 มม. พิมพ์สองด้าน ห่วงเหล็ก",
+      "coins": 110,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-17.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 72,
+      "shipsIn": 2
+    },
+    {
+      "id": 18,
+      "kind": "collect",
+      "name": "เข็มกลัดเคลือบแข็ง",
+      "blurb": "โลหะชุบ เคลือบแข็ง ขนาด 30 มม. เข็มกลัดคู่",
+      "coins": 140,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F26F21",
+        "#5B3A1E"
+      ],
+      "image": "/uploads/item-18.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 0,
+      "shipsIn": 2
+    }
+  ],
+  "itemDetails": {
+    "1": {
+      "maker": "HamsterHub Shop",
+      "owners": 1840,
+      "includes": [
+        "เสื้อยืด 1 ตัว",
+        "ป้ายทอที่คอเสื้อ"
+      ],
+      "showsUp": [
+        "คอตตอน 100%"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "2": {
+      "maker": "HamsterHub Shop",
+      "owners": 1120,
+      "includes": [
+        "เสื้อยืด 1 ตัว",
+        "ทรงโอเวอร์ไซซ์"
+      ],
+      "showsUp": [
+        "คอตตอน 100%"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "3": {
+      "maker": "HamsterHub Shop",
+      "owners": 640,
+      "includes": [
+        "ฮู้ดดี้ 1 ตัว",
+        "กระเป๋าหน้าใบใหญ่"
+      ],
+      "showsUp": [
+        "ผ้าสำลีสองหน้า"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "4": {
+      "maker": "HamsterHub Shop",
+      "owners": 980,
+      "includes": [
+        "หมวก 1 ใบ",
+        "ปรับสายได้"
+      ],
+      "showsUp": [
+        "ผ้าทวิลคอตตอน"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "5": {
+      "maker": "HamsterHub Shop",
+      "owners": 1560,
+      "includes": [
+        "ถุงเท้า 1 คู่"
+      ],
+      "showsUp": [
+        "คอตตอนผสมสแปนเด็กซ์"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "6": {
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 870,
+      "includes": [
+        "ปลอกหมอน 1 ใบ",
+        "ใส้หมอน 1 ใบ"
+      ],
+      "showsUp": [
+        "ผ้าลินินผสม"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "7": {
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 410,
+      "includes": [
+        "โคมไฟ 1 ตัว",
+        "สาย USB-C 1.5 ม."
+      ],
+      "showsUp": [
+        "อะลูมิเนียม + ABS"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "8": {
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 520,
+      "includes": [
+        "ผ้าห่ม 1 ผืน",
+        "ถุงผ้าเก็บ"
+      ],
+      "showsUp": [
+        "ไมโครไฟเบอร์"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "9": {
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 330,
+      "includes": [
+        "พรม 1 ผืน"
+      ],
+      "showsUp": [
+        "ผิวไนลอน หลังยาง"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "10": {
+      "maker": "HamsterHub Shop",
+      "owners": 2140,
+      "includes": [
+        "แก้ว 1 ใบ",
+        "กล่องกันกระแทก"
+      ],
+      "showsUp": [
+        "เซรามิกเคลือบ"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "11": {
+      "maker": "HamsterHub Shop",
+      "owners": 760,
+      "includes": [
+        "กระบอกน้ำ 1 ใบ",
+        "ฝาเกลียวกันรั่ว"
+      ],
+      "showsUp": [
+        "สเตนเลส 304"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "12": {
+      "maker": "HamsterHub Shop",
+      "owners": 2680,
+      "includes": [
+        "กระเป๋า 1 ใบ"
+      ],
+      "showsUp": [
+        "แคนวาส 12 ออนซ์"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "13": {
+      "maker": "HamsterHub Shop",
+      "owners": 1290,
+      "includes": [
+        "แผ่นรองเมาส์ 1 ผืน"
+      ],
+      "showsUp": [
+        "ผ้าไมโครไฟเบอร์ + ยาง"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "14": {
+      "maker": "HamsterHub Shop",
+      "owners": 1740,
+      "includes": [
+        "สมุด 1 เล่ม",
+        "ริบบิ้นคั่นหน้า"
+      ],
+      "showsUp": [
+        "กระดาษถนอมสายตา"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "15": {
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 690,
+      "includes": [
+        "ตุ๊กตา 1 ตัว",
+        "ป้ายห้อย"
+      ],
+      "showsUp": [
+        "กำมะหยี่ ใยรีไซเคิล"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "16": {
+      "maker": "Dev Sticker Co.",
+      "owners": 3410,
+      "includes": [
+        "สติกเกอร์ 12 ชิ้น",
+        "กันน้ำทุกชิ้น"
+      ],
+      "showsUp": [
+        "ไวนิลกันน้ำ"
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "17": {
+      "maker": "Dev Sticker Co.",
+      "owners": 1980,
+      "includes": [
+        "พวงกุญแจ 1 ชิ้น",
+        "ห่วงเหล็ก"
+      ],
+      "showsUp": [
+        "อะคริลิก 3 มม."
+      ],
+      "version": "",
+      "updatedAt": ""
+    },
+    "18": {
+      "maker": "Dev Sticker Co.",
+      "owners": 1150,
+      "includes": [
+        "เข็มกลัด 1 ชิ้น",
+        "การ์ดรองหลัง"
+      ],
+      "showsUp": [
+        "โลหะเคลือบแข็ง"
+      ],
+      "version": "",
+      "updatedAt": ""
+    }
+  },
+  "recommended": [
+    {
+      "id": 1,
+      "reason": "ขายดีที่สุด",
+      "note": "เสื้อตัวที่คนสั่งซ้ำมากที่สุด ผ้าหนาพอที่จะไม่โปร่งหลังซักสิบครั้ง"
+    },
+    {
+      "id": 7,
+      "reason": "เหลือ 6 ชิ้น",
+      "note": "ล็อตนี้ผลิตจำนวนจำกัด ปรับไฟได้สามระดับ ใช้สาย USB-C เส้นเดียวกับโน้ตบุ๊ก"
+    },
+    {
+      "id": 16,
+      "reason": "เริ่มต้น 90",
+      "note": "ถูกที่สุดในร้าน กันน้ำจริง ติดฝาโน้ตบุ๊กแล้วลอกออกได้ไม่ทิ้งคราบ"
+    },
+    {
+      "id": 3,
+      "reason": "หนาวนี้",
+      "note": "ผ้าสำลีสองหน้า ใส่คลุมได้ตั้งแต่แอร์ห้องเรียนยันดอย"
+    }
+  ],
+  "pathway": [
+    {
+      "id": "earn",
+      "step": "01",
+      "title": "เรียนแล้วได้เหรียญ",
+      "body": "เรียนจบบทเรียน ส่งงาน หรือช่วยตอบคำถามในฟอรัม เหรียญเข้ากระเป๋าทันที — ซื้อด้วยเงินจริงไม่ได้ ที่นี่มีทางเดียวคือเรียน",
+      "icon": "coin",
+      "color": "#F26F21"
+    },
+    {
+      "id": "choose",
+      "step": "02",
+      "title": "เลือกของแล้วเลือกไซซ์",
+      "body": "เสื้อ หมอน โคมไฟ แก้ว — ของจริงทั้งหมด กดดูรายละเอียดเพื่อเลือกไซซ์และดูว่าเหลือกี่ชิ้นก่อนใส่ตะกร้า",
+      "icon": "cart",
+      "color": "#F26F21"
+    },
+    {
+      "id": "ship",
+      "step": "03",
+      "title": "ส่งถึงหน้าบ้าน",
+      "body": "กรอกที่อยู่แล้วสั่งได้เลย ระบบจะให้เลขที่คำสั่งซื้อและวันที่ของถึงโดยประมาณ ส่งฟรีเมื่อยอดถึง 500 เหรียญ",
+      "icon": "receipt",
+      "color": "#F26F21"
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "title": "GUI Pro - Minimal Game Light",
+      "publisher": "Michsky",
+      "category": "GUI",
+      "pipelines": [
+        "Built-in",
+        "URP"
+      ],
+      "version": "2.4.1",
+      "size": 84.2,
+      "purchasedAt": "2026-01-14",
+      "updatedAt": "2026-06-02",
+      "license": "Single Entity",
+      "hasUpdate": true,
+      "downloaded": true,
+      "rating": 4.8,
+      "color": "#F26F21",
+      "image": "/uploads/asset-1.jpg",
+      "coins": 100,
+      "owned": true,
+      "sale": 0
+    },
+    {
+      "id": 2,
+      "title": "HTrace: SSGI URP",
+      "publisher": "Heterosis",
+      "category": "VFX",
+      "pipelines": [
+        "URP"
+      ],
+      "version": "1.9.0",
+      "size": 212.7,
+      "purchasedAt": "2026-02-03",
+      "updatedAt": "2026-02-03",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": true,
+      "rating": 4.6,
+      "color": "#F26F21",
+      "image": "/uploads/asset-2.jpg",
+      "coins": 130,
+      "owned": true,
+      "sale": 0
+    },
+    {
+      "id": 3,
+      "title": "UniPay - IAP Billing",
+      "publisher": "Hamster Lab",
+      "category": "TOOLS",
+      "pipelines": [
+        "Built-in"
+      ],
+      "version": "3.0.2",
+      "size": 18.4,
+      "updatedAt": "2026-05-21",
+      "license": "Multi Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.5,
+      "color": "#F26F21",
+      "image": "/uploads/asset-3.jpg",
+      "coins": 140,
+      "owned": false,
+      "sale": 0
+    },
+    {
+      "id": 4,
+      "title": "Character Boom",
+      "publisher": "Boom Studio",
+      "category": "CHARACTER",
+      "pipelines": [
+        "Built-in",
+        "URP"
+      ],
+      "version": "1.2.0",
+      "size": 156.9,
+      "updatedAt": "2026-03-07",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.9,
+      "color": "#F26F21",
+      "image": "/uploads/asset-4.jpg",
+      "coins": 160,
+      "owned": false,
+      "sale": 0
+    },
+    {
+      "id": 5,
+      "title": "MFPS 2.0 Multiplayer FPS",
+      "publisher": "LOVATTO Studio",
+      "category": "TEMPLATE",
+      "pipelines": [
+        "Built-in",
+        "URP"
+      ],
+      "version": "6.1.3",
+      "size": 640.5,
+      "purchasedAt": "2026-03-22",
+      "updatedAt": "2026-07-11",
+      "license": "Single Entity",
+      "hasUpdate": true,
+      "downloaded": true,
+      "rating": 4.7,
+      "color": "#F26F21",
+      "image": "/uploads/asset-5.jpg",
+      "coins": 230,
+      "owned": true,
+      "sale": 0
+    },
+    {
+      "id": 6,
+      "title": "City Car Driving Simulator",
+      "publisher": "RoadPro",
+      "category": "TEMPLATE",
+      "pipelines": [
+        "URP"
+      ],
+      "version": "2.0.0",
+      "size": 488.1,
+      "updatedAt": "2026-04-02",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.4,
+      "color": "#F26F21",
+      "image": "/uploads/asset-6.jpg",
+      "coins": 250,
+      "owned": false,
+      "sale": 20
+    },
+    {
+      "id": 7,
+      "title": "Low Poly Fantasy Forest",
+      "publisher": "Synty Studios",
+      "category": "ENVIRONMENTS",
+      "pipelines": [
+        "Built-in",
+        "URP",
+        "HDRP"
+      ],
+      "version": "4.5.0",
+      "size": 302.3,
+      "updatedAt": "2026-06-30",
+      "license": "Multi Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.8,
+      "color": "#F26F21",
+      "image": "/uploads/asset-7.jpg",
+      "coins": 180,
+      "owned": false,
+      "sale": 0
+    },
+    {
+      "id": 8,
+      "title": "Pixel Hero Pack Vol.1",
+      "publisher": "PixelToon",
+      "category": "CHARACTER",
+      "pipelines": [
+        "Built-in"
+      ],
+      "version": "1.0.4",
+      "size": 22.8,
+      "updatedAt": "2026-04-25",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.6,
+      "color": "#F26F21",
+      "image": "/uploads/asset-8.jpg",
+      "coins": 75,
+      "owned": false,
+      "sale": 0
+    },
+    {
+      "id": 9,
+      "title": "Ultimate Game SFX Bundle",
+      "publisher": "SoundBridge",
+      "category": "AUDIO",
+      "pipelines": [
+        "Built-in"
+      ],
+      "version": "5.2.0",
+      "size": 1284,
+      "purchasedAt": "2026-05-06",
+      "updatedAt": "2026-05-06",
+      "license": "Multi Entity",
+      "hasUpdate": false,
+      "downloaded": true,
+      "rating": 4.9,
+      "color": "#F26F21",
+      "image": "/uploads/asset-9.jpg",
+      "coins": 120,
+      "owned": true,
+      "sale": 0
+    },
+    {
+      "id": 10,
+      "title": "ProCamera 2D",
+      "publisher": "CINEMACHINE+",
+      "category": "TOOLS",
+      "pipelines": [
+        "Built-in",
+        "URP"
+      ],
+      "version": "2.8.7",
+      "size": 41.6,
+      "updatedAt": "2026-07-28",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.8,
+      "color": "#F26F21",
+      "image": "/uploads/asset-10.jpg",
+      "coins": 200,
+      "owned": false,
+      "sale": 15
+    },
+    {
+      "id": 11,
+      "title": "Cartoon FX Remaster",
+      "publisher": "Jean Moreno",
+      "category": "VFX",
+      "pipelines": [
+        "Built-in",
+        "URP"
+      ],
+      "version": "3.1.1",
+      "size": 98.4,
+      "purchasedAt": "2026-05-30",
+      "updatedAt": "2026-05-30",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": true,
+      "rating": 4.7,
+      "color": "#F26F21",
+      "image": "/uploads/asset-11.jpg",
+      "coins": 110,
+      "owned": true,
+      "sale": 0
+    },
+    {
+      "id": 12,
+      "title": "Fantasy RPG UI Kit",
+      "publisher": "PixelForge",
+      "category": "GUI",
+      "pipelines": [
+        "Built-in"
+      ],
+      "version": "1.6.2",
+      "size": 63.9,
+      "updatedAt": "2026-06-08",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.7,
+      "color": "#F26F21",
+      "image": "/uploads/asset-12.jpg",
+      "coins": 90,
+      "owned": false,
+      "sale": 0
+    },
+    {
+      "id": 13,
+      "title": "Cyberpunk City Pack",
+      "publisher": "NightCity Works",
+      "category": "ENVIRONMENTS",
+      "pipelines": [
+        "HDRP"
+      ],
+      "version": "2.2.0",
+      "size": 894.7,
+      "updatedAt": "2026-07-15",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.5,
+      "color": "#F26F21",
+      "image": "/uploads/asset-13.jpg",
+      "coins": 320,
+      "owned": false,
+      "sale": 20
+    },
+    {
+      "id": 14,
+      "title": "Magic Spells FX Vol.2",
+      "publisher": "Hovl Studio",
+      "category": "VFX",
+      "pipelines": [
+        "URP"
+      ],
+      "version": "2.0.1",
+      "size": 74.2,
+      "updatedAt": "2026-07-01",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.8,
+      "color": "#F26F21",
+      "image": "/uploads/asset-14.jpg",
+      "coins": 95,
+      "owned": false,
+      "sale": 0
+    },
+    {
+      "id": 15,
+      "title": "Modular Dungeon Kit",
+      "publisher": "Synty Studios",
+      "category": "ENVIRONMENTS",
+      "pipelines": [
+        "Built-in",
+        "URP"
+      ],
+      "version": "3.3.0",
+      "size": 271.5,
+      "updatedAt": "2026-07-09",
+      "license": "Multi Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.9,
+      "color": "#F26F21",
+      "image": "/uploads/asset-15.jpg",
+      "coins": 195,
+      "owned": false,
+      "sale": 0
+    },
+    {
+      "id": 16,
+      "title": "Endless Runner Mobile Kit",
+      "publisher": "Hamster Lab",
+      "category": "TEMPLATE",
+      "pipelines": [
+        "URP"
+      ],
+      "version": "1.4.0",
+      "size": 130.8,
+      "updatedAt": "2026-07-30",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.5,
+      "color": "#F26F21",
+      "image": "/uploads/asset-16.jpg",
+      "coins": 145,
+      "owned": false,
+      "sale": 0
+    },
+    {
+      "id": 17,
+      "title": "Mobile Game UI Bundle",
+      "publisher": "GameUI Studio",
+      "category": "GUI",
+      "pipelines": [
+        "Built-in",
+        "URP"
+      ],
+      "version": "2.1.0",
+      "size": 55.3,
+      "purchasedAt": "2026-07-24",
+      "updatedAt": "2026-07-24",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": true,
+      "rating": 4.4,
+      "color": "#F26F21",
+      "image": "/uploads/asset-17.jpg",
+      "coins": 85,
+      "owned": true,
+      "sale": 0
+    },
+    {
+      "id": 18,
+      "title": "Dungeon Warrior Pack",
+      "publisher": "Itch Soft",
+      "category": "CHARACTER",
+      "pipelines": [
+        "Built-in",
+        "HDRP"
+      ],
+      "version": "1.1.5",
+      "size": 187.2,
+      "updatedAt": "2026-07-29",
+      "license": "Single Entity",
+      "hasUpdate": false,
+      "downloaded": false,
+      "rating": 4.7,
+      "color": "#F26F21",
+      "image": "/uploads/asset-18.jpg",
+      "coins": 210,
+      "owned": false,
+      "sale": 0
+    }
+  ],
+  "cart": {
+    "title": "ตะกร้า",
+    "empty": "ยังไม่มีอะไรในตะกร้า",
+    "emptyHint": "กด “ใส่ตะกร้า” จากหน้าไหนก็ได้ ของจากทั้งสองหน้ามารวมกันที่นี่",
+    "total": "รวมสินค้า",
+    "shipping": "ค่าส่ง",
+    "grandTotal": "รวมทั้งหมด",
+    "balanceAfter": "เหลือหลังสั่ง",
+    "checkout": "สั่งซื้อ",
+    "short": "เหรียญไม่พอ",
+    "done": "สั่งซื้อเรียบร้อย",
+    "note": "เหรียญได้จากการเรียนเท่านั้น ไม่มีการตัดเงินจริง",
+    "addressTitle": "ที่อยู่จัดส่ง",
+    "namePlaceholder": "ชื่อผู้รับ",
+    "phonePlaceholder": "เบอร์โทร",
+    "addressPlaceholder": "บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์",
+    "addressRequired": "กรอกที่อยู่ให้ครบก่อนสั่ง",
+    "freeShipping": "ส่งฟรี",
+    "arrives": "ถึงประมาณ"
+  },
+  "kinds": [
+    {
+      "id": "apparel",
+      "label": "เสื้อผ้า",
+      "icon": "cart",
+      "motif": "blocks",
+      "color": "#F26F21"
+    },
+    {
+      "id": "home",
+      "label": "ของแต่งบ้าน",
+      "icon": "theme",
+      "motif": "blocks",
+      "color": "#F26F21"
+    },
+    {
+      "id": "desk",
+      "label": "ของใช้ประจำวัน",
+      "icon": "tools",
+      "motif": "blocks",
+      "color": "#F26F21"
+    },
+    {
+      "id": "collect",
+      "label": "ของสะสม",
+      "icon": "sticker",
+      "motif": "sheet",
+      "color": "#F26F21"
+    }
+  ],
+  "rarities": [
+    {
+      "id": "common",
+      "label": "สินค้า",
+      "color": "#7C736B"
+    }
+  ],
+  "assetCategories": [
+    {
+      "id": "ALL",
+      "label": "ทั้งหมด",
+      "icon": "all",
+      "motif": "blocks",
+      "color": "#7C736B"
+    },
+    {
+      "id": "CHARACTER",
+      "label": "Characters",
+      "icon": "character",
+      "motif": "figure",
+      "color": "#F26F21"
+    },
+    {
+      "id": "ENVIRONMENTS",
+      "label": "Environments",
+      "icon": "environment",
+      "motif": "terrain",
+      "color": "#F26F21"
+    },
+    {
+      "id": "GUI",
+      "label": "GUI",
+      "icon": "gui",
+      "motif": "blocks",
+      "color": "#F26F21"
+    },
+    {
+      "id": "VFX",
+      "label": "VFX",
+      "icon": "vfx",
+      "motif": "burst",
+      "color": "#F26F21"
+    },
+    {
+      "id": "AUDIO",
+      "label": "Audio",
+      "icon": "audio",
+      "motif": "waveform",
+      "color": "#F26F21"
+    },
+    {
+      "id": "TOOLS",
+      "label": "Tools",
+      "icon": "tools",
+      "motif": "blocks",
+      "color": "#F26F21"
+    },
+    {
+      "id": "TEMPLATE",
+      "label": "Templates",
+      "icon": "template",
+      "motif": "blocks",
+      "color": "#F26F21"
+    }
+  ],
+  "settings": {
+    "startingBalance": 1240,
+    "assetsPerPage": 8,
+    "shipping": {
+      "fee": 40,
+      "freeOver": 500,
+      "note": "ส่งด้วยขนส่งเอกชน มีเลขพัสดุให้ติดตาม"
+    }
+  }
+}
