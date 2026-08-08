@@ -10,10 +10,12 @@ export const metadata: Metadata = {
 
 export default function LibraryPage() {
   return (
-    <main className="min-h-screen bg-paper">
+    <main className="min-h-screen pt-16">
       <LibraryProvider>
-        <LibraryHero />
-        <LibraryBrowser />
+        <div className="stack">
+          <LibraryHero />
+          <LibraryBrowser />
+        </div>
       </LibraryProvider>
     </main>
   )

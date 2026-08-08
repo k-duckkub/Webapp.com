@@ -37,10 +37,10 @@ export function ItemGrid() {
   })
 
   return (
-    <section ref={root} id="items" className="bg-mist py-24 sm:py-32">
-      <div className="bleed">
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b border-hairline pb-6">
-          <h2 className="display-lg text-graphite" data-grid-el>
+    <section ref={root} id="items" className="panel scroll-mt-24">
+      <div>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+          <h2 className="display-md text-graphite" data-grid-el>
             {COPY.store.grid.heading}
           </h2>
           <p className="max-w-sm text-[15px] leading-relaxed text-slate" data-grid-el>
@@ -60,14 +60,14 @@ export function ItemGrid() {
                 key={f.id}
                 onClick={() => setFilter(f.id)}
                 aria-pressed={active}
-                className={`tap relative shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
-                  active ? 'text-paper' : 'text-slate hover:text-graphite'
+                className={`tap relative shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
+                  active ? 'text-white' : 'text-slate hover:text-graphite'
                 }`}
               >
                 {active && (
                   <motion.span
                     layoutId="filter-pill"
-                    className="absolute inset-0 rounded-full bg-graphite"
+                    className="absolute inset-0 rounded-full bg-brand"
                     transition={T.hover}
                   />
                 )}
@@ -85,7 +85,10 @@ export function ItemGrid() {
           variants={GRID_REVEAL}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+          /* Three across, not six. At six the card was ~180px and the Thai
+             wrapped to three lines; the picture is the argument and it needs
+             the room. */
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
           {items.map(item => (
             <ItemCard key={item.id} item={item} onOpen={setSelected} />

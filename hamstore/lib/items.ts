@@ -55,7 +55,7 @@ export const KIND_META: Record<string, KindMeta> = Object.fromEntries(
 
 export const KIND_ORDER: ItemKind[] = CONTENT.kinds.map(k => k.id)
 
-export const FALLBACK_KIND: KindMeta = { label: '—', icon: 'all', motif: 'blocks', color: '#6e6e73' }
+export const FALLBACK_KIND: KindMeta = { label: '—', icon: 'all', motif: 'blocks', color: '#7C736B' }
 
 export function kindMeta(kind: string): KindMeta {
   return KIND_META[kind] ?? FALLBACK_KIND
@@ -66,7 +66,7 @@ export const RARITY_META: Record<string, { label: string; color: string }> = Obj
 )
 
 export function rarityMeta(rarity: string) {
-  return RARITY_META[rarity] ?? { label: '—', color: '#6e6e73' }
+  return RARITY_META[rarity] ?? { label: '—', color: '#7C736B' }
 }
 
 export const PLATFORM_ITEMS: PlatformItem[] = CONTENT.items as unknown as PlatformItem[]

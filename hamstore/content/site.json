@@ -41,13 +41,14 @@
       "cheapest": "เหรียญ สำหรับชิ้นที่ถูกที่สุด",
       "baht": "บาท — เหรียญได้จากการเรียนเท่านั้น"
     },
-    "shelf": {
-      "heading": "และอีกสามหมวด",
-      "unit": "ชิ้น"
-    },
     "grid": {
       "heading": "สินค้าทั้งหมด",
       "sub": "ของใช้จริง ส่งถึงบ้าน — Unity asset อยู่อีกหน้า"
+    },
+    "how": {
+      "heading": "จากบทเรียน",
+      "headingAccent": "ถึงหน้าบ้าน",
+      "sub": "สามขั้น ไม่มีขั้นไหนใช้เงินจริง"
     }
   },
   "library": {
@@ -121,8 +122,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#F97316",
-        "#7C2D12"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-1.jpg",
       "sizes": [
@@ -144,8 +145,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#F97316",
-        "#7C2D12"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-2.jpg",
       "sizes": [
@@ -167,8 +168,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#F97316",
-        "#7C2D12"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-3.jpg",
       "sizes": [
@@ -190,8 +191,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#F97316",
-        "#7C2D12"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-4.jpg",
       "sizes": [
@@ -210,8 +211,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#F97316",
-        "#7C2D12"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-5.jpg",
       "sizes": [
@@ -231,8 +232,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#7C3AED",
-        "#2E1065"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-6.jpg",
       "sizes": [
@@ -251,8 +252,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#7C3AED",
-        "#2E1065"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-7.jpg",
       "sizes": [
@@ -271,8 +272,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#7C3AED",
-        "#2E1065"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-8.jpg",
       "sizes": [
@@ -291,8 +292,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#7C3AED",
-        "#2E1065"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-9.jpg",
       "sizes": [
@@ -311,8 +312,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#0891B2",
-        "#083344"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-10.jpg",
       "sizes": [
@@ -331,8 +332,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#0891B2",
-        "#083344"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-11.jpg",
       "sizes": [
@@ -351,8 +352,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#0891B2",
-        "#083344"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-12.jpg",
       "sizes": [
@@ -371,8 +372,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#0891B2",
-        "#083344"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-13.jpg",
       "sizes": [
@@ -391,8 +392,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#0891B2",
-        "#083344"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-14.jpg",
       "sizes": [
@@ -411,8 +412,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#059669",
-        "#022C22"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-15.jpg",
       "sizes": [
@@ -431,8 +432,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#059669",
-        "#022C22"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-16.jpg",
       "sizes": [
@@ -451,8 +452,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#059669",
-        "#022C22"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-17.jpg",
       "sizes": [
@@ -471,8 +472,8 @@
       "rarity": "common",
       "owned": false,
       "art": [
-        "#059669",
-        "#022C22"
+        "#F26F21",
+        "#5B3A1E"
       ],
       "image": "/uploads/item-18.jpg",
       "sizes": [
@@ -743,7 +744,7 @@
       "title": "เรียนแล้วได้เหรียญ",
       "body": "เรียนจบบทเรียน ส่งงาน หรือช่วยตอบคำถามในฟอรัม เหรียญเข้ากระเป๋าทันที — ซื้อด้วยเงินจริงไม่ได้ ที่นี่มีทางเดียวคือเรียน",
       "icon": "coin",
-      "color": "#FACC15"
+      "color": "#F26F21"
     },
     {
       "id": "choose",
@@ -751,7 +752,7 @@
       "title": "เลือกของแล้วเลือกไซซ์",
       "body": "เสื้อ หมอน โคมไฟ แก้ว — ของจริงทั้งหมด กดดูรายละเอียดเพื่อเลือกไซซ์และดูว่าเหลือกี่ชิ้นก่อนใส่ตะกร้า",
       "icon": "cart",
-      "color": "#F97316"
+      "color": "#F26F21"
     },
     {
       "id": "ship",
@@ -759,7 +760,7 @@
       "title": "ส่งถึงหน้าบ้าน",
       "body": "กรอกที่อยู่แล้วสั่งได้เลย ระบบจะให้เลขที่คำสั่งซื้อและวันที่ของถึงโดยประมาณ ส่งฟรีเมื่อยอดถึง 500 เหรียญ",
       "icon": "receipt",
-      "color": "#7C3AED"
+      "color": "#F26F21"
     }
   ],
   "assets": [
@@ -780,7 +781,7 @@
       "hasUpdate": true,
       "downloaded": true,
       "rating": 4.8,
-      "color": "#7C3AED",
+      "color": "#F26F21",
       "image": "/uploads/asset-1.jpg",
       "coins": 100,
       "owned": true,
@@ -802,7 +803,7 @@
       "hasUpdate": false,
       "downloaded": true,
       "rating": 4.6,
-      "color": "#0891B2",
+      "color": "#F26F21",
       "image": "/uploads/asset-2.jpg",
       "coins": 130,
       "owned": true,
@@ -823,7 +824,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.5,
-      "color": "#059669",
+      "color": "#F26F21",
       "image": "/uploads/asset-3.jpg",
       "coins": 140,
       "owned": false,
@@ -845,7 +846,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.9,
-      "color": "#DC2626",
+      "color": "#F26F21",
       "image": "/uploads/asset-4.jpg",
       "coins": 160,
       "owned": false,
@@ -868,7 +869,7 @@
       "hasUpdate": true,
       "downloaded": true,
       "rating": 4.7,
-      "color": "#D97706",
+      "color": "#F26F21",
       "image": "/uploads/asset-5.jpg",
       "coins": 230,
       "owned": true,
@@ -889,7 +890,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.4,
-      "color": "#D97706",
+      "color": "#F26F21",
       "image": "/uploads/asset-6.jpg",
       "coins": 250,
       "owned": false,
@@ -912,7 +913,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.8,
-      "color": "#2563EB",
+      "color": "#F26F21",
       "image": "/uploads/asset-7.jpg",
       "coins": 180,
       "owned": false,
@@ -933,7 +934,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.6,
-      "color": "#DC2626",
+      "color": "#F26F21",
       "image": "/uploads/asset-8.jpg",
       "coins": 75,
       "owned": false,
@@ -955,7 +956,7 @@
       "hasUpdate": false,
       "downloaded": true,
       "rating": 4.9,
-      "color": "#DB2777",
+      "color": "#F26F21",
       "image": "/uploads/asset-9.jpg",
       "coins": 120,
       "owned": true,
@@ -977,7 +978,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.8,
-      "color": "#059669",
+      "color": "#F26F21",
       "image": "/uploads/asset-10.jpg",
       "coins": 200,
       "owned": false,
@@ -1000,7 +1001,7 @@
       "hasUpdate": false,
       "downloaded": true,
       "rating": 4.7,
-      "color": "#0891B2",
+      "color": "#F26F21",
       "image": "/uploads/asset-11.jpg",
       "coins": 110,
       "owned": true,
@@ -1021,7 +1022,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.7,
-      "color": "#7C3AED",
+      "color": "#F26F21",
       "image": "/uploads/asset-12.jpg",
       "coins": 90,
       "owned": false,
@@ -1042,7 +1043,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.5,
-      "color": "#2563EB",
+      "color": "#F26F21",
       "image": "/uploads/asset-13.jpg",
       "coins": 320,
       "owned": false,
@@ -1063,7 +1064,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.8,
-      "color": "#0891B2",
+      "color": "#F26F21",
       "image": "/uploads/asset-14.jpg",
       "coins": 95,
       "owned": false,
@@ -1085,7 +1086,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.9,
-      "color": "#2563EB",
+      "color": "#F26F21",
       "image": "/uploads/asset-15.jpg",
       "coins": 195,
       "owned": false,
@@ -1106,7 +1107,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.5,
-      "color": "#D97706",
+      "color": "#F26F21",
       "image": "/uploads/asset-16.jpg",
       "coins": 145,
       "owned": false,
@@ -1129,7 +1130,7 @@
       "hasUpdate": false,
       "downloaded": true,
       "rating": 4.4,
-      "color": "#7C3AED",
+      "color": "#F26F21",
       "image": "/uploads/asset-17.jpg",
       "coins": 85,
       "owned": true,
@@ -1151,7 +1152,7 @@
       "hasUpdate": false,
       "downloaded": false,
       "rating": 4.7,
-      "color": "#DC2626",
+      "color": "#F26F21",
       "image": "/uploads/asset-18.jpg",
       "coins": 210,
       "owned": false,
@@ -1182,37 +1183,37 @@
     {
       "id": "apparel",
       "label": "เสื้อผ้า",
-      "icon": "skin",
-      "motif": "figure",
-      "color": "#F97316"
+      "icon": "cart",
+      "motif": "blocks",
+      "color": "#F26F21"
     },
     {
       "id": "home",
       "label": "ของแต่งบ้าน",
       "icon": "theme",
       "motif": "blocks",
-      "color": "#7C3AED"
+      "color": "#F26F21"
     },
     {
       "id": "desk",
       "label": "ของใช้ประจำวัน",
       "icon": "tools",
-      "motif": "swatches",
-      "color": "#0891B2"
+      "motif": "blocks",
+      "color": "#F26F21"
     },
     {
       "id": "collect",
       "label": "ของสะสม",
       "icon": "sticker",
       "motif": "sheet",
-      "color": "#059669"
+      "color": "#F26F21"
     }
   ],
   "rarities": [
     {
       "id": "common",
       "label": "สินค้า",
-      "color": "#7a7060"
+      "color": "#7C736B"
     }
   ],
   "assetCategories": [
@@ -1221,66 +1222,61 @@
       "label": "ทั้งหมด",
       "icon": "all",
       "motif": "blocks",
-      "color": "#6e6e73"
+      "color": "#7C736B"
     },
     {
       "id": "CHARACTER",
       "label": "Characters",
       "icon": "character",
       "motif": "figure",
-      "color": "#DC2626"
+      "color": "#F26F21"
     },
     {
       "id": "ENVIRONMENTS",
       "label": "Environments",
       "icon": "environment",
       "motif": "terrain",
-      "color": "#2563EB"
+      "color": "#F26F21"
     },
     {
       "id": "GUI",
       "label": "GUI",
       "icon": "gui",
       "motif": "blocks",
-      "color": "#7C3AED"
+      "color": "#F26F21"
     },
     {
       "id": "VFX",
       "label": "VFX",
       "icon": "vfx",
       "motif": "burst",
-      "color": "#0891B2"
+      "color": "#F26F21"
     },
     {
       "id": "AUDIO",
       "label": "Audio",
       "icon": "audio",
       "motif": "waveform",
-      "color": "#DB2777"
+      "color": "#F26F21"
     },
     {
       "id": "TOOLS",
       "label": "Tools",
       "icon": "tools",
       "motif": "blocks",
-      "color": "#059669"
+      "color": "#F26F21"
     },
     {
       "id": "TEMPLATE",
       "label": "Templates",
       "icon": "template",
       "motif": "blocks",
-      "color": "#D97706"
+      "color": "#F26F21"
     }
   ],
   "settings": {
     "startingBalance": 1240,
     "assetsPerPage": 8,
-    "shelfKinds": [
-      "home",
-      "desk",
-      "collect"
-    ],
     "shipping": {
       "fee": 40,
       "freeOver": 500,

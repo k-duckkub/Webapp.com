@@ -16,6 +16,13 @@ const PICKS = RECOMMENDED.map(pick => ({
   item: PLATFORM_ITEMS.find(i => i.id === pick.id)!,
 })).filter(p => p.item)
 
+/**
+ * The editor's picks, as big cards.
+ *
+ * Heading on the left, goods on the right — the arrangement HamsterHub uses
+ * for its recommended courses. Each card carries the reason it was chosen,
+ * because a recommendation without a stated reason is just a bigger card.
+ */
 export function Recommended() {
   const root = useRef<HTMLElement>(null)
   const { cart, toggleCart } = useWallet()
@@ -32,23 +39,16 @@ export function Recommended() {
   })
 
   return (
-    <section ref={root} className="bg-paper py-24 sm:py-32">
-      <div className="bleed">
-        <div className="mb-12 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b border-hairline pb-6">
-          <h2 className="display-lg text-graphite" data-rec-el>
-            {COPY.store.recommended.heading}
-          </h2>
-          <p className="max-w-sm text-[15px] leading-relaxed text-slate" data-rec-el>
-            {COPY.store.recommended.sub}
-          </p>
+    <section ref={root} className="panel">
+      <div className="grid gap-8 lg:grid-cols-[0.62fr_1.38fr] lg:gap-10">
+        <div data-rec-el>
+          <h2 className="display-md mb-3 text-graphite">{COPY.store.recommended.heading}</h2>
+          <p className="text-[15px] leading-relaxed text-slate">{COPY.store.recommended.sub}</p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" data-rec-el>
+        <div className="grid gap-5 sm:grid-cols-2" data-rec-el>
           {PICKS.map(({ item, reason, note }) => {
-            const kind = kindMeta(item.kind)
             const [from, to] = item.art
-            /* Same rules as a grid card: a size is picked in the sheet, and
-               nothing that is off the shelf pretends to be orderable. */
             const queued = anySizeInCart(cart, item.id)
             const soldOut = item.stock === 0
             const needsSize = item.sizes.length > 1
@@ -56,44 +56,46 @@ export function Recommended() {
             return (
               <motion.article
                 key={item.id}
-                whileHover={{ y: -6 }}
+                whileHover={{ y: -4 }}
                 transition={SPRING_SOFT}
-                className="relative flex flex-col overflow-hidden rounded-panel bg-mist p-6 sm:flex-row sm:items-center sm:gap-6"
+                className="group relative flex flex-col overflow-hidden rounded-card bg-paper shadow-card transition-shadow hover:shadow-lift"
               >
-                {/* Cover */}
-                <motion.div className="relative mb-5 aspect-[4/3] w-full shrink-0 overflow-hidden rounded-card bg-paper sm:mb-0 sm:aspect-square sm:w-40">
+                <div className="relative aspect-[16/10] overflow-hidden bg-mist">
                   <Artwork
                     seed={item.id}
-                    /* Name lives in the h3 beside the cover. */
-                    label={kind.label}
-                    motif={kind.motif}
+                    motif={kindMeta(item.kind).motif}
                     from={from}
                     to={to}
                     src={item.image}
                   />
-                </motion.div>
-
-                {/* Why we picked it */}
-                <div className="flex min-w-0 flex-1 flex-col">
-                  <p className="mb-2 inline-flex w-fit rounded-full bg-brand/10 px-3 py-1 text-[12px] font-medium text-brand">
+                  <span className="absolute left-3 top-3 z-20 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold text-white">
                     {reason}
-                  </p>
-                  <h3 className="mb-1.5 text-[19px] font-semibold tracking-tight text-graphite">
+                  </span>
+                </div>
+
+                <div className="flex flex-1 flex-col p-5">
+                  <h3 className="mb-1 text-[17px] font-bold leading-snug tracking-tight text-graphite">
                     {item.name}
                   </h3>
-                  <p className="mb-5 text-sm leading-relaxed text-slate">{note}</p>
+                  <p className="mb-4 line-clamp-2 text-[13px] leading-relaxed text-slate">{note}</p>
 
-                  <div className="mt-auto flex items-center justify-between gap-3">
-                    <span className="flex items-center gap-1.5 text-[15px] font-semibold text-graphite">
-                      {item.coins === 0 ? (
-                        'ฟรี'
-                      ) : (
-                        <>
-                          <Icon name="coin" className="h-4 w-4 text-slate-soft" />
-                          {priceOf(item)}
-                        </>
-                      )}
-                    </span>
+                  <div className="mt-auto flex items-end justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="mb-1.5 flex items-center gap-1.5 truncate text-[12px] text-slate-soft">
+                        <Icon name="receipt" className="h-3.5 w-3.5 shrink-0 text-brand" strokeWidth={1.8} />
+                        {soldOut ? 'รอรอบผลิตถัดไป' : `ส่งถึงใน ${item.shipsIn} วัน`}
+                      </p>
+                      <p className="flex items-center gap-1.5 text-[19px] font-bold tracking-tight text-graphite">
+                        {item.coins === 0 ? (
+                          'ฟรี'
+                        ) : (
+                          <>
+                            <Icon name="coin" className="h-4 w-4 text-slate-soft" />
+                            <span className="tabular-nums">{priceOf(item)}</span>
+                          </>
+                        )}
+                      </p>
+                    </div>
 
                     <motion.button
                       onClick={() => {
@@ -102,42 +104,54 @@ export function Recommended() {
                         else toggleCart(itemLine(item, item.sizes[0]))
                       }}
                       disabled={soldOut}
-                      whileHover={soldOut ? undefined : { scale: 1.05 }}
+                      whileHover={soldOut ? undefined : { scale: 1.08 }}
                       whileTap={soldOut ? undefined : { scale: 0.92 }}
                       transition={SPRING_SOFT}
-                      aria-pressed={soldOut || needsSize ? undefined : queued}
-                      className={`tap relative z-20 rounded-full px-5 py-2 text-[13px] font-medium transition-colors ${
+                      aria-label={
                         soldOut
-                          ? 'cursor-not-allowed bg-paper text-slate-soft'
+                          ? `${item.name} — ของหมด`
+                          : needsSize
+                            ? `เลือกไซซ์ของ ${item.name}`
+                            : queued
+                              ? `เอา ${item.name} ออกจากตะกร้า`
+                              : `ใส่ ${item.name} ลงตะกร้า`
+                      }
+                      aria-pressed={soldOut || needsSize ? undefined : queued}
+                      className={`tap relative z-20 flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors ${
+                        soldOut
+                          ? 'cursor-not-allowed bg-mist text-slate-soft'
                           : queued
                             ? 'bg-graphite text-white hover:bg-graphite/85'
                             : 'bg-brand text-white hover:bg-brand-hover'
                       }`}
                     >
-                      <AnimatePresence mode="popLayout" initial={false}>
-                        <motion.span
-                          key={soldOut ? 'out' : needsSize ? 'size' : queued ? 'queued' : 'add'}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={T.hover}
-                          className="block"
-                        >
-                          {soldOut ? 'ของหมด' : needsSize ? 'เลือกไซซ์' : queued ? 'อยู่ในตะกร้า' : 'ใส่ตะกร้า'}
-                        </motion.span>
-                      </AnimatePresence>
+                      <span className="block overflow-hidden">
+                        <AnimatePresence mode="popLayout" initial={false}>
+                          <motion.span
+                            key={soldOut ? 'out' : queued && !needsSize ? 'queued' : 'go'}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={T.hover}
+                            className="block"
+                          >
+                            <Icon
+                              name={queued && !needsSize ? 'check' : 'arrowRight'}
+                              className="h-[18px] w-[18px]"
+                              strokeWidth={2.2}
+                            />
+                          </motion.span>
+                        </AnimatePresence>
+                      </span>
                     </motion.button>
                   </div>
                 </div>
 
-                {/* Same stretched hit area as the grid cards: recommending
-                    something and then not letting anyone read about it is
-                    where a shelf stops being a recommendation. */}
                 <button
                   type="button"
                   onClick={() => setSelected(item)}
                   aria-label={`ดูรายละเอียด ${item.name}`}
-                  className="absolute inset-0 z-10 rounded-panel"
+                  className="absolute inset-0 z-10 rounded-card"
                 />
               </motion.article>
             )

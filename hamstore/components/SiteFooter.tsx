@@ -1,12 +1,25 @@
 import Link from 'next/link'
 import { COPY } from '@/lib/content'
+import { Icon } from '@/components/Icon'
 
 const COLUMNS = COPY.footer.columns
 
 export function SiteFooter() {
   return (
-    <footer className="bg-mist text-[12px] leading-relaxed text-slate">
-      <div className="shell py-12">
+    /* The footer is the last panel in the stack, not a band underneath it —
+       on the cream ground a `bg-mist` footer simply dissolved into the page. */
+    <footer className="stack text-[12px] leading-relaxed text-slate">
+      <div className="panel">
+        <div className="mb-8 flex items-center gap-4 border-b border-hairline pb-8">
+          <span className="icon-chip h-14 w-14 shrink-0">
+            <Icon name="hamster" className="h-7 w-7" strokeWidth={1.6} />
+          </span>
+          <p className="text-[15px] font-bold leading-snug text-graphite">
+            {COPY.nav.wordmark}
+            <span className="block text-[13px] font-normal text-slate">{COPY.footer.copyright}</span>
+          </p>
+        </div>
+
         <div className="grid grid-cols-2 gap-x-8 gap-y-10 border-b border-hairline pb-10 sm:grid-cols-4">
           {COLUMNS.map(col => (
             <div key={col.title}>

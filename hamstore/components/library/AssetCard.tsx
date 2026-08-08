@@ -37,7 +37,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
     <motion.article
       variants={GRID_ITEM}
       whileHover={{ y: -4, transition: SPRING_SOFT }}
-      className="flex flex-col overflow-hidden rounded-card bg-paper"
+      className="flex flex-col overflow-hidden rounded-card bg-paper shadow-card transition-shadow hover:shadow-lift"
     >
       {/* Cover */}
       <div className="relative aspect-[4/3] overflow-hidden bg-mist">
@@ -52,7 +52,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
         />
 
         {asset.sale > 0 && !owned && (
-          <span className="absolute right-3 top-3 rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
+          <span className="absolute right-3 top-3 z-20 rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
             −{asset.sale}%
           </span>
         )}
@@ -60,7 +60,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
         {/* Status runs along the bottom, above the button it explains and clear
             of the category chip in the opposite corner. Only an owned package
             has anything to say about a file. */}
-        <div className="absolute inset-x-3 bottom-3 flex flex-wrap gap-1.5">
+        <div className="absolute inset-x-3 bottom-3 z-20 flex flex-wrap gap-1.5">
           {owned && (
             <span className="flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-medium text-graphite backdrop-blur-sm">
               <Icon name="check" className="h-3 w-3 text-brand" strokeWidth={2.6} />
@@ -80,9 +80,11 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col px-1 pt-4">
-        <p className="mb-1 truncate text-xs text-slate-soft">{asset.publisher}</p>
-        <h3 className="mb-2.5 line-clamp-2 text-[17px] font-semibold leading-snug tracking-tight text-graphite">
+      <div className="flex flex-1 flex-col p-5">
+        <p className="mb-1 truncate text-xs text-slate-soft">
+          {asset.publisher} · v{asset.version}
+        </p>
+        <h3 className="mb-2.5 line-clamp-2 text-[17px] font-bold leading-snug tracking-tight text-graphite">
           {asset.title}
         </h3>
 
@@ -99,9 +101,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
 
         <dl className="mb-4 space-y-1.5 text-[13px] text-slate">
           {[
-            ['เวอร์ชัน', `v${asset.version}`],
             ['ขนาด', formatSize(asset.size)],
-            ['License', asset.license],
             ...(owned && asset.purchasedAt
               ? [['แลกเมื่อ', formatThaiDate(asset.purchasedAt)] as [string, string]]
               : [['อัปเดตล่าสุด', formatThaiDate(asset.updatedAt)] as [string, string]]),
@@ -113,7 +113,7 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
           ))}
         </dl>
 
-        <div className="mt-auto flex items-center gap-2 pb-2.5">
+        <div className="mt-auto flex items-center gap-2">
           {owned ? (
             <>
               <motion.button
@@ -184,20 +184,19 @@ export function AssetCard({ asset, onReceipt }: { asset: StoreAsset; onReceipt: 
                 transition={SPRING_SOFT}
                 aria-pressed={queued}
                 aria-label={queued ? `เอา ${asset.title} ออกจากตะกร้า` : `ใส่ ${asset.title} ลงตะกร้า`}
-                className={`tap ml-auto rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+                /* The same round button the store's cards carry, so the action
+                   looks identical on both pages. */
+                className={`tap ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors ${
                   queued
                     ? 'bg-graphite text-white hover:bg-graphite/85'
                     : 'bg-brand text-white hover:bg-brand-hover'
                 }`}
               >
-                {queued ? (
-                  <span className="flex items-center gap-1">
-                    <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.4} />
-                    อยู่ในตะกร้า
-                  </span>
-                ) : (
-                  'ใส่ตะกร้า'
-                )}
+                <Icon
+                  name={queued ? 'check' : 'arrowRight'}
+                  className="h-[18px] w-[18px]"
+                  strokeWidth={2.2}
+                />
               </motion.button>
             </>
           )}

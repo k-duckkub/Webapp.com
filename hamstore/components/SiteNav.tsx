@@ -56,16 +56,16 @@ export function SiteNav() {
             : "bg-transparent"
         }`}
       >
-        <nav className="shell flex h-12 items-center justify-between">
+        <nav className="shell flex h-16 items-center justify-between">
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-1.5 text-[15px] font-semibold tracking-tight text-graphite"
+            className="flex shrink-0 items-center gap-2.5 text-[15px] font-bold tracking-tight text-graphite"
           >
-            <Icon
-              name="hamster"
-              className="h-[18px] w-[18px] text-brand"
-              strokeWidth={1.9}
-            />
+            {/* A solid mark rather than a loose glyph — the wordmark next to it
+                needs something with weight to sit against. */}
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-white">
+              <Icon name="hamster" className="h-5 w-5" strokeWidth={1.9} />
+            </span>
             {/* The wordmark costs more width than the links can spare on a phone. */}
             <span className="hidden sm:inline">{COPY.nav.wordmark}</span>
             <span className="sr-only sm:hidden">{COPY.nav.wordmark}</span>
@@ -79,7 +79,7 @@ export function SiteNav() {
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
-                  className={`relative whitespace-nowrap px-2 py-1 text-[12px] font-normal transition-colors sm:text-[13px] ${
+                  className={`relative whitespace-nowrap px-2 py-1 text-[12px] font-medium transition-colors sm:text-[13px] ${
                     active ? "text-graphite" : "text-slate hover:text-graphite"
                   }`}
                 >
@@ -87,7 +87,7 @@ export function SiteNav() {
                   {active && (
                     <motion.span
                       layoutId="nav-rule"
-                      className="absolute inset-x-2 -bottom-px h-px bg-graphite"
+                      className="absolute inset-x-2 -bottom-1.5 h-[3px] rounded-full bg-brand"
                       transition={T.hover}
                     />
                   )}

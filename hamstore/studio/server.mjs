@@ -173,8 +173,6 @@ function validate(next) {
   const st = next.settings ?? {}
   need(Number.isFinite(st.startingBalance) && st.startingBalance >= 0, 'เหรียญตั้งต้นต้องเป็นตัวเลขไม่ติดลบ')
   need(Number.isInteger(st.assetsPerPage) && st.assetsPerPage > 0, 'จำนวนต่อหน้าต้องเป็นจำนวนเต็มบวก')
-  for (const k of st.shelfKinds ?? []) need(kindIds.has(k), `ชั้นล่างหน้าแรกอ้างหมวด "${k}" ที่ไม่มีแล้ว`)
-
   const sh = st.shipping ?? {}
   need(st.shipping && typeof st.shipping === 'object', 'ขาดการตั้งค่าค่าส่ง (settings.shipping)')
   need(Number.isFinite(sh.fee) && sh.fee >= 0, 'ค่าส่งต้องเป็นตัวเลขไม่ติดลบ')
@@ -184,6 +182,13 @@ function validate(next) {
   for (const band of next.store?.bands ?? []) {
     need(kindIds.has(band.kind), `แถบใหญ่อ้างหมวด "${band.kind}" ที่ไม่มีแล้ว`)
   }
+
+  /* The three-step row renders straight from these, so an empty one leaves a
+     heading that is half missing rather than a heading that is absent. */
+  const how = next.store?.how ?? {}
+  need(typeof how.heading === 'string' && how.heading.trim(), 'แถบสามขั้น: พาดหัวบรรทัดแรกว่างไม่ได้')
+  need(typeof how.headingAccent === 'string', 'แถบสามขั้น: พาดหัวบรรทัดสองต้องเป็นข้อความ')
+  need(typeof how.sub === 'string', 'แถบสามขั้น: คำอธิบายต้องเป็นข้อความ')
 
   const ids = (next.items ?? []).map(i => i.id)
   need(new Set(ids).size === ids.length, 'มี item id ซ้ำกัน')

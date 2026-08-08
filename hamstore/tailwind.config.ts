@@ -8,22 +8,35 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        /* HamsterHub's orange stays the accent — Apple's structure, our brand. */
+        /**
+         * One accent, used generously — the rest is black, cream and grey.
+         *
+         * HamsterHub's own pages carry a single orange and nothing else: the
+         * logo, the emphasised half of a heading, the badges, the icons, the
+         * prices. The store used to carry four category hues on one grid,
+         * which is what made it read as a template rather than a brand.
+         * Categories are told apart by their names now.
+         */
         brand: {
-          DEFAULT: '#F97316',
-          hover: '#EA6C00',
-          soft: '#FFF1E6',
+          DEFAULT: '#F26F21',
+          hover: '#DC5F14',
+          /* Peach — the circle an orange icon sits in. */
+          soft: '#FDEEE2',
         },
-        /* Apple's two grounds: paper white, and the off-white it alternates with. */
+        /**
+         * Warm neutrals. The previous set was Apple's, and Apple's greys are
+         * cool: #f5f5f7 carries a blue cast that turns cold the moment it sits
+         * beside HamsterHub's amber photography. Every ground here is warm.
+         */
         paper: '#ffffff',
-        mist: '#f5f5f7',
-        /* Near-black rather than pure black — pure #000 on white is too harsh. */
-        graphite: '#1d1d1f',
+        mist: '#F6F2EB',
+        /* Near-black rather than pure black, and warm rather than neutral. */
+        graphite: '#1A1613',
         slate: {
-          DEFAULT: '#6e6e73',
-          soft: '#86868b',
+          DEFAULT: '#7C736B',
+          soft: '#9C948C',
         },
-        hairline: '#d2d2d7',
+        hairline: '#E6DFD5',
         coin: '#B7791F',
         /* Kept for the dark showcase sections. */
         obsidian: '#000000',
@@ -37,8 +50,15 @@ const config: Config = {
         label: '0.06em',
       },
       borderRadius: {
-        card: '18px',
-        panel: '28px',
+        card: '20px',
+        panel: '32px',
+      },
+      boxShadow: {
+        /* A card has to separate itself from a white panel, and a neutral-black
+           shadow on cream goes grey and dirty. This one is warm, so the lift
+           reads as light rather than as smudge. */
+        card: '0 1px 2px rgba(60,42,28,0.05), 0 8px 24px -12px rgba(60,42,28,0.18)',
+        lift: '0 2px 4px rgba(60,42,28,0.06), 0 18px 40px -16px rgba(60,42,28,0.28)',
       },
       maxWidth: {
         copy: '46rem',

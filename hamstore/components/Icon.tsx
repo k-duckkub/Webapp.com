@@ -15,6 +15,7 @@ export type IconName =
   | 'receipt'
   | 'check'
   | 'chevronRight'
+  | 'arrowRight'
   | 'arrowDown'
   | 'close'
   | 'cart'
@@ -58,6 +59,9 @@ const PATHS: Record<IconName, { d: string; fill?: boolean }[]> = {
   ],
   check: [{ d: 'm4.5 12.8 4.8 4.7L19.5 6.9' }],
   chevronRight: [{ d: 'm9.5 5.5 7 6.5-7 6.5' }],
+  /* The round button's glyph. A full arrow rather than a chevron: the chevron
+     reads as "there is more below", the arrow as "this does something". */
+  arrowRight: [{ d: 'M4.5 12h15M13 6l6 6-6 6' }],
   arrowDown: [{ d: 'M12 4.5v15M6 13.5l6 6 6-6' }],
   close: [{ d: 'm6 6 12 12M18 6 6 18' }],
   cart: [

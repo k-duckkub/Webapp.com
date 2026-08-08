@@ -1,43 +1,46 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion } from 'framer-motion'
 import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
-import { REVEAL, REVEAL_START, SPRING_SOFT } from '@/lib/motion'
+import { REVEAL, REVEAL_START } from '@/lib/motion'
 import { kindMeta, PLATFORM_ITEMS, type ItemKind } from '@/lib/items'
-import { COPY, CONTENT, imageSrc } from '@/lib/content'
+import { COPY, imageSrc } from '@/lib/content'
 import { priceOf } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 
 /**
- * Two feature bands and a facts strip — not five identical bands.
+ * Two feature panels and a facts row.
  *
- * The previous version ran the same two-column band once per category, which
- * is the tell that a template produced the page rather than someone laying it
- * out. A product page varies what each section *is*: one leads with the art,
- * one leads with the range, one is only numbers. Categories that don't earn a
- * band of their own are still one click away in the grid below.
+ * The previous version ran full-bleed bands edge to edge, then a numbers strip,
+ * then a third shelf of category tiles — four sections of marketing furniture
+ * between the opening and the actual goods, on a shop with eighteen products.
+ * The shelf is gone (its categories are the filter row above the grid, one
+ * click away) and what is left sits in the same floating panels as everything
+ * else.
  */
 
-/* Which categories get a band, and what each one says, is content — the
+/* Which categories get a panel, and what each one says, is content — the
    alternating left/right rhythm below is not. */
 const BANDS = COPY.store.bands.map((band, i) => ({
   ...band,
   kind: band.kind as ItemKind,
   meta: kindMeta(band.kind),
   items: PLATFORM_ITEMS.filter(item => item.kind === band.kind),
-  artRight: i % 2 === 1,
-  onMist: i % 2 === 0,
+  artRight: i % 2 === 0,
 }))
 
 /* Facts, not adjectives. Each one is computed from the catalogue — which for
    physical goods means what is actually on the shelf, not what is listed. */
-const FACTS = [
-  { value: String(PLATFORM_ITEMS.length), label: COPY.store.facts.inStore },
-  { value: String(PLATFORM_ITEMS.filter(i => i.stock > 0).length), label: COPY.store.facts.free },
-  { value: `${Math.min(...PLATFORM_ITEMS.filter(i => i.coins > 0).map(priceOf))}`, label: COPY.store.facts.cheapest },
-  { value: '0', label: COPY.store.facts.baht },
+const FACTS: { value: string; label: string; icon: 'cart' | 'receipt' | 'coin' | 'hamster' }[] = [
+  { value: String(PLATFORM_ITEMS.length), label: COPY.store.facts.inStore, icon: 'cart' },
+  { value: String(PLATFORM_ITEMS.filter(i => i.stock > 0).length), label: COPY.store.facts.free, icon: 'receipt' },
+  {
+    value: `${Math.min(...PLATFORM_ITEMS.filter(i => i.coins > 0).map(priceOf))}`,
+    label: COPY.store.facts.cheapest,
+    icon: 'coin',
+  },
+  { value: '0', label: COPY.store.facts.baht, icon: 'hamster' },
 ]
 
 export function FeatureSections() {
@@ -51,164 +54,100 @@ export function FeatureSections() {
           stagger: 0.08,
           scrollTrigger: { trigger: section, start: REVEAL_START },
         })
-
-        const art = section.querySelector('[data-feature-art]')
-        if (!art) return
-
-        gsap.from(art, {
-          opacity: 0,
-          duration: 1,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: section, start: REVEAL_START },
-        })
-        /* Inner layer overscans by 10%, so a 7.2% drift never shows an edge. */
-        gsap.to(section.querySelector('[data-feature-art-inner]'), {
-          yPercent: -6,
-          ease: 'none',
-          scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true },
-        })
       })
     })
   })
 
   return (
-    <div ref={root}>
+    <div ref={root} className="contents">
       {BANDS.map(band => {
-        const [from, to] = band.items[0]?.art ?? ['#F97316', '#DC2626']
+        const [from, to] = band.items[0]?.art ?? ['#F26F21', '#5B3A1E']
+        const image = imageSrc(band.image)
 
         return (
-          <section
-            key={band.kind}
-            data-feature
-            className={`grid w-full items-stretch md:grid-cols-2 ${band.onMist ? 'bg-mist' : 'bg-paper'}`}
-          >
-            <div
-              data-feature-art
-              className={`relative min-h-[340px] overflow-hidden md:min-h-[600px] ${
-                band.artRight ? 'md:order-2' : ''
-              }`}
-            >
+          <section key={band.kind} data-feature className="panel">
+            <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+              <div className={band.artRight ? '' : 'lg:order-2'}>
+                <h2 className="display-md mb-4 max-w-md text-graphite" data-feature-el>
+                  {band.headline}
+                </h2>
+                <p className="mb-8 max-w-md text-[15px] leading-relaxed text-slate" data-feature-el>
+                  {band.body}
+                </p>
+
+                {/* Three from the category, priced — the proof behind the claim
+                    above, rather than another paragraph about it. */}
+                <ul className="mb-8 flex max-w-md flex-col gap-1" data-feature-el>
+                  {band.items.slice(0, 3).map(item => (
+                    <li key={item.id} className="flex items-center gap-3 py-2">
+                      <span className="icon-chip h-9 w-9">
+                        <Icon name="check" className="h-4 w-4" strokeWidth={2.4} />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-graphite">
+                        {item.name}
+                      </span>
+                      <span className="flex shrink-0 items-center gap-1.5 text-[15px] font-semibold text-graphite">
+                        {item.coins === 0 ? (
+                          'ฟรี'
+                        ) : (
+                          <>
+                            <Icon name="coin" className="h-3.5 w-3.5 text-slate-soft" />
+                            <span className="tabular-nums">{priceOf(item)}</span>
+                          </>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <a href="#items" className="btn-ghost" data-feature-el>
+                  ดู{band.meta.label}ทั้งหมด
+                  <Icon name="arrowRight" className="h-4 w-4" strokeWidth={2.2} />
+                </a>
+              </div>
+
               <div
-                data-feature-art-inner
-                className="absolute inset-x-0 -top-[10%] flex h-[120%] items-center justify-center"
-                style={
-                  imageSrc(band.image)
-                    ? undefined
-                    : { background: `radial-gradient(ellipse at 50% 45%, ${from}26 0%, ${to}0f 42%, transparent 72%)` }
-                }
+                className={`relative aspect-[4/3] overflow-hidden rounded-card bg-mist ${
+                  band.artRight ? '' : 'lg:order-1'
+                }`}
+                data-feature-el
               >
-                {/* A band shows its own picture when one is set, and the tinted
-                    field with the category mark when one isn't. */}
-                {imageSrc(band.image) ? (
+                {image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={imageSrc(band.image)} alt="" className="h-full w-full object-cover" />
+                  <img src={image} alt="" className="h-full w-full object-cover" />
                 ) : (
-                  <motion.span whileHover={{ scale: 1.05 }} transition={SPRING_SOFT}>
-                    <Icon
-                      name={band.meta.icon}
-                      className="h-[clamp(5rem,12vw,9rem)] w-[clamp(5rem,12vw,9rem)] text-graphite/[0.18]"
-                      strokeWidth={1}
-                    />
-                  </motion.span>
+                  <Artwork
+                    seed={band.items[0]?.id ?? 1}
+                    motif={band.meta.motif}
+                    from={from}
+                    to={to}
+                    src={band.items[0]?.image}
+                    size="lg"
+                  />
                 )}
               </div>
-            </div>
-
-            <div
-              className={`flex flex-col justify-center px-6 py-20 sm:px-10 md:px-14 lg:px-20 ${
-                band.artRight ? 'md:order-1' : ''
-              }`}
-            >
-              <h2 className="display-lg mb-5 max-w-md text-graphite" data-feature-el>
-                {band.headline}
-              </h2>
-              <p className="lede mb-10 max-w-md" data-feature-el>
-                {band.body}
-              </p>
-
-              <ul className="mb-10 flex max-w-md flex-col" data-feature-el>
-                {band.items.slice(0, 3).map(item => (
-                  <li
-                    key={item.id}
-                    className="flex items-center justify-between gap-4 border-b border-hairline/70 py-3"
-                  >
-                    <span className="truncate text-[15px] font-medium text-graphite">{item.name}</span>
-                    <span className="flex shrink-0 items-center gap-1.5 text-[15px] text-slate">
-                      {item.coins === 0 ? (
-                        'ฟรี'
-                      ) : (
-                        <>
-                          <Icon name="coin" className="h-3.5 w-3.5 text-slate-soft" />
-                          {priceOf(item)}
-                        </>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <a href="#items" className="btn-ghost self-start" data-feature-el>
-                ดู{band.meta.label}ทั้งหมด
-                <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
-              </a>
             </div>
           </section>
         )
       })}
 
-      {/* A different kind of section: no art, no prose, only figures. */}
-      <section data-feature className="bg-paper py-24 sm:py-28">
-        <dl className="bleed grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-4">
+      {/* A different kind of panel: no art, no prose, only figures. */}
+      <section data-feature className="panel">
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
           {FACTS.map(fact => (
             <div key={fact.label} data-feature-el>
-              <dt className="text-[clamp(2.75rem,6vw,4.5rem)] font-semibold leading-none tracking-display text-graphite">
+              <span className="icon-chip mb-4 h-12 w-12">
+                <Icon name={fact.icon} className="h-5 w-5" strokeWidth={1.7} />
+              </span>
+              <dt className="text-[clamp(2rem,4vw,3rem)] font-bold leading-none tracking-display text-graphite">
                 {fact.value}
               </dt>
-              <dd className="mt-3 max-w-[16rem] text-[15px] leading-relaxed text-slate">{fact.label}</dd>
+              <dd className="mt-2 max-w-[15rem] text-[14px] leading-relaxed text-slate">
+                {fact.label}
+              </dd>
             </div>
           ))}
         </dl>
-      </section>
-
-      {/* The categories that don't get a band still get a shelf. */}
-      <section data-feature className="bg-mist py-20 sm:py-24">
-        <div className="bleed">
-          <h2 className="display-md mb-8 text-graphite" data-feature-el>
-            {COPY.store.shelf.heading}
-          </h2>
-          <div className="grid gap-5 sm:grid-cols-3" data-feature-el>
-            {CONTENT.settings.shelfKinds.map((kind: ItemKind) => {
-              const meta = kindMeta(kind)
-              const items = PLATFORM_ITEMS.filter(i => i.kind === kind)
-              /* The category's own hue, not the first item's — pulling from
-                 items made all three shelves come out the same warm orange. */
-              const from = meta.color
-              const to = '#1d1d1f'
-
-              return (
-                <motion.a
-                  key={kind}
-                  href="#items"
-                  whileHover={{ y: -6 }}
-                  transition={SPRING_SOFT}
-                  className="group relative block aspect-[5/3] overflow-hidden rounded-panel"
-                >
-                  <Artwork
-                    seed={kind.length * 31 + items.length}
-                    title={meta.label}
-                    motif={meta.motif}
-                    from={from}
-                    to={to}
-                    size="lg"
-                  />
-                  <span className="absolute right-4 top-4 rounded-full bg-black/35 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
-                    {items.length} {COPY.store.shelf.unit}
-                  </span>
-                </motion.a>
-              )
-            })}
-          </div>
-        </div>
       </section>
     </div>
   )

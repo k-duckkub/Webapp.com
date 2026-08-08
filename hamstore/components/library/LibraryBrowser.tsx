@@ -168,10 +168,10 @@ export function LibraryBrowser() {
   }
 
   return (
-    <section ref={root} className="bg-mist pb-24 pt-16 sm:pb-32">
+    <section ref={root} className="panel">
       {/* Category pills */}
       <div className="border-b border-hairline">
-        <div className="no-scrollbar shell flex gap-1 overflow-x-auto pb-4">
+        <div className="no-scrollbar flex gap-1 overflow-x-auto pb-4">
           {LIBRARY_CATEGORIES.map(c => {
             const active = category === c.id
             const count =
@@ -185,20 +185,20 @@ export function LibraryBrowser() {
                 onClick={() => update(setCategory)(c.id)}
                 aria-pressed={active}
                 className={`tap relative shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
-                  active ? 'text-paper' : 'text-slate hover:text-graphite'
+                  active ? 'text-white' : 'text-slate hover:text-graphite'
                 }`}
               >
                 {active && (
                   <motion.span
                     layoutId="lib-pill"
-                    className="absolute inset-0 rounded-full bg-graphite"
+                    className="absolute inset-0 rounded-full bg-brand"
                     transition={T.hover}
                   />
                 )}
                 <span className="relative flex items-center gap-1.5">
                   <Icon name={c.icon} className="h-3.5 w-3.5" />
                   {c.label}
-                  <span className={active ? 'text-paper/60' : 'text-slate-soft'}>{count}</span>
+                  <span className={active ? 'text-white/60' : 'text-slate-soft'}>{count}</span>
                 </span>
               </button>
             )
@@ -206,7 +206,7 @@ export function LibraryBrowser() {
         </div>
       </div>
 
-      <div className="shell flex gap-10 pt-10">
+      <div className="flex gap-10 pt-8">
         {/* Sidebar */}
         <aside className="hidden w-60 shrink-0 md:block">
           <FilterPanel groups={filterGroups} activeCount={activeFilterCount} onClear={clearFilters} />
@@ -225,7 +225,7 @@ export function LibraryBrowser() {
                 value={query}
                 onChange={e => update(setQuery)(e.target.value)}
                 placeholder={COPY.library.searchPlaceholder}
-                className="w-full rounded-full bg-paper py-2.5 pl-10 pr-4 text-[15px] text-graphite outline-none transition-shadow placeholder:text-slate-soft focus:ring-2 focus:ring-brand/40"
+                className="w-full rounded-full bg-mist py-2.5 pl-10 pr-4 text-[15px] text-graphite outline-none transition-shadow placeholder:text-slate-soft focus:ring-2 focus:ring-brand/40"
               />
             </label>
 
@@ -234,7 +234,7 @@ export function LibraryBrowser() {
               <select
                 value={sort}
                 onChange={e => update(setSort)(e.target.value as Sort)}
-                className="rounded-full bg-paper px-4 py-2 text-[13px] text-graphite outline-none focus:ring-2 focus:ring-brand/40"
+                className="rounded-full bg-mist px-4 py-2 text-[13px] text-graphite outline-none focus:ring-2 focus:ring-brand/40"
               >
                 {SORTS.map(s => (
                   <option key={s.id} value={s.id}>
@@ -261,7 +261,7 @@ export function LibraryBrowser() {
           </div>
 
           {paginated.length === 0 ? (
-            <div className="rounded-card bg-paper py-20 text-center">
+            <div className="rounded-card bg-mist py-20 text-center">
               <Icon name="search" className="mx-auto mb-3 h-7 w-7 text-slate-soft" />
               <p className="text-[15px] font-medium text-graphite">{COPY.library.emptyTitle}</p>
               <button onClick={clearFilters} className="btn-ghost mt-4">
@@ -280,7 +280,7 @@ export function LibraryBrowser() {
               variants={GRID_REVEAL}
               initial="hidden"
               animate="show"
-              className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4"
+              className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
             >
               {paginated.map(asset => (
                 <AssetCard key={asset.id} asset={asset} onReceipt={setReceipt} />
@@ -302,7 +302,7 @@ export function LibraryBrowser() {
                   className={`tap h-9 w-9 rounded-full text-[13px] font-medium transition-colors ${
                     n === safePage
                       ? 'bg-graphite text-paper'
-                      : 'bg-paper text-slate hover:text-graphite'
+                      : 'bg-mist text-slate hover:text-graphite'
                   }`}
                 >
                   {n}
@@ -340,7 +340,7 @@ function PageBtn({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="tap inline-flex items-center gap-1.5 rounded-full bg-paper px-4 py-2 text-[13px] text-slate transition-colors enabled:hover:text-graphite disabled:cursor-not-allowed disabled:text-slate-soft/50"
+      className="tap inline-flex items-center gap-1.5 rounded-full bg-mist px-4 py-2 text-[13px] text-slate transition-colors enabled:hover:text-graphite disabled:cursor-not-allowed disabled:text-slate-soft/50"
     >
       {children}
     </button>

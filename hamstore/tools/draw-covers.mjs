@@ -78,7 +78,7 @@ const QUALITY = 86
  */
 const GROUND = `
   <rect width="400" height="400" fill="url(#studio)"/>
-  <ellipse cx="200" cy="336" rx="118" ry="17" fill="#0B0A09" opacity=".085"/>`
+  <ellipse cx="200" cy="336" rx="118" ry="17" fill="#4A3520" opacity=".10"/>`
 
 /* ---------------------------------------------------------------- garments */
 
@@ -504,11 +504,14 @@ const shell = defs => body => `<!doctype html>
 
 /* The studio ground every product shot shares: a pale neutral lifting slightly
    toward the top, the way a paper sweep does under one soft light. */
+/* Warm, not neutral. The first version used a cool grey sweep, which was fine
+   on the old cool-grey page and turned visibly blue the moment the site moved
+   to HamsterHub's cream. A product shot has to share the room's light. */
 const productPage = shell(`
   <linearGradient id="studio" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#FAFAFB"/>
-    <stop offset="58%" stop-color="#F1F1F3"/>
-    <stop offset="100%" stop-color="#E7E7EA"/>
+    <stop offset="0%" stop-color="#FDFBF7"/>
+    <stop offset="58%" stop-color="#F6F1E8"/>
+    <stop offset="100%" stop-color="#EDE5D8"/>
   </linearGradient>`)
 
 const placeholderPage = (bg, body) => shell(`

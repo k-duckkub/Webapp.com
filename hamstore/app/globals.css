@@ -7,8 +7,11 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* The ground is the warm cream; white belongs to the panels that sit on it.
+     Getting this the wrong way round is what makes a card stop reading as a
+     card — a white panel on a white page is just a margin. */
   body {
-    @apply bg-paper text-graphite antialiased;
+    @apply bg-mist text-graphite antialiased;
   }
 
   /* Lenis drives scrolling; a CSS smooth-scroll on top of it fights the library. */
@@ -25,7 +28,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid #f97316;
+    outline: 2px solid #f26f21;
     outline-offset: 3px;
   }
 }
@@ -79,6 +82,32 @@
      as edge-to-edge bands rather than centred columns. */
   .bleed {
     @apply w-full px-6 sm:px-10 lg:px-16;
+  }
+
+  /**
+   * The page as a stack of floating panels.
+   *
+   * HamsterHub's own pages are not edge-to-edge bands — they are white cards
+   * with large radii sitting on the warm ground, separated by a visible gap,
+   * with the ground showing down both margins. The gap is the design: it is
+   * what turns a run of sections into discrete, readable blocks. This holds
+   * the rhythm; `.panel` is one card in it.
+   */
+  .stack {
+    @apply mx-auto flex w-full max-w-shell flex-col gap-4 px-4 pb-4 sm:gap-6 sm:px-6 sm:pb-6;
+  }
+
+  .panel {
+    @apply rounded-panel bg-paper px-6 py-10 sm:px-10 sm:py-14;
+  }
+
+  /**
+   * An orange glyph in a peach disc. The reference uses this everywhere a
+   * feature needs a mark — it is the one piece of ornament in the system, so
+   * it is defined once and never improvised per section.
+   */
+  .icon-chip {
+    @apply flex shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand;
   }
 }
 

@@ -6,6 +6,7 @@ import { GSAP_EASE, DURATION } from '@/lib/motion'
 import { STORE_ASSETS } from '@/lib/library'
 import { COPY } from '@/lib/content'
 import { useWallet, assetKey } from '@/components/WalletProvider'
+import { Icon, type IconName } from '@/components/Icon'
 
 const publisherCount = new Set(STORE_ASSETS.map(a => a.publisher)).size
 const cheapest = Math.min(...STORE_ASSETS.map(a => (a.sale > 0 ? Math.round(a.coins * (1 - a.sale / 100)) : a.coins)))
@@ -16,10 +17,10 @@ const hero = COPY.library.hero
    The owned count is the one that moves while you shop, so it is rendered by
    React rather than written by the GSAP counter — the counter fires once on
    entry and would leave a stale number sitting there after a checkout. */
-const FIXED_STATS = [
-  { id: 'assets',     value: STORE_ASSETS.length, label: hero.stats.assets },
-  { id: 'cheapest',   value: cheapest,            label: hero.stats.cheapest },
-  { id: 'publishers', value: publisherCount,      label: hero.stats.publishers },
+const FIXED_STATS: { id: string; value: number; label: string; icon: IconName }[] = [
+  { id: 'assets',     value: STORE_ASSETS.length, label: hero.stats.assets,     icon: 'template' },
+  { id: 'cheapest',   value: cheapest,            label: hero.stats.cheapest,   icon: 'coin' },
+  { id: 'publishers', value: publisherCount,      label: hero.stats.publishers, icon: 'tools' },
 ]
 
 /* The strip is one row of equal cells, so the column count has to follow the
@@ -70,44 +71,46 @@ export function LibraryHero() {
   })
 
   return (
-    <section ref={root} className="bg-paper pt-32 sm:pt-40">
-      <div className="bleed">
-        <div className="mb-12 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
-          <h1 className="display-xl max-w-3xl text-graphite" data-lib-el>
-            {hero.headlineLine1}
-            <br />
-            {hero.headlineLine2}
-          </h1>
-          <p className="max-w-xs text-[15px] leading-relaxed text-slate" data-lib-el>
-            {hero.lede}
-          </p>
-        </div>
-
-        <dl
-          className={`grid grid-cols-2 gap-px overflow-hidden rounded-panel bg-hairline/70 ${
-            COLUMNS[FIXED_STATS.length + 1] ?? 'sm:grid-cols-4'
-          }`}
-        >
-          {FIXED_STATS.map(stat => (
-            <div key={stat.id} data-stat className="bg-paper px-5 py-7">
-              <dd
-                data-stat-value={stat.value}
-                className="mb-1 text-[clamp(1.5rem,3vw,2rem)] font-semibold tabular-nums tracking-display text-graphite"
-              >
-                {stat.value.toLocaleString('th-TH')}
-              </dd>
-              <dt className="text-[13px] text-slate">{stat.label}</dt>
-            </div>
-          ))}
-
-          <div data-stat className="bg-paper px-5 py-7">
-            <dd className="mb-1 text-[clamp(1.5rem,3vw,2rem)] font-semibold tabular-nums tracking-display text-graphite">
-              {ownedCount.toLocaleString('th-TH')}
-            </dd>
-            <dt className="text-[13px] text-slate">{hero.stats.owned}</dt>
-          </div>
-        </dl>
+    <section ref={root} className="panel">
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+        <h1 className="display-lg max-w-2xl text-graphite" data-lib-el>
+          {hero.headlineLine1}
+          <span className="block text-brand">{hero.headlineLine2}</span>
+        </h1>
+        <p className="max-w-xs text-[15px] leading-relaxed text-slate" data-lib-el>
+          {hero.lede}
+        </p>
       </div>
+
+      {/* The same figures row page one uses, so the two pages count things the
+          same way — icon chip, number, label — rather than each inventing a
+          stat block of its own. */}
+      <dl className={`grid grid-cols-2 gap-x-6 gap-y-8 ${COLUMNS[FIXED_STATS.length + 1] ?? 'sm:grid-cols-4'}`}>
+        {FIXED_STATS.map(stat => (
+          <div key={stat.id} data-stat>
+            <span className="icon-chip mb-3 h-11 w-11">
+              <Icon name={stat.icon} className="h-5 w-5" strokeWidth={1.7} />
+            </span>
+            <dd
+              data-stat-value={stat.value}
+              className="mb-1 text-[clamp(1.5rem,3vw,2rem)] font-bold tabular-nums tracking-display text-graphite"
+            >
+              {stat.value.toLocaleString('th-TH')}
+            </dd>
+            <dt className="text-[13px] text-slate">{stat.label}</dt>
+          </div>
+        ))}
+
+        <div data-stat>
+          <span className="icon-chip mb-3 h-11 w-11">
+            <Icon name="check" className="h-5 w-5" strokeWidth={2.2} />
+          </span>
+          <dd className="mb-1 text-[clamp(1.5rem,3vw,2rem)] font-bold tabular-nums tracking-display text-graphite">
+            {ownedCount.toLocaleString('th-TH')}
+          </dd>
+          <dt className="text-[13px] text-slate">{hero.stats.owned}</dt>
+        </div>
+      </dl>
     </section>
   )
 }

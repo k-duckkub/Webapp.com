@@ -575,7 +575,7 @@ function renderStore() {
         bind(s.hero, 'primaryCta', 'ปุ่มหลัก'),
         bind(s.hero, 'secondaryCta', 'ลิงก์รอง'),
       ),
-      imageField(s.hero, 'image', 'ภาพพื้นหลัง Hero'),
+      imageField(s.hero, 'image', 'ภาพใหญ่ข้างพาดหัว (เช่น รูปมาสคอต)'),
     ),
     el('details', { className: 'card' },
       el('summary', {}, 'หัวข้อของแต่ละส่วน'),
@@ -584,9 +584,15 @@ function renderStore() {
         bind(s.recommended, 'sub', 'คำอธิบายใต้หัวข้อ'),
         bind(s.grid, 'heading', 'หัวข้อตารางไอเทม'),
         bind(s.grid, 'sub', 'คำอธิบายตารางไอเทม'),
-        bind(s.shelf, 'heading', 'หัวข้อชั้นสามหมวด'),
-        bind(s.shelf, 'unit', 'หน่วยนับ (เช่น ชิ้น)'),
       ),
+    ),
+    el('details', { className: 'card' },
+      el('summary', {}, 'แถบสามขั้น (เรียน → เลือก → ส่ง)'),
+      el('div', { className: 'row' },
+        bind(s.how, 'heading', 'พาดหัวบรรทัดแรก'),
+        bind(s.how, 'headingAccent', 'พาดหัวบรรทัดสอง (สีส้ม)'),
+      ),
+      bind(s.how, 'sub', 'คำอธิบายใต้หัวข้อ'),
     ),
     ...s.bands.map((band, i) =>
       el('details', { className: 'card' },
@@ -913,20 +919,6 @@ function renderPathway() {
 
 function renderSettings() {
   const st = data.settings
-  const shelf = el('div', { className: 'row' })
-  for (const k of data.kinds) {
-    const input = el('input', { type: 'checkbox', checked: st.shelfKinds.includes(k.id) })
-    input.style.width = 'auto'
-    input.addEventListener('change', () => {
-      st.shelfKinds = input.checked
-        ? [...st.shelfKinds, k.id]
-        : st.shelfKinds.filter(x => x !== k.id)
-      touch()
-    })
-    shelf.append(el('div', { className: 'field' },
-      el('div', { style: 'display:flex;align-items:center;gap:8px' },
-        input, el('span', { style: 'font-size:13px', textContent: k.label }))))
-  }
   const shipping = st.shipping || (st.shipping = { fee: 40, freeOver: 500, note: '' })
 
   return panel('settings', 'ตั้งค่า', 'ตัวเลขที่คุมพฤติกรรมของทั้งเว็บ',
@@ -940,8 +932,6 @@ function renderSettings() {
       bind(shipping, 'freeOver', 'ส่งฟรีเมื่อยอดถึง', { type: 'number' }),
     ),
     bind(shipping, 'note', 'บรรทัดอธิบายการส่ง'),
-    el('h3', { style: 'margin:18px 0 8px;font-size:14px', textContent: 'หมวดที่ขึ้นชั้นล่างหน้าแรก' }),
-    shelf,
   )
 }
 
