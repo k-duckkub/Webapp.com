@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { EASE_OUT, SPRING_SOFT } from '@/lib/motion'
-import { ITEM_DETAILS, kindMeta, rarityMeta, type PlatformItem } from '@/lib/items'
+import { ITEM_DETAILS, kindMeta, type PlatformItem } from '@/lib/items'
 import { formatThaiDate } from '@/lib/library'
 import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
+import { CONTENT } from '@/lib/content'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 
@@ -20,7 +21,7 @@ import { Icon } from '@/components/Icon'
  * the commitment are in the same place.
  */
 export function ItemSheet({ item, onClose }: { item: PlatformItem | null; onClose: () => void }) {
-  const { owns, inCart, toggleCart, balance } = useWallet()
+  const { inCart, toggleCart, balance } = useWallet()
   const panel = useRef<HTMLDivElement>(null)
   const restoreFocus = useRef<HTMLElement | null>(null)
 
@@ -89,7 +90,7 @@ export function ItemSheet({ item, onClose }: { item: PlatformItem | null; onClos
             transition={SPRING_SOFT}
             className="relative max-h-[92svh] w-full overflow-y-auto rounded-t-panel bg-paper outline-none sm:max-w-4xl sm:rounded-panel"
           >
-            <Body item={item} onClose={onClose} owns={owns} inCart={inCart} toggleCart={toggleCart} balance={balance} />
+            <Body item={item} onClose={onClose} inCart={inCart} toggleCart={toggleCart} balance={balance} />
           </motion.div>
         </motion.div>
       )}
@@ -100,27 +101,31 @@ export function ItemSheet({ item, onClose }: { item: PlatformItem | null; onClos
 function Body({
   item,
   onClose,
-  owns,
   inCart,
   toggleCart,
   balance,
 }: {
   item: PlatformItem
   onClose: () => void
-  owns: (key: string) => boolean
   inCart: (key: string) => boolean
   toggleCart: (line: ReturnType<typeof itemLine>) => void
   balance: number
 }) {
   const kind = kindMeta(item.kind)
-  const rarity = rarityMeta(item.rarity)
   const detail = ITEM_DETAILS[item.id]
   const [from, to] = item.art
   const price = priceOf(item)
-  const key = itemKey(item.id)
-  const owned = owns(key)
-  const queued = inCart(key)
+  const soldOut = item.stock === 0
+
+  /* Preselect only when there is nothing to choose. With real options, an
+     unset size is the honest starting state — picking one for someone is how
+     a medium arrives for a person who wanted a large. */
+  const [size, setSize] = useState<string | null>(item.sizes.length === 1 ? item.sizes[0] : null)
+  const queued = size ? inCart(itemKey(item.id, size)) : false
   const short = Math.max(0, price - balance)
+
+  const arrives = new Date(Date.now() + item.shipsIn * 86_400_000)
+  const arrivalLabel = formatThaiDate(arrives.toISOString().slice(0, 10))
 
   return (
     <>
@@ -180,23 +185,36 @@ function Body({
                 </ul>
               </Section>
 
-              <Section title="โผล่ที่ไหน">
-                <div className="flex flex-wrap gap-2">
-                  {detail.showsUp.map(place => (
-                    <span key={place} className="rounded-full bg-mist px-3 py-1 text-[13px] text-graphite">
-                      {place}
-                    </span>
-                  ))}
-                </div>
-              </Section>
+              {/* The one decision that has to be made before ordering, given
+                  its own section rather than tucked beside the button. */}
+              {item.sizes.length > 1 && (
+                <Section title="เลือกไซซ์">
+                  <div className="flex flex-wrap gap-2">
+                    {item.sizes.map(option => (
+                      <button
+                        key={option}
+                        onClick={() => setSize(option)}
+                        aria-pressed={size === option}
+                        className={`tap min-w-[52px] rounded-full px-4 py-2 text-[14px] font-medium transition-colors ${
+                          size === option
+                            ? 'bg-graphite text-white'
+                            : 'bg-mist text-graphite hover:bg-hairline'
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </Section>
+              )}
 
               <Section title="รายละเอียด" last>
                 <dl className="grid grid-cols-2 gap-x-6 gap-y-2.5 text-[14px]">
                   {[
-                    ['ระดับ', rarity.label],
-                    ['เวอร์ชัน', `v${detail.version}`],
-                    ['อัปเดตล่าสุด', formatThaiDate(detail.updatedAt)],
                     ['หมวด', kind.label],
+                    ['วัสดุ', detail.showsUp[0] ?? '—'],
+                    ['คงเหลือ', soldOut ? 'ของหมด' : `${item.stock} ชิ้น`],
+                    ['ถึงประมาณ', arrivalLabel],
                   ].map(([k, v]) => (
                     <div key={k} className="flex justify-between gap-3 border-b border-hairline/60 pb-2">
                       <dt className="text-slate">{k}</dt>
@@ -236,31 +254,31 @@ function Body({
               </div>
 
               <motion.button
-                onClick={() => toggleCart(itemLine(item))}
-                disabled={owned}
-                whileHover={owned ? undefined : { scale: 1.03 }}
-                whileTap={owned ? undefined : { scale: 0.96 }}
+                onClick={() => size && toggleCart(itemLine(item, size))}
+                disabled={soldOut || !size}
+                whileHover={soldOut || !size ? undefined : { scale: 1.03 }}
+                whileTap={soldOut || !size ? undefined : { scale: 0.96 }}
                 transition={SPRING_SOFT}
-                aria-pressed={owned ? undefined : queued}
-                className={`rounded-full px-8 py-3.5 text-[15px] font-medium transition-colors ${
-                  owned
-                    ? 'cursor-default bg-mist text-slate'
+                aria-pressed={soldOut || !size ? undefined : queued}
+                className={`tap rounded-full px-8 py-3.5 text-[15px] font-medium transition-colors ${
+                  soldOut || !size
+                    ? 'cursor-not-allowed bg-mist text-slate-soft'
                     : queued
                       ? 'bg-graphite text-white hover:bg-graphite/85'
                       : 'bg-brand text-white hover:bg-brand-hover'
                 }`}
               >
-                {owned ? 'มีแล้ว' : queued ? 'อยู่ในตะกร้า' : 'ใส่ตะกร้า'}
+                {soldOut ? 'ของหมด' : !size ? 'เลือกไซซ์ก่อน' : queued ? 'อยู่ในตะกร้า' : 'ใส่ตะกร้า'}
               </motion.button>
             </div>
 
             {/* Says what happens after, and what to do when it can't. */}
             <p className="text-[13px] leading-relaxed text-slate">
-              {owned
-                ? 'อยู่ในบัญชีคุณแล้ว เปิดใช้เมื่อไหร่ก็ได้ ไม่มีวันหมดอายุ'
+              {soldOut
+                ? 'หมดชั่วคราว — รอบผลิตถัดไปจะกลับมาในร้านอัตโนมัติ'
                 : short > 0
                   ? `ใส่ตะกร้าไว้ก่อนได้ — ตอนนี้ยังขาดอีก ${short.toLocaleString('th-TH')} เหรียญ เรียนจบอีกบทเดียวก็มักจะพอ`
-                  : 'แลกแล้วเป็นของคุณถาวร เปลี่ยนไปใช้ชิ้นอื่นแล้วกลับมาใช้อันนี้ได้ตลอด'}
+                  : `สั่งวันนี้ ถึงประมาณ ${arrivalLabel} · ${CONTENT.settings.shipping.note}`}
             </p>
           </div>
         </div>

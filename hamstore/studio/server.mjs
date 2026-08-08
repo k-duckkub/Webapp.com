@@ -108,6 +108,16 @@ function validate(next) {
     need(Number.isFinite(item.coins) && item.coins >= 0, `item ${item.id}: ราคาต้องเป็นตัวเลขไม่ติดลบ`)
     need(Number.isFinite(item.sale) && item.sale >= 0 && item.sale < 100, `item ${item.id}: ส่วนลดต้องอยู่ 0–99`)
     need(Array.isArray(item.art) && item.art.length === 2, `item ${item.id}: art ต้องมีสองสี`)
+    /* Physical goods. An empty size list is the one that actually breaks the
+       shop: the card adds `sizes[0]` to the cart and would queue undefined. */
+    need(
+      Array.isArray(item.sizes) && item.sizes.length > 0 && item.sizes.every(s => typeof s === 'string' && s.trim()),
+      `item ${item.id}: ต้องมีตัวเลือกไซซ์อย่างน้อยหนึ่ง (ของที่ไม่มีให้เลือกใส่ "Free")`,
+    )
+    need(new Set(item.sizes ?? []).size === (item.sizes ?? []).length, `item ${item.id}: ไซซ์ซ้ำกัน`)
+    need(Number.isInteger(item.stock) && item.stock >= 0, `item ${item.id}: จำนวนคงเหลือต้องเป็นจำนวนเต็มไม่ติดลบ`)
+    need(Number.isInteger(item.shipsIn) && item.shipsIn > 0 && item.shipsIn <= 60,
+      `item ${item.id}: จำนวนวันจัดส่งต้องอยู่ 1–60`)
   }
   for (const asset of next.assets ?? []) {
     need(typeof asset.id === 'number', `asset ${asset?.title ?? '?'}: id ต้องเป็นตัวเลข`)
@@ -164,6 +174,12 @@ function validate(next) {
   need(Number.isFinite(st.startingBalance) && st.startingBalance >= 0, 'เหรียญตั้งต้นต้องเป็นตัวเลขไม่ติดลบ')
   need(Number.isInteger(st.assetsPerPage) && st.assetsPerPage > 0, 'จำนวนต่อหน้าต้องเป็นจำนวนเต็มบวก')
   for (const k of st.shelfKinds ?? []) need(kindIds.has(k), `ชั้นล่างหน้าแรกอ้างหมวด "${k}" ที่ไม่มีแล้ว`)
+
+  const sh = st.shipping ?? {}
+  need(st.shipping && typeof st.shipping === 'object', 'ขาดการตั้งค่าค่าส่ง (settings.shipping)')
+  need(Number.isFinite(sh.fee) && sh.fee >= 0, 'ค่าส่งต้องเป็นตัวเลขไม่ติดลบ')
+  need(Number.isFinite(sh.freeOver) && sh.freeOver >= 0, 'ยอดส่งฟรีต้องเป็นตัวเลขไม่ติดลบ')
+  need(typeof sh.note === 'string', 'คำอธิบายการส่งต้องเป็นข้อความ')
 
   for (const band of next.store?.bands ?? []) {
     need(kindIds.has(band.kind), `แถบใหญ่อ้างหมวด "${band.kind}" ที่ไม่มีแล้ว`)

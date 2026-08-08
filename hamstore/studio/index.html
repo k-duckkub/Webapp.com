@@ -619,6 +619,7 @@ function renderItems() {
       id, kind: data.kinds[0]?.id ?? 'skin', name: 'ไอเทมใหม่', blurb: '',
       coins: 100, sale: 0, rarity: data.rarities[0]?.id ?? 'common', owned: false,
       art: ['#F97316', '#DC2626'], image: '',
+      sizes: ['Free'], stock: 10, shipsIn: 3,
     })
     data.itemDetails[id] = { maker: '', owners: 0, includes: [], showsUp: [], version: '1.0', updatedAt: '' }
     touch(); draw()
@@ -648,7 +649,11 @@ function renderItems() {
 
       return el('details', { className: 'card' },
         el('summary', {}, thumb, el('span', { textContent: item.name }),
-          el('span', { className: 'tag', textContent: (kinds[item.kind] || item.kind) + ' · ' + item.coins }),
+          el('span', {
+            className: 'tag',
+            textContent: (kinds[item.kind] || item.kind) + ' · ' + item.coins
+              + (item.stock === 0 ? ' · ของหมด' : ''),
+          }),
           rowTools(data.items, index, draw, {
             label: 'ไอเทม “' + item.name + '”',
             onDelete: removed => {
@@ -664,6 +669,13 @@ function renderItems() {
           el('div', { className: 'field' }, el('label', { textContent: 'หมวด' }), kindSelect),
           el('div', { className: 'field' }, el('label', { textContent: 'ระดับ' }), raritySelect),
         ),
+        el('div', { className: 'row' },
+          bind(item, 'stock', 'คงเหลือ (0 = ของหมด)', { type: 'number' }),
+          bind(item, 'shipsIn', 'ส่งถึงในกี่วัน', { type: 'number' }),
+        ),
+        /* One entry means there is nothing to choose and the card adds it to
+           the cart directly; two or more sends the buyer to the sheet. */
+        listField(item, 'sizes', 'ไซซ์ให้เลือก (อันเดียว = ไม่ต้องเลือก)'),
         el('div', { className: 'row' },
           colorField(item.art, 0, 'สีปกด้านบน'),
           colorField(item.art, 1, 'สีปกด้านล่าง'),
@@ -915,11 +927,19 @@ function renderSettings() {
       el('div', { style: 'display:flex;align-items:center;gap:8px' },
         input, el('span', { style: 'font-size:13px', textContent: k.label }))))
   }
+  const shipping = st.shipping || (st.shipping = { fee: 40, freeOver: 500, note: '' })
+
   return panel('settings', 'ตั้งค่า', 'ตัวเลขที่คุมพฤติกรรมของทั้งเว็บ',
     el('div', { className: 'row' },
       bind(st, 'startingBalance', 'เหรียญตั้งต้นของผู้ใช้', { type: 'number' }),
       bind(st, 'assetsPerPage', 'จำนวน asset ต่อหน้า', { type: 'number' }),
     ),
+    el('h3', { style: 'margin:18px 0 8px;font-size:14px', textContent: 'การจัดส่ง' }),
+    el('div', { className: 'row' },
+      bind(shipping, 'fee', 'ค่าส่ง (เหรียญ)', { type: 'number' }),
+      bind(shipping, 'freeOver', 'ส่งฟรีเมื่อยอดถึง', { type: 'number' }),
+    ),
+    bind(shipping, 'note', 'บรรทัดอธิบายการส่ง'),
     el('h3', { style: 'margin:18px 0 8px;font-size:14px', textContent: 'หมวดที่ขึ้นชั้นล่างหน้าแรก' }),
     shelf,
   )

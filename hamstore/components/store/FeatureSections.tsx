@@ -31,10 +31,11 @@ const BANDS = COPY.store.bands.map((band, i) => ({
   onMist: i % 2 === 0,
 }))
 
-/* Facts, not adjectives. Each one is computed from the catalogue. */
+/* Facts, not adjectives. Each one is computed from the catalogue — which for
+   physical goods means what is actually on the shelf, not what is listed. */
 const FACTS = [
   { value: String(PLATFORM_ITEMS.length), label: COPY.store.facts.inStore },
-  { value: String(PLATFORM_ITEMS.filter(i => i.coins === 0).length), label: COPY.store.facts.free },
+  { value: String(PLATFORM_ITEMS.filter(i => i.stock > 0).length), label: COPY.store.facts.free },
   { value: `${Math.min(...PLATFORM_ITEMS.filter(i => i.coins > 0).map(priceOf))}`, label: COPY.store.facts.cheapest },
   { value: '0', label: COPY.store.facts.baht },
 ]

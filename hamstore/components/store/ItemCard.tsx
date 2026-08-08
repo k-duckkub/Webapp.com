@@ -2,10 +2,10 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import { T, pressableCard, SPRING_SOFT, GRID_ITEM } from '@/lib/motion'
-import { ITEM_DETAILS, kindMeta, rarityMeta, type PlatformItem } from '@/lib/items'
+import { kindMeta, type PlatformItem } from '@/lib/items'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
-import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
+import { useWallet, priceOf, itemLine, anySizeInCart } from '@/components/WalletProvider'
 
 export function ItemCard({
   item,
@@ -16,17 +16,16 @@ export function ItemCard({
   featured?: boolean
   onOpen?: (item: PlatformItem) => void
 }) {
-  const { owns, inCart, toggleCart, isEquipped, equip } = useWallet()
+  const { cart, toggleCart } = useWallet()
   const kind = kindMeta(item.kind)
-  const rarity = rarityMeta(item.rarity)
-  const detail = ITEM_DETAILS[item.id]
   const [from, to] = item.art
 
-  const key = itemKey(item.id)
-  const owned = owns(key)
-  const queued = inCart(key)
   const price = priceOf(item)
-  const worn = isEquipped(item)
+  const queued = anySizeInCart(cart, item.id)
+  const soldOut = item.stock === 0
+  /* Anything with a real choice of size has to be chosen in the sheet, not
+     guessed at from a card — so the card's button opens it. */
+  const needsSize = item.sizes.length > 1
 
   return (
     /* Entry and layout belong to the grid, not to each card — see ItemGrid. */
@@ -53,45 +52,43 @@ export function ItemCard({
           />
         </motion.div>
 
-        {/* Top-right, opposite the cover's own category chip. Safe to share
-            that corner with the owned badge — the two never show together. */}
-        {item.sale > 0 && !owned && (
-          <span className="absolute right-3 top-3 rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
-            −{item.sale}%
+        {/* Top-right, opposite the cover's own category chip. Sold out beats
+            a discount: there is no point advertising a price nobody can pay. */}
+        {soldOut ? (
+          <span className="absolute right-3 top-3 rounded-full bg-graphite px-2.5 py-0.5 text-[11px] font-medium text-white">
+            ของหมด
           </span>
+        ) : (
+          item.sale > 0 && (
+            <span className="absolute right-3 top-3 rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-medium text-white">
+              −{item.sale}%
+            </span>
+          )
         )}
-
-        <AnimatePresence>
-          {owned && (
-            <motion.span
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={SPRING_SOFT}
-              className="absolute right-3 top-3 rounded-full bg-graphite px-2.5 py-0.5 text-[11px] font-medium text-white"
-            >
-              {worn ? 'กำลังใช้' : 'มีแล้ว'}
-            </motion.span>
-          )}
-        </AnimatePresence>
       </div>
 
       {/* Copy */}
       <div className="flex flex-1 flex-col px-1 pt-4">
-        <p className="mb-1 text-xs font-medium tracking-label" style={{ color: rarity.color }}>
-          {rarity.label}
+        <p className="mb-1 text-xs font-medium tracking-label" style={{ color: kind.color }}>
+          {kind.label}
         </p>
         <h3 className="mb-1.5 text-[17px] font-semibold leading-snug tracking-tight text-graphite">
           {item.name}
         </h3>
         <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-slate">{item.blurb}</p>
 
-        {/* The only social proof we can state honestly, and the one thing a
-            buyer checks first: is anyone else actually running this. */}
-        {detail && (
-          <p className="mb-4 text-[12px] text-slate-soft">
-            <span className="tabular-nums">{detail.owners.toLocaleString('th-TH')}</span> คนมีแล้ว
-          </p>
-        )}
+        {/* The two things a buyer checks before anything else on a physical
+            product: is there any left, and when would it turn up. */}
+        <p className="mb-4 text-[12px] text-slate-soft">
+          {soldOut ? (
+            'ของหมด — รอรอบผลิตถัดไป'
+          ) : (
+            <>
+              เหลือ <span className="tabular-nums">{item.stock}</span> ชิ้น · ส่งถึงใน{' '}
+              <span className="tabular-nums">{item.shipsIn}</span> วัน
+            </>
+          )}
+        </p>
 
         <div className="mt-auto flex items-center justify-between gap-3 pb-2.5">
           <span className="flex items-center gap-1.5 text-[15px] font-semibold text-graphite">
@@ -106,25 +103,30 @@ export function ItemCard({
           </span>
 
           <motion.button
-            onClick={() => (owned ? equip(item) : toggleCart(itemLine(item)))}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.92 }}
+            onClick={() => {
+              if (soldOut) return
+              /* A size is a decision, and a card is the wrong place to make
+                 one — send them to the sheet where the options are. */
+              if (needsSize) onOpen?.(item)
+              else toggleCart(itemLine(item, item.sizes[0]))
+            }}
+            disabled={soldOut}
+            whileHover={soldOut ? undefined : { scale: 1.05 }}
+            whileTap={soldOut ? undefined : { scale: 0.92 }}
             transition={SPRING_SOFT}
             aria-label={
-              owned
-                ? worn
-                  ? `เลิกใช้ ${item.name}`
-                  : `ใช้งาน ${item.name}`
-                : queued
-                  ? `เอา ${item.name} ออกจากตะกร้า`
-                  : `ใส่ ${item.name} ลงตะกร้า`
+              soldOut
+                ? `${item.name} — ของหมด`
+                : needsSize
+                  ? `เลือกไซซ์ของ ${item.name}`
+                  : queued
+                    ? `เอา ${item.name} ออกจากตะกร้า`
+                    : `ใส่ ${item.name} ลงตะกร้า`
             }
-            aria-pressed={owned ? worn : queued}
+            aria-pressed={soldOut || needsSize ? undefined : queued}
             className={`tap relative z-20 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
-              owned
-                ? worn
-                  ? 'bg-graphite text-white hover:bg-graphite/85'
-                  : 'bg-mist text-graphite hover:bg-hairline'
+              soldOut
+                ? 'cursor-not-allowed bg-mist text-slate-soft'
                 : queued
                   ? 'bg-graphite text-white hover:bg-graphite/85'
                   : 'bg-brand text-white hover:bg-brand-hover'
@@ -136,22 +138,17 @@ export function ItemCard({
             <span className="block overflow-hidden">
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
-                key={owned ? (worn ? 'worn' : 'owned') : queued ? 'queued' : 'add'}
+                key={soldOut ? 'out' : needsSize ? 'size' : queued ? 'queued' : 'add'}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={T.hover}
                 className="block"
               >
-                {owned ? (
-                  worn ? (
-                    <span className="flex items-center gap-1">
-                      <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.4} />
-                      กำลังใช้
-                    </span>
-                  ) : (
-                    'ใช้งาน'
-                  )
+                {soldOut ? (
+                  'ของหมด'
+                ) : needsSize ? (
+                  'เลือกไซซ์'
                 ) : queued ? (
                   <span className="flex items-center gap-1">
                     <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.4} />

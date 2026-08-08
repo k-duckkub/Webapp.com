@@ -27,6 +27,12 @@ export interface PlatformItem {
   owned: boolean
   /** two-tone field the generated cover is built from */
   art: [string, string]
+  /** What you pick before ordering. One entry means there is nothing to pick. */
+  sizes: string[]
+  /** How many are on the shelf. 0 means it cannot be ordered. */
+  stock: number
+  /** Working days from order to doorstep. */
+  shipsIn: number
   /** Path to real cover art. Drop a file in /public and set it here to
    *  override the generated cover — nothing else needs to change. */
   image?: string
@@ -63,7 +69,7 @@ export function rarityMeta(rarity: string) {
   return RARITY_META[rarity] ?? { label: '—', color: '#6e6e73' }
 }
 
-export const PLATFORM_ITEMS: PlatformItem[] = CONTENT.items as PlatformItem[]
+export const PLATFORM_ITEMS: PlatformItem[] = CONTENT.items as unknown as PlatformItem[]
 
 /**
  * The three "chapters" the GSAP pathway scroll walks the visitor through.

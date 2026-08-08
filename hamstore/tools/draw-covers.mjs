@@ -3,11 +3,11 @@
  * Draws the cover art as real image files.
  *
  * The generated SVG motifs in `Artwork.tsx` are abstract by design — they were
- * a stand-in for pictures nobody had. This draws the actual products instead:
- * a hamster wearing the outfit you would be buying, the pet that follows your
- * cursor, the frame around a portrait. Each one is composed in a headless
- * browser and screenshotted, so what lands in `public/uploads` is a genuine
- * raster file that any host can serve and the studio can replace.
+ * a stand-in for pictures nobody had. This draws the actual goods instead: the
+ * tee laid flat, the mug with its handle out, the lamp on the sweep. Each one
+ * is composed in a headless browser and screenshotted, so what lands in
+ * `public/uploads` is a genuine raster file that any host can serve and the
+ * studio can replace with a real photograph the day one exists.
  *
  * Nothing is downloaded. Outbound image hosts are blocked by the network
  * policy here, and copying someone's photography into a shop would be the
@@ -150,135 +150,277 @@ const wordmark = (text, color, size = 13) =>
 
 /* ----------------------------------------------------------------- objects */
 
-/** The astronaut helmet — an object, shot like one. */
-const helmet = `
+/**
+ * The hamster mark, once.
+ *
+ * It is printed on the tee, embroidered on the cap, glazed on the mug, woven
+ * into the mat and cut out as the keyring — so it is drawn in one place and
+ * scaled. A shop whose logo is redrawn per product is a shop whose logo nobody
+ * recognises on the second shelf.
+ */
+const hamsterMark = ({ fur = '#F5A524', ear = '#E9A07C', ink = '#2A211A', r = 30 } = {}) => `
   <g>
-    <ellipse cx="200" cy="322" rx="74" ry="20" fill="#D8DBE4"/>
-    <rect x="126" y="252" width="148" height="70" rx="18" fill="#EDEFF4"/>
-    <rect x="126" y="252" width="148" height="16" rx="8" fill="#F97316"/>
-    <circle cx="200" cy="196" r="106" fill="#F4F5F8"/>
-    <path d="M200 90a106 106 0 0 1 106 106c0 24-40 44-106 44S94 220 94 196A106 106 0 0 1 200 90Z" fill="#CBD8EA"/>
-    <path d="M200 104a92 92 0 0 1 92 92c0 20-36 36-92 36s-92-16-92-36a92 92 0 0 1 92-92Z" fill="#8FA9C9" opacity=".55"/>
-    <path d="M126 158a94 94 0 0 1 52-44" stroke="#fff" stroke-width="13" fill="none" stroke-linecap="round" opacity=".85"/>
-    <circle cx="200" cy="196" r="106" fill="none" stroke="#DFE3EB" stroke-width="8"/>
+    <circle cx="${-r * 0.72}" cy="${-r * 0.68}" r="${r * 0.34}" fill="${fur}"/>
+    <circle cx="${r * 0.72}" cy="${-r * 0.68}" r="${r * 0.34}" fill="${fur}"/>
+    <circle cx="${-r * 0.72}" cy="${-r * 0.68}" r="${r * 0.18}" fill="${ear}"/>
+    <circle cx="${r * 0.72}" cy="${-r * 0.68}" r="${r * 0.18}" fill="${ear}"/>
+    <ellipse cx="0" cy="0" rx="${r}" ry="${r * 0.9}" fill="${fur}"/>
+    <ellipse cx="${-r * 0.46}" cy="${r * 0.26}" rx="${r * 0.28}" ry="${r * 0.2}" fill="#fff" opacity=".3"/>
+    <ellipse cx="${r * 0.46}" cy="${r * 0.26}" rx="${r * 0.28}" ry="${r * 0.2}" fill="#fff" opacity=".3"/>
+    <circle cx="${-r * 0.34}" cy="${-r * 0.06}" r="${r * 0.12}" fill="${ink}"/>
+    <circle cx="${r * 0.34}" cy="${-r * 0.06}" r="${r * 0.12}" fill="${ink}"/>
+    <path d="M${-r * 0.12} ${r * 0.24}h${r * 0.24}l${-r * 0.12} ${r * 0.15}Z" fill="${ink}"/>
+    <path d="M${-r * 0.36} ${r * 0.46}q${r * 0.36} ${r * 0.24} ${r * 0.72} 0"
+          stroke="${ink}" stroke-width="${r * 0.08}" fill="none" stroke-linecap="round"/>
   </g>`
 
-/** The mortarboard, for the graduation set. */
-const mortarboard = `
+/** A cap, three-quarter on with the peak toward the camera. */
+const cap = `
   <g>
-    <path d="M200 176 92 218l108 42 108-42Z" fill="#20233A"/>
-    <path d="M200 260 92 218v12c0 8 46 24 108 24s108-16 108-24v-12Z" fill="#171A2C"/>
-    <path d="M296 226v56" stroke="#FBBF24" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="296" cy="290" r="14" fill="#FBBF24"/>
-    <circle cx="200" cy="218" r="9" fill="#0F1120"/>
+    <path d="M206 286c52 0 94 8 94 22 0 12-42 18-94 18-18 0-34-1-46-4l-4-34Z" fill="#12161F"/>
+    <path d="M196 154c50 0 88 46 88 102 0 16-40 24-88 24s-88-8-88-24c0-56 38-102 88-102Z" fill="#1E2634"/>
+    <path d="M196 154c50 0 88 46 88 102 0 11-20 18-50 21 8-58 2-99-38-123Z" fill="#151C27"/>
+    <path d="M196 154v126" stroke="#151C27" stroke-width="3.5" fill="none" opacity=".7"/>
+    <path d="M124 244c20-6 46-9 72-9s52 3 72 9" stroke="#151C27" stroke-width="3" fill="none" opacity=".45"/>
+    <circle cx="196" cy="156" r="7" fill="#151C27"/>
+    <g transform="translate(184 216)">${hamsterMark({ r: 22 })}</g>
   </g>`
 
-/** Pets photographed as plush, which is what a cosmetic pet is: a soft toy. */
-function plush(inner) {
-  return `<g>${inner}</g>`
-}
+/** One sock. Two of them, offset, is how a pair is photographed. */
+const sock = (x, y, tilt, body, cuff) => `
+  <g transform="translate(${x} ${y}) rotate(${tilt})">
+    <path d="M8 0h58v124c0 20 10 29 30 38l24 11c17 8 21 26 12 41-9 14-28 18-45 10L26 200C13 193 8 180 8 160Z"
+          fill="${body}"/>
+    <path d="M8 0h58v26H8Z" fill="${cuff}"/>
+    <path d="M8 34h58v9H8Z" fill="${cuff}" opacity=".8"/>
+    <path d="M66 0v124c0 20-10 29-30 38" stroke="#00000018" stroke-width="7" fill="none"/>
+    <g transform="translate(37 96) scale(.62)">${hamsterMark({ r: 26 })}</g>
+  </g>`
 
-const PLUSH = {
-  cat: plush(`
-    <path d="M128 176 150 106l46 40Z" fill="#F5A524"/>
-    <path d="M272 176 250 106l-46 40Z" fill="#F5A524"/>
-    <path d="M128 176 150 118l34 30Z" fill="#F7BC5E"/>
-    <ellipse cx="200" cy="216" rx="94" ry="82" fill="#F5A524"/>
-    <ellipse cx="200" cy="296" rx="72" ry="40" fill="#EE9A12"/>
-    <path d="M270 300c40-8 60-34 54-66" stroke="#F5A524" stroke-width="26" fill="none" stroke-linecap="round"/>
-    <ellipse cx="170" cy="208" rx="11" ry="15" fill="#2A211A"/>
-    <ellipse cx="230" cy="208" rx="11" ry="15" fill="#2A211A"/>
-    <path d="M190 238h20l-10 11Z" fill="#E06A6A"/>
-    <g stroke="#2A211A" stroke-width="3.5" stroke-linecap="round" opacity=".5">
-      <path d="M116 222h44M116 238h44M284 222h-44M284 238h-44"/>
-    </g>`),
-  slime: plush(`
-    <path d="M200 116c54 0 100 60 100 114 0 42-44 62-100 62s-100-20-100-62c0-54 46-114 100-114Z" fill="#34D399"/>
-    <path d="M200 116c54 0 100 60 100 114 0 42-44 62-100 62" fill="none" stroke="#0E9F6E" stroke-width="6" opacity=".45"/>
-    <ellipse cx="166" cy="174" rx="24" ry="32" fill="#fff" opacity=".55" transform="rotate(-18 166 174)"/>
-    <circle cx="174" cy="230" r="12" fill="#0B3B2E"/>
-    <circle cx="226" cy="230" r="12" fill="#0B3B2E"/>
-    <path d="M184 260c10 12 24 12 34 0" stroke="#0B3B2E" stroke-width="6" fill="none" stroke-linecap="round"/>`),
-  dragon: plush(`
-    <path d="M196 218 82 164l14 88Z" fill="#A855F7"/>
-    <path d="M204 218 318 164l-14 88Z" fill="#9333EA"/>
-    <path d="M200 128 134 246h132Z" fill="#EC4899"/>
-    <path d="M200 128 134 246h66Z" fill="#DB2777"/>
-    <path d="M134 246h132l-66 62Z" fill="#F472B6"/>
-    <path d="M134 246h66v62Z" fill="#EC4899"/>
-    <circle cx="184" cy="214" r="9" fill="#fff"/>
-    <circle cx="216" cy="214" r="9" fill="#fff"/>
-    <circle cx="184" cy="214" r="4" fill="#3B0A2A"/>
-    <circle cx="216" cy="214" r="4" fill="#3B0A2A"/>`),
-}
+/** A cushion — corners pulled, the way a filled cover actually sits. */
+const cushion = `
+  <g>
+    <path d="M112 116c60-11 116-11 176 0 11 60 11 116 0 176-60 11-116 11-176 0-11-60-11-116 0-176Z"
+          fill="#E8DBC4"/>
+    <path d="M200 110c44 0 74 2 88 6 11 60 11 116 0 176-14 4-44 6-88 6Z" fill="#DFCFB4" opacity=".55"/>
+    <path d="M112 116c60-11 116-11 176 0 11 60 11 116 0 176-60 11-116 11-176 0-11-60-11-116 0-176Z"
+          fill="none" stroke="#CBB998" stroke-width="3" stroke-dasharray="9 7" opacity=".8"/>
+    <g transform="translate(200 202)">${hamsterMark({ r: 52 })}</g>
+  </g>`
 
-/** A theme is software, so it is shot as the screen it changes. */
-function screen({ bg, panel, accent, text }) {
+/** The desk lamp, lit — an unlit lamp in a shop photo looks broken. */
+const lamp = `
+  <g transform="translate(200 330) scale(1.14) translate(-200 -330)">
+    <ellipse cx="244" cy="322" rx="106" ry="26" fill="#FBBF24" opacity=".18"/>
+    <ellipse cx="196" cy="320" rx="62" ry="15" fill="#C7CBD4"/>
+    <ellipse cx="196" cy="311" rx="62" ry="15" fill="#E9ECF1"/>
+    <rect x="189" y="132" width="15" height="180" fill="#DCE0E7"/>
+    <rect x="189" y="132" width="5" height="180" fill="#F4F6F9"/>
+    <path d="M196 126c0-16 13-30 30-30h68c13 0 21 8 21 17s-8 17-21 17h-98Z" fill="#E9ECF1"/>
+    <path d="M226 96h68c13 0 21 8 21 17s-8 17-21 17h-68Z" fill="#DCE0E7" opacity=".7"/>
+    <rect x="214" y="134" width="98" height="9" rx="4.5" fill="#FDE68A"/>
+    <circle cx="196" cy="286" r="13" fill="#F97316"/>
+    <circle cx="196" cy="286" r="5" fill="#C2410C"/>
+  </g>`
+
+/**
+ * A throw, hanging.
+ *
+ * Folded flat it came out as a stack of pancakes — three rounded slabs read as
+ * baking, not bedding. Hung, with a wavy hem and a fringe, there is nothing
+ * else it could be: only cloth falls in that shape.
+ */
+const blanket = (() => {
+  const left = 96, right = 304, top = 124, bottom = 286
+  const hem = x => 11 * Math.sin(((x - left) / (right - left)) * Math.PI * 3)
+  const shoulder = x => 7 * Math.sin(((x - left) / (right - left)) * Math.PI * 2)
+
+  const along = f => {
+    const pts = []
+    for (let x = left; x <= right; x += 8) pts.push([x, f(x)])
+    return pts
+  }
+  const upper = along(x => top + shoulder(x))
+  const lower = along(x => bottom + hem(x))
+  const trace = pts => pts.map(([x, y]) => `L${x} ${y.toFixed(1)}`).join('')
+
+  const body = `M${left} ${(top + shoulder(left)).toFixed(1)}${trace(upper)}${trace([...lower].reverse())}Z`
+  const fringe = lower
+    .filter((_, i) => i % 2 === 0)
+    .map(([x, y]) => `<path d="M${x} ${(y - 2).toFixed(1)}v15"/>`)
+    .join('')
+
   return `
     <g>
-      <rect x="66" y="92" width="268" height="196" rx="16" fill="#2A2A2E"/>
-      <rect x="74" y="100" width="252" height="180" rx="10" fill="${bg}"/>
-      <rect x="74" y="100" width="252" height="30" rx="10" fill="${panel}"/>
-      <rect x="74" y="118" width="252" height="12" fill="${panel}"/>
-      <circle cx="92" cy="115" r="5" fill="${accent}"/>
-      <rect x="106" y="110" width="48" height="10" rx="5" fill="${text}" opacity=".4"/>
-      <rect x="94" y="152" width="118" height="15" rx="7" fill="${text}" opacity=".85"/>
-      <rect x="94" y="178" width="170" height="8" rx="4" fill="${text}" opacity=".32"/>
-      <rect x="94" y="194" width="140" height="8" rx="4" fill="${text}" opacity=".32"/>
-      <rect x="94" y="220" width="76" height="24" rx="12" fill="${accent}"/>
-      <rect x="182" y="220" width="58" height="24" rx="12" fill="${panel}"/>
-      <path d="M170 288h60l8 26h-76Z" fill="#3A3A40"/>
-      <rect x="140" y="312" width="120" height="10" rx="5" fill="#2A2A2E"/>
+      <path d="${body}" fill="#E4D7BE"/>
+      <!-- Drape, not panels: hard-edged full-height strips made it read as a
+           folding screen, so each fold tapers from nothing at the shoulder to
+           its full width at the hem, the way cloth actually gathers. -->
+      <g fill="#0000000c">
+        <path d="M142 129 146 129 158 297 128 296Z"/>
+        <path d="M220 123 224 123 240 293 206 292Z"/>
+        <path d="M282 130 286 130 296 296 268 297Z"/>
+      </g>
+      <path d="M96 124 118 125 112 293 96 292Z" fill="#00000008"/>
+      <g stroke="#CDBD9E" stroke-width="4" stroke-linecap="round">${fringe}</g>
     </g>`
-}
+})()
 
-/** A sticker pack, shot as the physical sheet it would come on. */
+/** A doormat, seen the way one is: from standing height, thick at the edge. */
+const doormat = `
+  <g>
+    <clipPath id="matface"><path d="M62 212 200 156l138 56-138 56Z"/></clipPath>
+    <path d="M62 212 200 156l138 56v26L200 294 62 238Z" fill="#3E332A"/>
+    <path d="M62 212 200 156l138 56-138 56Z" fill="#8B7355"/>
+    <g clip-path="url(#matface)">
+      <g transform="translate(200 212) scale(1 .38)">${hamsterMark({ r: 62, fur: '#E7D7BC', ear: '#D6BF9D', ink: '#4A3B2C' })}</g>
+      <!-- coir, laid the way the pile runs -->
+      <g stroke="#00000016" stroke-width="2">
+        <path d="M62 212 200 268M110 192 248 248M158 172 296 228M206 152 344 208M14 232 152 288"/>
+      </g>
+    </g>
+    <path d="M62 212 200 156l138 56-138 56Z" fill="none" stroke="#6B573F" stroke-width="7"/>
+  </g>`
+
+/** A mug, handle out — the standard angle, so the handle is part of the sale. */
+const mug = `
+  <g>
+    <path d="M262 178c28 0 48 18 48 40s-20 42-48 42" fill="none" stroke="#FDFDFE" stroke-width="22" stroke-linecap="round"/>
+    <path d="M262 178c28 0 48 18 48 40s-20 42-48 42" fill="none" stroke="#E1E4EA" stroke-width="5" stroke-linecap="round"/>
+    <path d="M128 152h136v146c0 11-30 18-68 18s-68-7-68-18Z" fill="#FDFDFE"/>
+    <path d="M226 152h38v146c0 9-16 15-38 17Z" fill="#EDEFF3"/>
+    <ellipse cx="196" cy="152" rx="68" ry="16" fill="#F5F6F9"/>
+    <ellipse cx="196" cy="152" rx="68" ry="16" fill="none" stroke="#E1E4EA" stroke-width="3"/>
+    <ellipse cx="196" cy="153" rx="56" ry="12" fill="#E4E7ED"/>
+    <g transform="translate(186 226)">${hamsterMark({ r: 34 })}</g>
+  </g>`
+
+/** The insulated bottle, lid on. */
+const bottle = `
+  <g>
+    <rect x="176" y="90" width="48" height="22" rx="10" fill="#2C3A44"/>
+    <rect x="164" y="106" width="72" height="30" rx="13" fill="#3A4A56"/>
+    <path d="M156 134h88v164c0 15-14 24-44 24s-44-9-44-24Z" fill="#0E7490"/>
+    <path d="M214 134h30v164c0 13-9 20-30 23Z" fill="#0A5A70" opacity=".85"/>
+    <rect x="166" y="152" width="11" height="122" rx="5.5" fill="#fff" opacity=".2"/>
+    <g transform="translate(200 224)">${hamsterMark({ r: 27, fur: '#FDE68A', ear: '#FBBF24', ink: '#0A4657' })}</g>
+  </g>`
+
+/** A canvas tote, hanging with the handles up. */
+const tote = `
+  <g>
+    <path d="M150 154c0-32 22-56 50-56s50 24 50 56" fill="none" stroke="#DCD1BA" stroke-width="13" stroke-linecap="round"/>
+    <path d="M150 154c0-32 22-56 50-56" fill="none" stroke="#E9E1D0" stroke-width="13" stroke-linecap="round"/>
+    <path d="M112 148h176l9 166c-33 9-64 13-97 13s-64-4-97-13Z" fill="#EDE4D2"/>
+    <path d="M200 148h88l9 166c-30 8-59 12-89 13Z" fill="#E2D8C3" opacity=".7"/>
+    <path d="M112 148h176l1 14H113Z" fill="#DCD1BA"/>
+    <g transform="translate(200 238)">${hamsterMark({ r: 46 })}</g>
+  </g>`
+
+/**
+ * The long desk mat.
+ *
+ * A flat dark rectangle is indistinguishable from the doormat two shelves up,
+ * so the mouse sits on it: it gives the mat a scale, and it says at a glance
+ * which of the two flat rectangles in this shop is the one for a desk.
+ */
+const deskmat = `
+  <g>
+    <path d="M50 236 208 190l142 40-158 46Z" fill="#30333B"/>
+    <path d="M50 236v14l142 46v-14Z" fill="#1F2228"/>
+    <path d="M350 230v14l-158 52v-14Z" fill="#282B32"/>
+    <path d="M50 236 208 190l142 40-158 46Z" fill="none" stroke="#F97316" stroke-width="3" opacity=".75"/>
+    <g transform="translate(150 246) scale(1 .34)">${hamsterMark({ r: 44, fur: '#818897', ear: '#9AA1AE', ink: '#23262C' })}</g>
+    <g transform="translate(272 208)">
+      <ellipse cx="0" cy="6" rx="30" ry="18" fill="#1F2228" opacity=".5"/>
+      <path d="M-26 4c0-20 11-34 26-34s26 14 26 34c0 13-11 20-26 20s-26-7-26-20Z" fill="#5E6470"/>
+      <path d="M0 -30c15 0 26 14 26 34 0 13-11 20-26 20Z" fill="#4A505B"/>
+      <path d="M0 -26v16" stroke="#2C2F36" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>`
+
+/** A hardcover notebook, closed, with the elastic across it. */
+const notebook = `
+  <g transform="rotate(-5 200 208)">
+    <rect x="126" y="98" width="152" height="216" rx="9" fill="#8A6236"/>
+    <rect x="126" y="98" width="18" height="216" rx="9" fill="#6B4A28"/>
+    <rect x="266" y="104" width="10" height="204" rx="3" fill="#F5F1E8"/>
+    <rect x="262" y="104" width="6" height="204" fill="#E5DFD2"/>
+    <rect x="234" y="98" width="10" height="216" fill="#1F2937" opacity=".85"/>
+    <g transform="translate(196 196)">${hamsterMark({ r: 40, fur: '#E7C48F', ear: '#D9AE72', ink: '#5B4022' })}</g>
+    <text x="196" y="272" text-anchor="middle" font-family="system-ui,sans-serif"
+          font-size="12" font-weight="700" letter-spacing="2.5" fill="#E7C48F" opacity=".8">HAMSTERHUB</text>
+  </g>`
+
+/** The plush. A soft toy is drawn soft — no straight edges anywhere. */
+const plushHamster = `
+  <g>
+    <circle cx="140" cy="158" r="27" fill="#E0912F"/>
+    <circle cx="260" cy="158" r="27" fill="#E0912F"/>
+    <circle cx="140" cy="158" r="14" fill="#E9A07C"/>
+    <circle cx="260" cy="158" r="14" fill="#E9A07C"/>
+    <ellipse cx="200" cy="252" rx="100" ry="72" fill="#F5A524"/>
+    <ellipse cx="200" cy="268" rx="64" ry="52" fill="#FBE6C4"/>
+    <ellipse cx="200" cy="196" rx="88" ry="72" fill="#F7B24A"/>
+    <ellipse cx="150" cy="212" rx="26" ry="18" fill="#fff" opacity=".28"/>
+    <ellipse cx="250" cy="212" rx="26" ry="18" fill="#fff" opacity=".28"/>
+    <circle cx="172" cy="188" r="11" fill="#2A211A"/>
+    <circle cx="228" cy="188" r="11" fill="#2A211A"/>
+    <circle cx="175" cy="184" r="3.5" fill="#fff"/>
+    <circle cx="231" cy="184" r="3.5" fill="#fff"/>
+    <path d="M192 210h16l-8 10Z" fill="#C2705E"/>
+    <path d="M186 226q14 10 28 0" stroke="#2A211A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="138" cy="268" rx="20" ry="26" fill="#F7B24A" transform="rotate(-16 138 268)"/>
+    <ellipse cx="262" cy="268" rx="20" ry="26" fill="#F7B24A" transform="rotate(16 262 268)"/>
+    <ellipse cx="168" cy="316" rx="26" ry="14" fill="#EE9A12"/>
+    <ellipse cx="232" cy="316" rx="26" ry="14" fill="#EE9A12"/>
+  </g>`
+
+/** The sticker pack, shot as the sheet it is cut on. */
 function sheet(tints) {
-  const faces = []
-  const grid = [[140, 154], [200, 142], [260, 154], [128, 222], [200, 214], [272, 222], [158, 288], [242, 288]]
-  grid.forEach(([x, y], i) => {
-    const tint = tints[i % tints.length]
-    const r = i === 4 ? 36 : 28
-    faces.push(`
-      <g>
-        <circle cx="${x}" cy="${y}" r="${r + 5}" fill="#fff"/>
-        <circle cx="${x}" cy="${y}" r="${r}" fill="${tint}"/>
-        <circle cx="${x - r * 0.62}" cy="${y - r * 0.66}" r="${r * 0.3}" fill="${tint}"/>
-        <circle cx="${x + r * 0.62}" cy="${y - r * 0.66}" r="${r * 0.3}" fill="${tint}"/>
-        <circle cx="${x - r * 0.26}" cy="${y - r * 0.04}" r="${r * 0.12}" fill="#2A211A"/>
-        <circle cx="${x + r * 0.26}" cy="${y - r * 0.04}" r="${r * 0.12}" fill="#2A211A"/>
-        <path d="M${x - r * 0.22} ${y + r * 0.3}q${r * 0.22} ${r * 0.2} ${r * 0.44} 0"
-              stroke="#2A211A" stroke-width="${r * 0.09}" fill="none" stroke-linecap="round"/>
-      </g>`)
+  const grid = [[140, 152], [200, 140], [260, 152], [128, 220], [200, 212], [272, 220], [158, 286], [242, 286]]
+  const faces = grid.map(([x, y], i) => {
+    const r = i === 4 ? 34 : 26
+    return `
+      <g transform="translate(${x} ${y})">
+        <circle cx="0" cy="0" r="${r + 7}" fill="#fff"/>
+        ${hamsterMark({ r, fur: tints[i % tints.length] })}
+      </g>`
   })
   return `
     <g>
-      <rect x="84" y="102" width="232" height="216" rx="12" fill="#fff"/>
-      <rect x="84" y="102" width="232" height="216" rx="12" fill="none" stroke="#E4E4E8" stroke-width="3"/>
+      <rect x="84" y="100" width="232" height="218" rx="12" fill="#fff"/>
+      <rect x="84" y="100" width="232" height="218" rx="12" fill="none" stroke="#E4E4E8" stroke-width="3"/>
       <g stroke="#E4E4E8" stroke-width="2" stroke-dasharray="5 5">
-        <path d="M84 210h232M200 102v216"/>
+        <path d="M84 209h232M200 100v218"/>
       </g>
       ${faces.join('')}
     </g>`
 }
 
-/** A frame, shot as the object rather than around anything. */
-function frameObject(inner) {
-  return `
-    <g>
-      <circle cx="200" cy="204" r="116" fill="#fff"/>
-      <!-- The portrait a frame is always sold around. Kept grey so the border
-           stays the product and the sitter stays the sample. -->
-      <clipPath id="portrait"><circle cx="200" cy="204" r="116"/></clipPath>
-      <g clip-path="url(#portrait)">
-        <rect x="84" y="88" width="232" height="232" fill="#EDEDF0"/>
-        <circle cx="200" cy="186" r="46" fill="#C9C9D2"/>
-        <path d="M118 330c0-46 37-72 82-72s82 26 82 72Z" fill="#C9C9D2"/>
-      </g>
-      <circle cx="200" cy="204" r="116" fill="none" stroke="#E2E2E8" stroke-width="3"/>
-      ${inner}
-    </g>`
-}
+/** An acrylic charm on a split ring — clear border, printed centre. */
+const keyring = `
+  <g>
+    <circle cx="200" cy="112" r="28" fill="none" stroke="#B9BDC6" stroke-width="10"/>
+    <circle cx="200" cy="112" r="28" fill="none" stroke="#EDEFF3" stroke-width="4"/>
+    <path d="M200 140v22" stroke="#C7CBD4" stroke-width="7" stroke-linecap="round"/>
+    <ellipse cx="200" cy="248" rx="88" ry="82" fill="#FFFFFF" opacity=".95"/>
+    <ellipse cx="200" cy="248" rx="88" ry="82" fill="none" stroke="#DADDE4" stroke-width="3"/>
+    <ellipse cx="164" cy="200" rx="26" ry="16" fill="#fff" opacity=".7" transform="rotate(-24 164 200)"/>
+    <g transform="translate(200 252)">${hamsterMark({ r: 58 })}</g>
+    <circle cx="200" cy="176" r="8" fill="#F0F1F5" stroke="#D3D6DD" stroke-width="2"/>
+  </g>`
+
+/** A hard enamel pin: metal rim, filled colour, one specular streak. */
+const pin = `
+  <g>
+    <circle cx="200" cy="208" r="98" fill="#C9911A"/>
+    <circle cx="200" cy="208" r="90" fill="#FAF0DC"/>
+    <g transform="translate(200 208)">${hamsterMark({ r: 62 })}</g>
+    <circle cx="200" cy="208" r="98" fill="none" stroke="#A8781A" stroke-width="4"/>
+    <circle cx="200" cy="208" r="90" fill="none" stroke="#E4C67E" stroke-width="3"/>
+    <path d="M142 150a84 84 0 0 1 44-32" stroke="#fff" stroke-width="11" opacity=".55" fill="none" stroke-linecap="round"/>
+  </g>`
 
 /**
  * One entry per catalogue item id.
@@ -287,79 +429,40 @@ function frameObject(inner) {
  * whole point of shooting a catalogue this way. Only the object changes.
  */
 const ITEM_ART = {
-  // Skins, shot as the garment you would be buying.
+  // Apparel, laid flat on the sweep.
   1: () => garment({
-        body: '#EFF1F5', shade: '#D6DAE3', trim: '#F97316', sleeve: 'long',
-        chest: chestMark(`
-          <rect x="-34" y="-26" width="68" height="46" rx="8" fill="#D6DAE3"/>
-          <rect x="-26" y="-18" width="52" height="18" rx="4" fill="#8FA9C9"/>
-          <circle cx="-14" cy="10" r="5" fill="#F97316"/>
-          <circle cx="0" cy="10" r="5" fill="#9AA3B2"/>
-          <circle cx="14" cy="10" r="5" fill="#9AA3B2"/>`),
+        body: '#1E1E22', shade: '#0F0F12', sleeve: 'short',
+        chest: chestMark(hamsterMark({ r: 30 }), 206),
       }),
   2: () => garment({
-        body: '#FBF8F3', shade: '#E4DED4', sleeve: 'long',
-        chest: `<path d="M200 130v186" stroke="#E4DED4" stroke-width="4" fill="none"/>
-                <g fill="#E4DED4">
-                  <circle cx="176" cy="170" r="6"/><circle cx="176" cy="204" r="6"/>
-                  <circle cx="176" cy="238" r="6"/><circle cx="176" cy="272" r="6"/>
-                </g>`,
+        body: '#F4EBDA', shade: '#DFD2BC', sleeve: 'short',
+        chest: chestMark(hamsterMark({ r: 30 }), 206),
       }),
   3: () => garment({
-        body: '#26262B', shade: '#141417', hood: true, sleeve: 'long', trim: '#B0121A',
-        chest: chestMark(wordmark('HAMSTER', '#B0121A', 12), 250),
+        body: '#2C2C32', shade: '#191A1E', hood: true, sleeve: 'long', trim: '#F97316',
+        chest: chestMark(hamsterMark({ r: 26 }), 244),
       }),
-  4: () => garment({
-        body: '#20233A', shade: '#171A2C', sleeve: 'long',
-        chest: `<path d="M170 128 200 244 230 128l-14-6-16 74-16-74Z" fill="#F5F5F7" opacity=".92"/>
-                <path d="M186 268h28v10h-28Z" fill="#FBBF24"/>`,
-      }),
+  4: () => cap,
+  5: () => `${sock(96, 112, -7, '#F2E9DA', '#F97316')}${sock(196, 128, 6, '#F2E9DA', '#F97316')}`,
 
-  // Pets, shot as plush — which is what a cosmetic pet is: a soft toy.
-  5: () => PLUSH.cat,
-  6: () => PLUSH.slime,
-  7: () => PLUSH.dragon,
+  // Home.
+  6: () => cushion,
+  7: () => lamp,
+  8: () => blanket,
+  9: () => doormat,
 
-  // Themes, shot as the screen they change.
-  8:  () => screen({ bg: '#17161A', panel: '#232228', accent: '#F97316', text: '#F5F5F7' }),
-  9:  () => screen({ bg: '#160E2E', panel: '#241546', accent: '#22D3EE', text: '#E9D5FF' }),
-  10: () => screen({ bg: '#F2FBF4', panel: '#DCF3E3', accent: '#16A34A', text: '#14532D' }),
-  11: () => screen({ bg: '#0F172A', panel: '#1E293B', accent: '#F472B6', text: '#E2E8F0' }),
+  // Desk.
+  10: () => mug,
+  11: () => bottle,
+  12: () => tote,
+  13: () => deskmat,
+  14: () => notebook,
 
-  // Sticker packs, shot as the sheet.
-  12: () => sheet(['#FDBA74', '#FCD34D', '#FB923C']),
-  13: () => sheet(['#67E8F9', '#6EE7B7', '#5EEAD4']),
-  14: () => sheet(['#F9A8D4', '#FCD34D', '#FDA4AF']),
-
-  // Frames, shot as the object.
-  15: () => frameObject(`
-        <circle cx="200" cy="204" r="128" fill="none" stroke="#F1B419" stroke-width="17"/>
-        <circle cx="200" cy="204" r="140" fill="none" stroke="#E09B0B" stroke-width="5" opacity=".65"/>
-        <circle cx="291" cy="139" r="11" fill="#FDE68A"/>`),
-  16: () => frameObject(`
-        <circle cx="200" cy="204" r="128" fill="none" stroke="#EF5A1E" stroke-width="18"/>
-        <g fill="#F9A825">
-          <path d="M200 62c13 21 4 32 0 44-10-14-15-23 0-44Z"/>
-          <path d="M342 204c-21 13-32 4-44 0 14-10 23-15 44 0Z"/>
-          <path d="M200 346c-13-21-4-32 0-44 10 14 15 23 0 44Z"/>
-          <path d="M58 204c21-13 32-4 44 0-14 10-23 15-44 0Z"/>
-        </g>`),
-  17: () => frameObject(`
-        <circle cx="200" cy="204" r="128" fill="none" stroke="#65A30D" stroke-width="15"/>
-        <g fill="#4D7C0F">
-          <ellipse cx="200" cy="76" rx="25" ry="13"/>
-          <ellipse cx="328" cy="204" rx="13" ry="25"/>
-          <ellipse cx="200" cy="332" rx="25" ry="13"/>
-          <ellipse cx="72" cy="204" rx="13" ry="25"/>
-        </g>`),
-  18: () => frameObject(`
-        <circle cx="200" cy="204" r="128" fill="none" stroke="#6366F1" stroke-width="15"/>
-        <g fill="#4F46E5">
-          <circle cx="200" cy="76" r="8"/><circle cx="290" cy="124" r="5"/>
-          <circle cx="328" cy="228" r="7"/><circle cx="244" cy="330" r="5"/>
-          <circle cx="130" cy="322" r="8"/><circle cx="72" cy="222" r="5"/>
-          <circle cx="106" cy="118" r="6"/>
-        </g>`),
+  // Collectables.
+  15: () => plushHamster,
+  16: () => sheet(['#F5A524', '#FDBA74', '#FCD34D', '#F59E0B']),
+  17: () => keyring,
+  18: () => pin,
 }
 
 /**

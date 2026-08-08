@@ -2,7 +2,7 @@
   "$schema": "./site.schema.json",
   "nav": {
     "wordmark": "HamsterHub",
-    "storeLabel": "ของแต่งแฮมสเตอร์",
+    "storeLabel": "ของจริงส่งถึงบ้าน",
     "libraryLabel": "Unity Asset",
     "balanceSuffix": "HamCoin",
     "cartLabel": "ตะกร้า"
@@ -10,34 +10,34 @@
   "store": {
     "hero": {
       "eyebrow": "HamStore",
-      "headlineLine1": "แต่งแฮมสเตอร์",
-      "headlineLine2": "ให้เป็นตัวคุณ",
-      "lede": "สกิน เพื่อนซี้ ธีม อิโมจิ กรอบ — แลกด้วยเหรียญที่ได้จากการเรียน",
+      "headlineLine1": "ของจริง",
+      "headlineLine2": "ส่งถึงบ้าน",
+      "lede": "เสื้อ หมอน โคมไฟ แก้ว — แลกด้วยเหรียญที่ได้จากการเรียน ส่งฟรีเมื่อครบ 500 เหรียญ",
       "primaryCta": "ดูของทั้งหมด",
       "secondaryCta": "HamCoin ใช้ยังไง",
       "image": ""
     },
     "recommended": {
       "heading": "ของที่เราแนะนำ",
-      "sub": "สี่ชิ้นนี้มาจากยอดแลกจริงของเดือนนี้"
+      "sub": "สี่ชิ้นนี้มาจากยอดสั่งจริงของเดือนนี้"
     },
     "bands": [
       {
-        "kind": "skin",
-        "headline": "ใส่แล้วคนทั้งเว็บเห็น",
-        "body": "สกินเปลี่ยนแฮมสเตอร์ประจำตัวคุณทุกที่ที่มันโผล่ — โปรไฟล์ คอมเมนต์ กระดานอันดับ",
+        "kind": "apparel",
+        "headline": "ผ้าที่ใส่ได้ทุกวัน ไม่ใช่แค่ครั้งเดียว",
+        "body": "คอตตอนหนา 220 แกรม สกรีนด้วยหมึกน้ำที่ไม่แตกหลังซัก เราซักตัวอย่างสิบรอบก่อนสั่งผลิต",
         "image": ""
       },
       {
-        "kind": "theme",
-        "headline": "เปลี่ยนทั้งเว็บ ไม่ใช่แค่พื้นหลัง",
-        "body": "ธีมคุมสีตั้งแต่พื้น ปุ่ม ยันเส้นขอบ เลือกให้เข้ากับเวลาที่คุณนั่งโค้ดจริงๆ",
+        "kind": "home",
+        "headline": "ของที่อยู่บนโต๊ะคุณทั้งปี",
+        "body": "หมอน โคมไฟ ผ้าห่ม — เลือกมาจากของที่เราใช้เองก่อน แล้วค่อยเอามาขาย",
         "image": ""
       }
     ],
     "facts": {
       "inStore": "ชิ้นในร้านตอนนี้",
-      "free": "ชิ้นที่ปลดล็อกได้ฟรี",
+      "free": "ชิ้นที่มีของพร้อมส่ง",
       "cheapest": "เหรียญ สำหรับชิ้นที่ถูกที่สุด",
       "baht": "บาท — เหรียญได้จากการเรียนเท่านั้น"
     },
@@ -46,8 +46,8 @@
       "unit": "ชิ้น"
     },
     "grid": {
-      "heading": "ไอเทมทั้งหมด",
-      "sub": "ของแต่งโปรไฟล์และหน้าเว็บ — Unity asset อยู่อีกหน้า"
+      "heading": "สินค้าทั้งหมด",
+      "sub": "ของใช้จริง ส่งถึงบ้าน — Unity asset อยู่อีกหน้า"
     }
   },
   "library": {
@@ -74,10 +74,10 @@
       {
         "title": "HamStore",
         "links": [
-          "ของที่ซื้อได้",
+          "ของทั้งหมด",
           "คลัง Unity Asset",
           "ของมาใหม่",
-          "ของลดราคา"
+          "ติดตามพัสดุ"
         ]
       },
       {
@@ -113,568 +113,653 @@
   "items": [
     {
       "id": 1,
-      "kind": "skin",
-      "name": "แฮมนักบินอวกาศ",
-      "blurb": "ชุดนักบินอวกาศพร้อมหมวกกระจก ลอยได้ตอนไอเดิล",
+      "kind": "apparel",
+      "name": "เสื้อยืดแฮมสเตอร์ สีดำ",
+      "blurb": "คอตตอน 100% หนา 220 แกรม สกรีนหน้าอกซ้าย",
       "coins": 320,
-      "sale": 0,
-      "rarity": "legendary",
-      "owned": false,
-      "art": [
-        "#7C3AED",
-        "#2563EB"
-      ],
-      "image": "/uploads/item-1.jpg"
-    },
-    {
-      "id": 2,
-      "kind": "skin",
-      "name": "แฮมพ่อครัว",
-      "blurb": "หมวกเชฟกับผ้ากันเปื้อน แถมเอฟเฟกต์ควันตอนพิมพ์โค้ด",
-      "coins": 180,
-      "sale": 20,
-      "rarity": "epic",
-      "owned": true,
-      "art": [
-        "#DC2626",
-        "#F97316"
-      ],
-      "image": "/uploads/item-2.jpg"
-    },
-    {
-      "id": 3,
-      "kind": "skin",
-      "name": "แฮมนินจา",
-      "blurb": "ชุดดำล้วน เดินผ่านหน้าเว็บแบบไร้เสียง",
-      "coins": 240,
-      "sale": 0,
-      "rarity": "epic",
-      "owned": false,
-      "art": [
-        "#1a1814",
-        "#7C3AED"
-      ],
-      "image": "/uploads/item-3.jpg"
-    },
-    {
-      "id": 4,
-      "kind": "skin",
-      "name": "แฮมบัณฑิต",
-      "blurb": "ชุดครุยรับปริญญา ปลดล็อกเมื่อเรียนจบคอร์สแรก",
-      "coins": 0,
-      "sale": 0,
-      "rarity": "common",
-      "owned": true,
-      "art": [
-        "#1E1E2E",
-        "#FBBF24"
-      ],
-      "image": "/uploads/item-4.jpg"
-    },
-    {
-      "id": 5,
-      "kind": "pet",
-      "name": "เจ้าเหมียวจิ๋ว",
-      "blurb": "แมวตัวเล็กเดินตามเคอร์เซอร์ทั่วหน้าเว็บ",
-      "coins": 260,
-      "sale": 0,
-      "rarity": "epic",
-      "owned": false,
-      "art": [
-        "#F59E0B",
-        "#DC2626"
-      ],
-      "image": "/uploads/item-5.jpg"
-    },
-    {
-      "id": 6,
-      "kind": "pet",
-      "name": "สไลม์เรืองแสง",
-      "blurb": "สไลม์เด้งดึ๋ง เปลี่ยนสีตามธีมที่ใช้อยู่",
-      "coins": 150,
-      "sale": 0,
-      "rarity": "rare",
-      "owned": false,
-      "art": [
-        "#059669",
-        "#0891B2"
-      ],
-      "image": "/uploads/item-6.jpg"
-    },
-    {
-      "id": 7,
-      "kind": "pet",
-      "name": "มังกรกระดาษ",
-      "blurb": "มังกรออริกามิบินวนรอบการ์ดโปรไฟล์",
-      "coins": 420,
-      "sale": 15,
-      "rarity": "legendary",
-      "owned": false,
-      "art": [
-        "#DB2777",
-        "#7C3AED"
-      ],
-      "image": "/uploads/item-7.jpg"
-    },
-    {
-      "id": 8,
-      "kind": "theme",
-      "name": "ธีมกลางคืน",
-      "blurb": "โทนดำอมส้ม ถนอมสายตาตอนโค้ดดึก",
-      "coins": 120,
-      "sale": 0,
-      "rarity": "common",
-      "owned": true,
-      "art": [
-        "#0f0e0d",
-        "#F97316"
-      ],
-      "image": "/uploads/item-8.jpg"
-    },
-    {
-      "id": 9,
-      "kind": "theme",
-      "name": "ธีมไซเบอร์พังก์",
-      "blurb": "นีออนม่วง-ฟ้า พร้อมเส้นสแกนไลน์แบบจอ CRT",
-      "coins": 280,
-      "sale": 0,
-      "rarity": "epic",
-      "owned": false,
-      "art": [
-        "#7C3AED",
-        "#0891B2"
-      ],
-      "image": "/uploads/item-9.jpg"
-    },
-    {
-      "id": 10,
-      "kind": "theme",
-      "name": "ธีมทุ่งหญ้า",
-      "blurb": "เขียวสดใส เหมาะกับการเรียนตอนเช้า",
-      "coins": 120,
-      "sale": 30,
-      "rarity": "common",
-      "owned": false,
-      "art": [
-        "#059669",
-        "#FACC15"
-      ],
-      "image": "/uploads/item-10.jpg"
-    },
-    {
-      "id": 11,
-      "kind": "theme",
-      "name": "ธีมพิกเซล 8-bit",
-      "blurb": "ฟอนต์พิกเซลกับขอบแบบเกมเก่า ครบทั้งหน้าเว็บ",
-      "coins": 200,
-      "sale": 0,
-      "rarity": "rare",
-      "owned": false,
-      "art": [
-        "#2563EB",
-        "#DB2777"
-      ],
-      "image": "/uploads/item-11.jpg"
-    },
-    {
-      "id": 12,
-      "kind": "emoji",
-      "name": "ชุดอิโมจิแฮมจอมป่วน",
-      "blurb": "อิโมจิแฮมสเตอร์ 24 แบบ ใช้ได้ในคอมเมนต์และแชท",
-      "coins": 90,
       "sale": 0,
       "rarity": "common",
       "owned": false,
       "art": [
         "#F97316",
-        "#FACC15"
+        "#7C2D12"
       ],
-      "image": "/uploads/item-12.jpg"
+      "image": "/uploads/item-1.jpg",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": 42,
+      "shipsIn": 2
+    },
+    {
+      "id": 2,
+      "kind": "apparel",
+      "name": "เสื้อยืดแฮมสเตอร์ สีครีม",
+      "blurb": "ทรงโอเวอร์ไซซ์ ผ้าเดียวกับสีดำ ใส่สบายทั้งวัน",
+      "coins": 320,
+      "sale": 20,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F97316",
+        "#7C2D12"
+      ],
+      "image": "/uploads/item-2.jpg",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": 18,
+      "shipsIn": 2
+    },
+    {
+      "id": 3,
+      "kind": "apparel",
+      "name": "ฮู้ดดี้ HamsterHub",
+      "blurb": "ผ้าสำลีสองหน้า มีกระเป๋าหน้า เชือกฮู้ดกลม",
+      "coins": 680,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F97316",
+        "#7C2D12"
+      ],
+      "image": "/uploads/item-3.jpg",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": 9,
+      "shipsIn": 3
+    },
+    {
+      "id": 4,
+      "kind": "apparel",
+      "name": "หมวกแก๊ปปักโลโก้",
+      "blurb": "ทรงหกชิ้น ปรับสายหลังได้ ปักนูนด้านหน้า",
+      "coins": 240,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F97316",
+        "#7C2D12"
+      ],
+      "image": "/uploads/item-4.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 55,
+      "shipsIn": 2
+    },
+    {
+      "id": 5,
+      "kind": "apparel",
+      "name": "ถุงเท้าลายแฮม",
+      "blurb": "ลายทอทั้งผืน ไม่ใช่สกรีน ยาวข้อกลาง",
+      "coins": 120,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#F97316",
+        "#7C2D12"
+      ],
+      "image": "/uploads/item-5.jpg",
+      "sizes": [
+        "M",
+        "L"
+      ],
+      "stock": 80,
+      "shipsIn": 2
+    },
+    {
+      "id": 6,
+      "kind": "home",
+      "name": "หมอนอิงแฮมสเตอร์",
+      "blurb": "ขนาด 45×45 ซม. ปลอกถอดซักได้ พร้อมใส้หมอน",
+      "coins": 380,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#7C3AED",
+        "#2E1065"
+      ],
+      "image": "/uploads/item-6.jpg",
+      "sizes": [
+        "45×45 ซม."
+      ],
+      "stock": 24,
+      "shipsIn": 4
+    },
+    {
+      "id": 7,
+      "kind": "home",
+      "name": "โคมไฟตั้งโต๊ะ",
+      "blurb": "ไฟ LED ปรับสามระดับ สาย USB-C ยาว 1.5 ม.",
+      "coins": 890,
+      "sale": 15,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#7C3AED",
+        "#2E1065"
+      ],
+      "image": "/uploads/item-7.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 6,
+      "shipsIn": 5
+    },
+    {
+      "id": 8,
+      "kind": "home",
+      "name": "ผ้าห่มขนนุ่ม",
+      "blurb": "ขนาด 150×200 ซม. ผ้าไมโครไฟเบอร์ ไม่เป็นขุย",
+      "coins": 640,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#7C3AED",
+        "#2E1065"
+      ],
+      "image": "/uploads/item-8.jpg",
+      "sizes": [
+        "150×200 ซม."
+      ],
+      "stock": 12,
+      "shipsIn": 4
+    },
+    {
+      "id": 9,
+      "kind": "home",
+      "name": "พรมเช็ดเท้าแฮม",
+      "blurb": "ขนาด 40×60 ซม. หลังยางกันลื่น ซักได้",
+      "coins": 290,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#7C3AED",
+        "#2E1065"
+      ],
+      "image": "/uploads/item-9.jpg",
+      "sizes": [
+        "40×60 ซม."
+      ],
+      "stock": 0,
+      "shipsIn": 4
+    },
+    {
+      "id": 10,
+      "kind": "desk",
+      "name": "แก้วเซรามิกแฮม",
+      "blurb": "ความจุ 350 มล. เข้าไมโครเวฟและเครื่องล้างจานได้",
+      "coins": 260,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#0891B2",
+        "#083344"
+      ],
+      "image": "/uploads/item-10.jpg",
+      "sizes": [
+        "350 มล."
+      ],
+      "stock": 37,
+      "shipsIn": 3
+    },
+    {
+      "id": 11,
+      "kind": "desk",
+      "name": "กระบอกน้ำเก็บอุณหภูมิ",
+      "blurb": "สเตนเลสสองชั้น 500 มล. เก็บร้อน 6 ชม. เย็น 12 ชม.",
+      "coins": 520,
+      "sale": 0,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#0891B2",
+        "#083344"
+      ],
+      "image": "/uploads/item-11.jpg",
+      "sizes": [
+        "500 มล."
+      ],
+      "stock": 21,
+      "shipsIn": 3
+    },
+    {
+      "id": 12,
+      "kind": "desk",
+      "name": "กระเป๋าผ้าแคนวาส",
+      "blurb": "ผ้าแคนวาส 12 ออนซ์ สายยาวสะพายไหล่ได้",
+      "coins": 180,
+      "sale": 30,
+      "rarity": "common",
+      "owned": false,
+      "art": [
+        "#0891B2",
+        "#083344"
+      ],
+      "image": "/uploads/item-12.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 64,
+      "shipsIn": 2
     },
     {
       "id": 13,
-      "kind": "emoji",
-      "name": "ชุดอิโมจิสายโค้ด",
-      "blurb": "อิโมจิบั๊ก คอมไพล์ผ่าน เดดไลน์ และอื่นๆ อีก 18 แบบ",
-      "coins": 90,
+      "kind": "desk",
+      "name": "แผ่นรองเมาส์ยาว",
+      "blurb": "ขนาด 80×30 ซม. ขอบเย็บกันลุ่ย ฐานยางกันลื่น",
+      "coins": 220,
       "sale": 0,
       "rarity": "common",
-      "owned": true,
+      "owned": false,
       "art": [
         "#0891B2",
-        "#059669"
+        "#083344"
       ],
-      "image": "/uploads/item-13.jpg"
+      "image": "/uploads/item-13.jpg",
+      "sizes": [
+        "80×30 ซม."
+      ],
+      "stock": 33,
+      "shipsIn": 3
     },
     {
       "id": 14,
-      "kind": "emoji",
-      "name": "ชุดอิโมจิเคลื่อนไหว",
-      "blurb": "อิโมจิขยับได้ 12 แบบ สำหรับสมาชิก Pro",
-      "coins": 260,
+      "kind": "desk",
+      "name": "สมุดโน้ตปกแข็ง",
+      "blurb": "A5 กระดาษถนอมสายตา 160 หน้า มีเส้นบรรทัด",
+      "coins": 150,
       "sale": 0,
-      "rarity": "epic",
+      "rarity": "common",
       "owned": false,
       "art": [
-        "#DB2777",
-        "#F59E0B"
+        "#0891B2",
+        "#083344"
       ],
-      "image": "/uploads/item-14.jpg"
+      "image": "/uploads/item-14.jpg",
+      "sizes": [
+        "A5"
+      ],
+      "stock": 48,
+      "shipsIn": 2
     },
     {
       "id": 15,
-      "kind": "frame",
-      "name": "กรอบทองคำ",
-      "blurb": "กรอบโปรไฟล์ทองพร้อมประกายวิ่งรอบขอบ",
-      "coins": 350,
+      "kind": "collect",
+      "name": "ตุ๊กตาแฮมสเตอร์",
+      "blurb": "สูง 18 ซม. ผ้ากำมะหยี่ ใยรีไซเคิลข้างใน",
+      "coins": 450,
       "sale": 0,
-      "rarity": "legendary",
+      "rarity": "common",
       "owned": false,
       "art": [
-        "#F59E0B",
-        "#FACC15"
+        "#059669",
+        "#022C22"
       ],
-      "image": "/uploads/item-15.jpg"
+      "image": "/uploads/item-15.jpg",
+      "sizes": [
+        "18 ซม."
+      ],
+      "stock": 15,
+      "shipsIn": 4
     },
     {
       "id": 16,
-      "kind": "frame",
-      "name": "กรอบเปลวไฟ",
-      "blurb": "เปลวไฟไหวๆ รอบรูปโปรไฟล์",
-      "coins": 220,
-      "sale": 10,
-      "rarity": "epic",
+      "kind": "collect",
+      "name": "สติกเกอร์ไดคัท 12 ชิ้น",
+      "blurb": "กันน้ำ ติดโน้ตบุ๊กได้ ไม่ทิ้งคราบเวลาลอก",
+      "coins": 90,
+      "sale": 0,
+      "rarity": "common",
       "owned": false,
       "art": [
-        "#DC2626",
-        "#F97316"
+        "#059669",
+        "#022C22"
       ],
-      "image": "/uploads/item-16.jpg"
+      "image": "/uploads/item-16.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 120,
+      "shipsIn": 2
     },
     {
       "id": 17,
-      "kind": "frame",
-      "name": "กรอบใบไม้",
-      "blurb": "กรอบใบไม้เรียบๆ ใครก็ใช้ได้",
-      "coins": 60,
+      "kind": "collect",
+      "name": "พวงกุญแจอะคริลิก",
+      "blurb": "อะคริลิกหนา 3 มม. พิมพ์สองด้าน ห่วงเหล็ก",
+      "coins": 110,
       "sale": 0,
       "rarity": "common",
-      "owned": true,
+      "owned": false,
       "art": [
         "#059669",
-        "#84CC16"
+        "#022C22"
       ],
-      "image": "/uploads/item-17.jpg"
+      "image": "/uploads/item-17.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 72,
+      "shipsIn": 2
     },
     {
       "id": 18,
-      "kind": "frame",
-      "name": "กรอบกาแล็กซี",
-      "blurb": "ดาวหมุนช้าๆ รอบรูป พร้อมฝุ่นดาวจางๆ",
-      "coins": 300,
+      "kind": "collect",
+      "name": "เข็มกลัดเคลือบแข็ง",
+      "blurb": "โลหะชุบ เคลือบแข็ง ขนาด 30 มม. เข็มกลัดคู่",
+      "coins": 140,
       "sale": 0,
-      "rarity": "epic",
+      "rarity": "common",
       "owned": false,
       "art": [
-        "#2563EB",
-        "#7C3AED"
+        "#059669",
+        "#022C22"
       ],
-      "image": "/uploads/item-18.jpg"
+      "image": "/uploads/item-18.jpg",
+      "sizes": [
+        "Free"
+      ],
+      "stock": 0,
+      "shipsIn": 2
     }
   ],
   "itemDetails": {
     "1": {
-      "maker": "สตูดิโอแฮมสเตอร์",
-      "owners": 4820,
-      "version": "1.3",
-      "updatedAt": "2026-07-18",
+      "maker": "HamsterHub Shop",
+      "owners": 1840,
       "includes": [
-        "ท่ายืน 6 ท่า",
-        "หมวกกระจกแยกชิ้น ถอดได้",
-        "เอฟเฟกต์ลอยตอนไอเดิล"
+        "เสื้อยืด 1 ตัว",
+        "ป้ายทอที่คอเสื้อ"
       ],
       "showsUp": [
-        "โปรไฟล์",
-        "คอมเมนต์",
-        "กระดานอันดับ"
-      ]
+        "คอตตอน 100%"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "2": {
-      "maker": "ครัวแฮมสเตอร์",
-      "owners": 7310,
-      "version": "2.0",
-      "updatedAt": "2026-06-02",
+      "maker": "HamsterHub Shop",
+      "owners": 1120,
       "includes": [
-        "ท่ายืน 4 ท่า",
-        "หมวกเชฟ + ผ้ากันเปื้อน",
-        "ควันตอนพิมพ์โค้ด"
+        "เสื้อยืด 1 ตัว",
+        "ทรงโอเวอร์ไซซ์"
       ],
       "showsUp": [
-        "โปรไฟล์",
-        "คอมเมนต์"
-      ]
+        "คอตตอน 100%"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "3": {
-      "maker": "สตูดิโอแฮมสเตอร์",
-      "owners": 3190,
-      "version": "1.1",
-      "updatedAt": "2026-05-11",
+      "maker": "HamsterHub Shop",
+      "owners": 640,
       "includes": [
-        "ท่ายืน 5 ท่า",
-        "เอฟเฟกต์เดินไร้เสียง"
+        "ฮู้ดดี้ 1 ตัว",
+        "กระเป๋าหน้าใบใหญ่"
       ],
       "showsUp": [
-        "โปรไฟล์",
-        "คอมเมนต์"
-      ]
+        "ผ้าสำลีสองหน้า"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "4": {
-      "maker": "HamsterHub",
-      "owners": 12040,
-      "version": "1.0",
-      "updatedAt": "2026-01-09",
+      "maker": "HamsterHub Shop",
+      "owners": 980,
       "includes": [
-        "ท่ายืน 3 ท่า",
-        "ชุดครุย + หมวก"
+        "หมวก 1 ใบ",
+        "ปรับสายได้"
       ],
       "showsUp": [
-        "โปรไฟล์"
-      ]
+        "ผ้าทวิลคอตตอน"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "5": {
-      "maker": "บ้านสัตว์เลี้ยง",
-      "owners": 2870,
-      "version": "1.4",
-      "updatedAt": "2026-07-02",
+      "maker": "HamsterHub Shop",
+      "owners": 1560,
       "includes": [
-        "อนิเมชันเดิน 8 เฟรม",
-        "ตามเคอร์เซอร์ทุกหน้า"
+        "ถุงเท้า 1 คู่"
       ],
       "showsUp": [
-        "ทุกหน้าในเว็บ"
-      ]
+        "คอตตอนผสมสแปนเด็กซ์"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "6": {
-      "maker": "บ้านสัตว์เลี้ยง",
-      "owners": 5240,
-      "version": "1.2",
-      "updatedAt": "2026-04-27",
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 870,
       "includes": [
-        "อนิเมชันเด้ง 6 เฟรม",
-        "เปลี่ยนสีตามธีมอัตโนมัติ"
+        "ปลอกหมอน 1 ใบ",
+        "ใส้หมอน 1 ใบ"
       ],
       "showsUp": [
-        "ทุกหน้าในเว็บ"
-      ]
+        "ผ้าลินินผสม"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "7": {
-      "maker": "Origami Lab",
-      "owners": 940,
-      "version": "1.0",
-      "updatedAt": "2026-07-25",
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 410,
       "includes": [
-        "อนิเมชันบิน 12 เฟรม",
-        "เงาตกกระทบบนการ์ด"
+        "โคมไฟ 1 ตัว",
+        "สาย USB-C 1.5 ม."
       ],
       "showsUp": [
-        "การ์ดโปรไฟล์"
-      ]
+        "อะลูมิเนียม + ABS"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "8": {
-      "maker": "HamsterHub",
-      "owners": 18600,
-      "version": "3.1",
-      "updatedAt": "2026-06-14",
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 520,
       "includes": [
-        "โทนสีครบทั้งเว็บ",
-        "ปรับความสว่างได้ 3 ระดับ"
+        "ผ้าห่ม 1 ผืน",
+        "ถุงผ้าเก็บ"
       ],
       "showsUp": [
-        "ทั้งเว็บ"
-      ]
+        "ไมโครไฟเบอร์"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "9": {
-      "maker": "Neon Works",
-      "owners": 6120,
-      "version": "2.2",
-      "updatedAt": "2026-07-09",
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 330,
       "includes": [
-        "โทนสีครบทั้งเว็บ",
-        "เส้นสแกนไลน์เปิด/ปิดได้",
-        "ฟอนต์หัวข้อเฉพาะธีม"
+        "พรม 1 ผืน"
       ],
       "showsUp": [
-        "ทั้งเว็บ"
-      ]
+        "ผิวไนลอน หลังยาง"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "10": {
-      "maker": "HamsterHub",
-      "owners": 8730,
-      "version": "1.5",
-      "updatedAt": "2026-03-20",
+      "maker": "HamsterHub Shop",
+      "owners": 2140,
       "includes": [
-        "โทนสีครบทั้งเว็บ"
+        "แก้ว 1 ใบ",
+        "กล่องกันกระแทก"
       ],
       "showsUp": [
-        "ทั้งเว็บ"
-      ]
+        "เซรามิกเคลือบ"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "11": {
-      "maker": "Pixel Press",
-      "owners": 4410,
-      "version": "1.8",
-      "updatedAt": "2026-05-30",
+      "maker": "HamsterHub Shop",
+      "owners": 760,
       "includes": [
-        "โทนสีครบทั้งเว็บ",
-        "ฟอนต์พิกเซล",
-        "ขอบแบบเกมเก่า"
+        "กระบอกน้ำ 1 ใบ",
+        "ฝาเกลียวกันรั่ว"
       ],
       "showsUp": [
-        "ทั้งเว็บ"
-      ]
+        "สเตนเลส 304"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "12": {
-      "maker": "สตูดิโอแฮมสเตอร์",
-      "owners": 9980,
-      "version": "2.0",
-      "updatedAt": "2026-06-28",
+      "maker": "HamsterHub Shop",
+      "owners": 2680,
       "includes": [
-        "สติกเกอร์ 24 แบบ",
-        "ไฟล์ความละเอียด 2x"
+        "กระเป๋า 1 ใบ"
       ],
       "showsUp": [
-        "คอมเมนต์",
-        "ฟอรัม",
-        "แชท"
-      ]
+        "แคนวาส 12 ออนซ์"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "13": {
-      "maker": "Dev Sticker Co.",
-      "owners": 11250,
-      "version": "2.3",
-      "updatedAt": "2026-07-21",
+      "maker": "HamsterHub Shop",
+      "owners": 1290,
       "includes": [
-        "สติกเกอร์ 18 แบบ",
-        "ไฟล์ความละเอียด 2x"
+        "แผ่นรองเมาส์ 1 ผืน"
       ],
       "showsUp": [
-        "คอมเมนต์",
-        "ฟอรัม",
-        "แชท"
-      ]
+        "ผ้าไมโครไฟเบอร์ + ยาง"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "14": {
-      "maker": "Dev Sticker Co.",
-      "owners": 2130,
-      "version": "1.1",
-      "updatedAt": "2026-07-30",
+      "maker": "HamsterHub Shop",
+      "owners": 1740,
       "includes": [
-        "สติกเกอร์ขยับได้ 12 แบบ",
-        "ไฟล์ 2x + เวอร์ชันนิ่ง"
+        "สมุด 1 เล่ม",
+        "ริบบิ้นคั่นหน้า"
       ],
       "showsUp": [
-        "คอมเมนต์",
-        "ฟอรัม",
-        "แชท"
-      ]
+        "กระดาษถนอมสายตา"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "15": {
-      "maker": "Frame Atelier",
-      "owners": 1580,
-      "version": "1.0",
-      "updatedAt": "2026-07-12",
+      "maker": "บ้านแฮมสเตอร์",
+      "owners": 690,
       "includes": [
-        "กรอบ + ประกายวิ่งรอบขอบ",
-        "ปรับความเร็วประกายได้"
+        "ตุ๊กตา 1 ตัว",
+        "ป้ายห้อย"
       ],
       "showsUp": [
-        "รูปโปรไฟล์"
-      ]
+        "กำมะหยี่ ใยรีไซเคิล"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "16": {
-      "maker": "Frame Atelier",
-      "owners": 3360,
-      "version": "1.2",
-      "updatedAt": "2026-05-05",
+      "maker": "Dev Sticker Co.",
+      "owners": 3410,
       "includes": [
-        "กรอบ + เปลวไฟ 24 เฟรม"
+        "สติกเกอร์ 12 ชิ้น",
+        "กันน้ำทุกชิ้น"
       ],
       "showsUp": [
-        "รูปโปรไฟล์"
-      ]
+        "ไวนิลกันน้ำ"
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "17": {
-      "maker": "HamsterHub",
-      "owners": 15900,
-      "version": "1.0",
-      "updatedAt": "2026-02-14",
+      "maker": "Dev Sticker Co.",
+      "owners": 1980,
       "includes": [
-        "กรอบนิ่ง 1 แบบ"
+        "พวงกุญแจ 1 ชิ้น",
+        "ห่วงเหล็ก"
       ],
       "showsUp": [
-        "รูปโปรไฟล์"
-      ]
+        "อะคริลิก 3 มม."
+      ],
+      "version": "",
+      "updatedAt": ""
     },
     "18": {
-      "maker": "Frame Atelier",
-      "owners": 2740,
-      "version": "1.1",
-      "updatedAt": "2026-06-19",
+      "maker": "Dev Sticker Co.",
+      "owners": 1150,
       "includes": [
-        "กรอบ + ดาวหมุน",
-        "ฝุ่นดาวเปิด/ปิดได้"
+        "เข็มกลัด 1 ชิ้น",
+        "การ์ดรองหลัง"
       ],
       "showsUp": [
-        "รูปโปรไฟล์"
-      ]
+        "โลหะเคลือบแข็ง"
+      ],
+      "version": "",
+      "updatedAt": ""
     }
   },
   "recommended": [
     {
       "id": 1,
-      "reason": "ขายดีที่สุดเดือนนี้",
-      "note": "คนเลือกมากที่สุดในบรรดาสกินทั้งหมด และเป็นชิ้นเดียวที่ลอยได้ตอนไอเดิล"
-    },
-    {
-      "id": 9,
-      "reason": "คู่กับสกินได้ทุกตัว",
-      "note": "โทนนีออนเข้ากับสกินเกือบทุกแบบ เลยเป็นธีมที่คนใส่คู่กันบ่อยที่สุด"
-    },
-    {
-      "id": 17,
-      "reason": "เริ่มต้นแค่ 60",
-      "note": "ถูกที่สุดในหมวดกรอบ เหมาะกับคนที่เพิ่งเก็บเหรียญได้ก้อนแรก"
+      "reason": "ขายดีที่สุด",
+      "note": "เสื้อตัวที่คนสั่งซ้ำมากที่สุด ผ้าหนาพอที่จะไม่โปร่งหลังซักสิบครั้ง"
     },
     {
       "id": 7,
-      "reason": "ของหายาก",
-      "note": "ระดับตำนาน มีเอฟเฟกต์บินวนรอบการ์ดโปรไฟล์ที่ไม่มีในชิ้นอื่น"
+      "reason": "เหลือ 6 ชิ้น",
+      "note": "ล็อตนี้ผลิตจำนวนจำกัด ปรับไฟได้สามระดับ ใช้สาย USB-C เส้นเดียวกับโน้ตบุ๊ก"
+    },
+    {
+      "id": 16,
+      "reason": "เริ่มต้น 90",
+      "note": "ถูกที่สุดในร้าน กันน้ำจริง ติดฝาโน้ตบุ๊กแล้วลอกออกได้ไม่ทิ้งคราบ"
+    },
+    {
+      "id": 3,
+      "reason": "หนาวนี้",
+      "note": "ผ้าสำลีสองหน้า ใส่คลุมได้ตั้งแต่แอร์ห้องเรียนยันดอย"
     }
   ],
   "pathway": [
     {
-      "id": "dress",
+      "id": "earn",
       "step": "01",
-      "title": "แต่งตัวแฮมของคุณ",
-      "body": "สกินและเพื่อนซี้เปลี่ยนหน้าตาแฮมสเตอร์ประจำตัวคุณ ทุกคนที่เข้ามาดูโปรไฟล์จะเห็นทันที",
-      "icon": "skin",
+      "title": "เรียนแล้วได้เหรียญ",
+      "body": "เรียนจบบทเรียน ส่งงาน หรือช่วยตอบคำถามในฟอรัม เหรียญเข้ากระเป๋าทันที — ซื้อด้วยเงินจริงไม่ได้ ที่นี่มีทางเดียวคือเรียน",
+      "icon": "coin",
+      "color": "#FACC15"
+    },
+    {
+      "id": "choose",
+      "step": "02",
+      "title": "เลือกของแล้วเลือกไซซ์",
+      "body": "เสื้อ หมอน โคมไฟ แก้ว — ของจริงทั้งหมด กดดูรายละเอียดเพื่อเลือกไซซ์และดูว่าเหลือกี่ชิ้นก่อนใส่ตะกร้า",
+      "icon": "cart",
       "color": "#F97316"
     },
     {
-      "id": "decorate",
-      "step": "02",
-      "title": "ตกแต่งพื้นที่ของคุณ",
-      "body": "ธีมเปลี่ยนสีทั้งเว็บ กรอบโปรไฟล์และอิโมจิทำให้คอมเมนต์ของคุณไม่เหมือนใคร",
-      "icon": "theme",
-      "color": "#7C3AED"
-    },
-    {
-      "id": "earn",
+      "id": "ship",
       "step": "03",
-      "title": "สะสม HamCoin",
-      "body": "เรียนจบบทเรียน ส่งงาน หรือช่วยตอบคำถามในฟอรัม แล้วเอาเหรียญมาแลกของที่นี่",
-      "icon": "coin",
-      "color": "#FACC15"
+      "title": "ส่งถึงหน้าบ้าน",
+      "body": "กรอกที่อยู่แล้วสั่งได้เลย ระบบจะให้เลขที่คำสั่งซื้อและวันที่ของถึงโดยประมาณ ส่งฟรีเมื่อยอดถึง 500 เหรียญ",
+      "icon": "receipt",
+      "color": "#7C3AED"
     }
   ],
   "assets": [
@@ -1077,70 +1162,57 @@
     "title": "ตะกร้า",
     "empty": "ยังไม่มีอะไรในตะกร้า",
     "emptyHint": "กด “ใส่ตะกร้า” จากหน้าไหนก็ได้ ของจากทั้งสองหน้ามารวมกันที่นี่",
-    "total": "รวมทั้งหมด",
-    "balanceAfter": "เหลือหลังแลก",
-    "checkout": "แลกทั้งตะกร้า",
+    "total": "รวมสินค้า",
+    "shipping": "ค่าส่ง",
+    "grandTotal": "รวมทั้งหมด",
+    "balanceAfter": "เหลือหลังสั่ง",
+    "checkout": "สั่งซื้อ",
     "short": "เหรียญไม่พอ",
-    "done": "แลกเรียบร้อย",
-    "note": "เหรียญได้จากการเรียนเท่านั้น ไม่มีการตัดเงินจริง"
+    "done": "สั่งซื้อเรียบร้อย",
+    "note": "เหรียญได้จากการเรียนเท่านั้น ไม่มีการตัดเงินจริง",
+    "addressTitle": "ที่อยู่จัดส่ง",
+    "namePlaceholder": "ชื่อผู้รับ",
+    "phonePlaceholder": "เบอร์โทร",
+    "addressPlaceholder": "บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์",
+    "addressRequired": "กรอกที่อยู่ให้ครบก่อนสั่ง",
+    "freeShipping": "ส่งฟรี",
+    "arrives": "ถึงประมาณ"
   },
   "kinds": [
     {
-      "id": "skin",
-      "label": "สกินแฮมสเตอร์",
+      "id": "apparel",
+      "label": "เสื้อผ้า",
       "icon": "skin",
       "motif": "figure",
       "color": "#F97316"
     },
     {
-      "id": "pet",
-      "label": "เพื่อนซี้",
-      "icon": "pet",
-      "motif": "tracks",
-      "color": "#DC2626"
-    },
-    {
-      "id": "theme",
-      "label": "ธีมหน้าเว็บ",
+      "id": "home",
+      "label": "ของแต่งบ้าน",
       "icon": "theme",
-      "motif": "swatches",
+      "motif": "blocks",
       "color": "#7C3AED"
     },
     {
-      "id": "emoji",
-      "label": "สติกเกอร์",
-      "icon": "sticker",
-      "motif": "sheet",
+      "id": "desk",
+      "label": "ของใช้ประจำวัน",
+      "icon": "tools",
+      "motif": "swatches",
       "color": "#0891B2"
     },
     {
-      "id": "frame",
-      "label": "กรอบโปรไฟล์",
-      "icon": "frame",
-      "motif": "nested",
+      "id": "collect",
+      "label": "ของสะสม",
+      "icon": "sticker",
+      "motif": "sheet",
       "color": "#059669"
     }
   ],
   "rarities": [
     {
       "id": "common",
-      "label": "ธรรมดา",
+      "label": "สินค้า",
       "color": "#7a7060"
-    },
-    {
-      "id": "rare",
-      "label": "หายาก",
-      "color": "#2563EB"
-    },
-    {
-      "id": "epic",
-      "label": "เอพิค",
-      "color": "#7C3AED"
-    },
-    {
-      "id": "legendary",
-      "label": "ตำนาน",
-      "color": "#F59E0B"
     }
   ],
   "assetCategories": [
@@ -1205,9 +1277,14 @@
     "startingBalance": 1240,
     "assetsPerPage": 8,
     "shelfKinds": [
-      "pet",
-      "emoji",
-      "frame"
-    ]
+      "home",
+      "desk",
+      "collect"
+    ],
+    "shipping": {
+      "fee": 40,
+      "freeOver": 500,
+      "note": "ส่งด้วยขนส่งเอกชน มีเลขพัสดุให้ติดตาม"
+    }
   }
 }

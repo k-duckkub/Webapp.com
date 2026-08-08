@@ -7,7 +7,7 @@ import { gsap, useGsapContext, MOTION_OK } from '@/lib/gsap'
 import { REVEAL, REVEAL_START, T, SPRING_SOFT } from '@/lib/motion'
 import { kindMeta, PLATFORM_ITEMS, RECOMMENDED, type PlatformItem } from '@/lib/items'
 import { COPY } from '@/lib/content'
-import { useWallet, priceOf, itemKey, itemLine } from '@/components/WalletProvider'
+import { useWallet, priceOf, itemLine, anySizeInCart } from '@/components/WalletProvider'
 import { Artwork } from '@/components/Artwork'
 import { Icon } from '@/components/Icon'
 
@@ -18,7 +18,7 @@ const PICKS = RECOMMENDED.map(pick => ({
 
 export function Recommended() {
   const root = useRef<HTMLElement>(null)
-  const { owns, inCart, toggleCart } = useWallet()
+  const { cart, toggleCart } = useWallet()
   const [selected, setSelected] = useState<PlatformItem | null>(null)
 
   useGsapContext(root, ({ mm }) => {
@@ -47,9 +47,11 @@ export function Recommended() {
           {PICKS.map(({ item, reason, note }) => {
             const kind = kindMeta(item.kind)
             const [from, to] = item.art
-            const key = itemKey(item.id)
-            const owned = owns(key)
-            const queued = inCart(key)
+            /* Same rules as a grid card: a size is picked in the sheet, and
+               nothing that is off the shelf pretends to be orderable. */
+            const queued = anySizeInCart(cart, item.id)
+            const soldOut = item.stock === 0
+            const needsSize = item.sizes.length > 1
 
             return (
               <motion.article
@@ -94,15 +96,19 @@ export function Recommended() {
                     </span>
 
                     <motion.button
-                      onClick={() => toggleCart(itemLine(item))}
-                      disabled={owned}
-                      whileHover={owned ? undefined : { scale: 1.05 }}
-                      whileTap={owned ? undefined : { scale: 0.92 }}
+                      onClick={() => {
+                        if (soldOut) return
+                        if (needsSize) setSelected(item)
+                        else toggleCart(itemLine(item, item.sizes[0]))
+                      }}
+                      disabled={soldOut}
+                      whileHover={soldOut ? undefined : { scale: 1.05 }}
+                      whileTap={soldOut ? undefined : { scale: 0.92 }}
                       transition={SPRING_SOFT}
-                      aria-pressed={owned ? undefined : queued}
+                      aria-pressed={soldOut || needsSize ? undefined : queued}
                       className={`tap relative z-20 rounded-full px-5 py-2 text-[13px] font-medium transition-colors ${
-                        owned
-                          ? 'cursor-default bg-paper text-slate-soft'
+                        soldOut
+                          ? 'cursor-not-allowed bg-paper text-slate-soft'
                           : queued
                             ? 'bg-graphite text-white hover:bg-graphite/85'
                             : 'bg-brand text-white hover:bg-brand-hover'
@@ -110,14 +116,14 @@ export function Recommended() {
                     >
                       <AnimatePresence mode="popLayout" initial={false}>
                         <motion.span
-                          key={owned ? 'owned' : queued ? 'queued' : 'add'}
+                          key={soldOut ? 'out' : needsSize ? 'size' : queued ? 'queued' : 'add'}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
                           transition={T.hover}
                           className="block"
                         >
-                          {owned ? 'มีแล้ว' : queued ? 'อยู่ในตะกร้า' : 'ใส่ตะกร้า'}
+                          {soldOut ? 'ของหมด' : needsSize ? 'เลือกไซซ์' : queued ? 'อยู่ในตะกร้า' : 'ใส่ตะกร้า'}
                         </motion.span>
                       </AnimatePresence>
                     </motion.button>
